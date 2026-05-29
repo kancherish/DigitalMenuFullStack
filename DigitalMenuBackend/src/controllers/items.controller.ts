@@ -5,7 +5,6 @@ import { ErrorResponse } from "../utils/Error-Response.js";
 
 type VariantInput = { name: string; price: number };
 type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] };
-type GetItemsBody = { category_id?: unknown; includeVariants?: unknown };
 type DeleteItemBody = { item_id?: unknown };
 
 const toNumber = (val: unknown): number | null => {
@@ -210,33 +209,27 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
     data: updatedItem,
   });
 });
-
 export const getItemsByCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { category_id, includeVariants } = (req.body?.para || {}) as GetItemsBody;
+  const category_id = req.query.c_id;
 
   if (!category_id) {
-    res.status(400).json(new ErrorResponse(400, "Missing 'category_id'"));
+    res.status(400).json(new ErrorResponse(400, "Missing 'c_id' query parameter"));
     return;
   }
 
   const categoryIdNum = toNumber(category_id);
   if (categoryIdNum === null) {
-    res.status(400).json(new ErrorResponse(400, "category_id must be a valid number"));
+    res.status(400).json(new ErrorResponse(400, "c_id must be a valid number"));
     return;
   }
 
-  const includeVariantsBool = toBoolean(includeVariants ?? true);
-
-  // Build args object without undefined include
-  const findManyArgs: any = {
+  // Always include variants – no conditional needed
+  const items = await prisma.item.findMany({
     where: { category_id: categoryIdNum },
     orderBy: { id: "asc" },
-  };
-  if (includeVariantsBool) {
-    findManyArgs.include = { variants: true };
-  }
+    include: { variants: true }, // ✅ Always include variants
+  });
 
-  const items = await prisma.item.findMany(findManyArgs);
   res.status(200).json({ success: true, data: items });
 });
 

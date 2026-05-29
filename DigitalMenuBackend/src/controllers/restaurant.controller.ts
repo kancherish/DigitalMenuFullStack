@@ -35,26 +35,26 @@ export const addResturant = asyncHandler(async (req: Request, res: Response) => 
 
 // Also fix getRestaurantInfo to send response
 export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  // Safely extract from body.para (same pattern as addResturant)
-  const { restauarnt_id } = req.body?.para || {};
+
+  const restaurant_id  = Number(req.query.r_id) || undefined;
 
   // Validate presence of id
-  if (!restauarnt_id) {
+  if (!restaurant_id) {
     res.status(400).json(
-      new ErrorResponse(400, "Missing 'restauarnt_id' in request body.para")
+      new ErrorResponse(400, "Missing 'restaurant_id' in request body.para")
     );
     return;
   }
 
   // Fetch restaurant from database
   const restaurant = await prisma.restaurant.findUnique({
-    where: { id: restauarnt_id }
+    where: { id: restaurant_id }
   });
 
   // Handle case where id doesn't exist
   if (!restaurant) {
     res.status(404).json(
-      new ErrorResponse(404, `Restaurant with id ${restauarnt_id} not found`)
+      new ErrorResponse(404, `Restaurant with id ${restaurant_id} not found`)
     );
     return;
   }
@@ -68,24 +68,24 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
   // Extract from body.para (same pattern as addResturant)
-  const { restauarnt_id, name, tagline, primaryColor, accentColor } = req.body?.para || {};
+  const { restaurant_id, name, tagline, primaryColor, accentColor } = req.body?.para || {};
 
   // Validate restaurant ID
-  if (!restauarnt_id) {
+  if (!restaurant_id) {
     res.status(400).json(
-      new ErrorResponse(400, "Missing 'restauarnt_id' in request body.para")
+      new ErrorResponse(400, "Missing 'restaurant_id' in request body.para")
     );
     return;
   }
 
   // Check if restaurant exists first (optional but good practice)
   const existing = await prisma.restaurant.findUnique({
-    where: { id: restauarnt_id }
+    where: { id: restaurant_id }
   });
 
   if (!existing) {
     res.status(404).json(
-      new ErrorResponse(404, `Restaurant with id ${restauarnt_id} not found`)
+      new ErrorResponse(404, `Restaurant with id ${restaurant_id} not found`)
     );
     return;
   }
@@ -107,7 +107,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
 
   // Perform update
   const updatedRestaurant = await prisma.restaurant.update({
-    where: { id: restauarnt_id },
+    where: { id: restaurant_id },
     data: updateData,
   });
 

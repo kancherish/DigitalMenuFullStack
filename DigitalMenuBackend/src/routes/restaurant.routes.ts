@@ -3,7 +3,7 @@ import { addResturant,getRestaurantInfo,updateRestaurantInfo } from "../controll
 
 const restaurantRouter = Router();
 
-restaurantRouter.route("/add").put(addResturant)
+restaurantRouter.route("/add").post(addResturant)
 
 restaurantRouter.route("/get").get(getRestaurantInfo)
 

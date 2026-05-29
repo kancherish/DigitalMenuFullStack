@@ -43,50 +43,35 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
     data: category,
   });
 });
-
 export const getCategoriesByRestaurant = asyncHandler(async (req: Request, res: Response) => {
-  // Extract restaurant_id from body.para
-  const { restaurant_id, includeItems = false, includeVariants = false } = req.body?.para || {};
 
-  // Validate restaurant_id
-  if (!restaurant_id) {
-    res.status(400).json(
-      new ErrorResponse(400, "Missing 'restaurant_id' in request body.para")
-    );
+  const restaurant_id = Number(req.query.r_id);
+  // Query param ?incItem=true – default false if not provided or not "true"
+  const includeItems = req.query.incItem === "true";
+
+  if (isNaN(restaurant_id)) {
+    res.status(400).json(new ErrorResponse(400, "Valid restaurant_id is required in URL param :r_id"));
     return;
   }
 
-  // Optional: verify restaurant exists
   const restaurantExists = await prisma.restaurant.findUnique({
     where: { id: restaurant_id }
   });
-
   if (!restaurantExists) {
-    res.status(404).json(
-      new ErrorResponse(404, `Restaurant with id ${restaurant_id} not found`)
-    );
+    res.status(404).json(new ErrorResponse(404, `Restaurant ${restaurant_id} not found`));
     return;
   }
 
-  // Build include object dynamically based on flags
-  const include: any = {};
-  if (includeItems) {
-    include.items = {
-      include: includeVariants ? { variants: true } : undefined,
-    };
-  }
+  // If we include items, always include variants (no separate flag needed)
+  const include = includeItems ? { items: { include: { variants: true } } } : {};
 
-  // Fetch categories
   const categories = await prisma.category.findMany({
     where: { restaurant_id },
-    orderBy: { id: 'asc' }, // or order by name if you prefer
+    orderBy: { id: 'asc' },
     include,
   });
 
-  res.status(200).json({
-    success: true,
-    data: categories,
-  });
+  res.status(200).json({ success: true, data: categories });
 });
 
 export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
