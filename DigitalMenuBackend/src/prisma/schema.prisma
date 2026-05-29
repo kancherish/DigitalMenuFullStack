@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Restaurant {
+  id           Int        @id @default(autoincrement())
+  name         String
+  tagline      String?
+  primaryColor String
+  accentColor  String
+  categories   Category[]
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  name          String
+  restaurant    Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
+  restaurant_id Int
+  items         Item[]
+}
+
+model Item {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float?    // null if item uses variants for pricing
+  category    Category  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category_id Int
+  variants    Variant[]
+}
+
+model Variant {
+  id      Int    @id @default(autoincrement())
+  name    String
+  price   Float
+  item    Item   @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id Int
+}

@@ -1,0 +1,30 @@
+# Logs
+DigitalMenu/logs
+DigitalMenu/*.log
+DigitalMenu/npm-debug.log*
+DigitalMenu/yarn-debug.log*
+DigitalMenu/yarn-error.log*
+DigitalMenu/pnpm-debug.log*
+DigitalMenu/lerna-debug.log*
+
+DigitalMenu/node_modules
+DigitalMenu/dist
+DigitalMenu/dist-ssr
+DigitalMenu/*.local
+DigitalMenu/.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+DigitalMenuBackend/node_modules/
+DigitalMenuBackend/dist/
+DigitalMenuBackend/.env
+DigitalMenuBackend/src/generated/prisma
