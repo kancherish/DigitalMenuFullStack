@@ -7,19 +7,18 @@ type VariantInput = { name: string; price: number };
 type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] };
 type DeleteItemBody = { item_id?: unknown };
 
-const toNumber = (val: unknown): number | null => {
-  if (typeof val === "number") return val;
-  if (typeof val === "string") {
-    const num = parseFloat(val);
-    return isNaN(num) ? null : num;
-  }
+// Helper to safely extract string from unknown
+const toString = (val: unknown): string | null => {
+  if (typeof val === "string") return val;
+  if (typeof val === "number") return String(val);
   return null;
 };
 
-const toBoolean = (val: unknown): boolean => {
-  if (typeof val === "boolean") return val;
-  if (typeof val === "string") return val === "true";
-  return !!val;
+// Helper to safely extract number from unknown (for price)
+const toNumber = (val: unknown): number | null => {
+  if (val === undefined || val === null || val === "") return null;
+  const num = Number(val);
+  return isNaN(num) ? null : num;
 };
 
 export const addItem = asyncHandler(async (req: Request, res: Response) => {
@@ -30,15 +29,15 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
-  const categoryIdNum = toNumber(category_id);
-  if (categoryIdNum === null) {
-    res.status(400).json(new ErrorResponse(400, "category_id must be a valid number"));
+  const categoryIdStr = toString(category_id);
+  if (!categoryIdStr) {
+    res.status(400).json(new ErrorResponse(400, "category_id must be a valid string"));
     return;
   }
 
-  const category = await prisma.category.findUnique({ where: { id: categoryIdNum } });
+  const category = await prisma.category.findUnique({ where: { publicId: categoryIdStr } });
   if (!category) {
-    res.status(404).json(new ErrorResponse(404, `Category with id ${categoryIdNum} not found`));
+    res.status(404).json(new ErrorResponse(404, `Category with id ${categoryIdStr} not found`));
     return;
   }
 
@@ -69,8 +68,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  // Build data object without undefined optional fields
-  const data: any = { name, description: description || null, category_id: categoryIdNum };
+  const data: any = { name, description: description || null, category_id: categoryIdStr };
   if (hasPrice) data.price = priceNum;
   if (hasVariants) data.variants = { create: validatedVariants };
 
@@ -82,133 +80,95 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   const { item_id, name, description, price, category_id, variants } = req.body?.para || {};
 
   if (!item_id) {
-    res.status(400).json(
-      new ErrorResponse(400, "Missing 'item_id' in request body.para")
-    );
+    res.status(400).json(new ErrorResponse(400, "Missing 'item_id' in request body.para"));
     return;
   }
 
-  // Check item exists and get current data
+  const itemIdStr = toString(item_id);
+  if (!itemIdStr) {
+    res.status(400).json(new ErrorResponse(400, "item_id must be a valid string"));
+    return;
+  }
+
   const existingItem = await prisma.item.findUnique({
-    where: { id: item_id },
+    where: { publicId: itemIdStr },
     include: { variants: true }
   });
   if (!existingItem) {
-    res.status(404).json(
-      new ErrorResponse(404, `Item with id ${item_id} not found`)
-    );
+    res.status(404).json(new ErrorResponse(404, `Item with id ${itemIdStr} not found`));
     return;
   }
 
-  // Determine what's being updated
-  const hasPrice = price !== undefined;
-  const hasVariants = variants !== undefined; // even empty array means clear variants
-  const willHaveVariants = hasVariants ? (Array.isArray(variants) && variants.length > 0) : undefined;
+  const priceNum = toNumber(price);
+  const hasPrice = priceNum !== null;
+  const hasVariants = variants !== undefined;
+  const willHaveVariants = hasVariants && Array.isArray(variants) && variants.length > 0;
 
-  // Enforce mutual exclusivity in update
   if (hasPrice && hasVariants) {
-    res.status(400).json(
-      new ErrorResponse(400, "Cannot update both price and variants at the same time. Choose one mode.")
-    );
+    res.status(400).json(new ErrorResponse(400, "Cannot update both price and variants at the same time"));
     return;
   }
 
-  // If switching to price mode (and price provided)
-  if (hasPrice && price !== null) {
-    // Will delete all existing variants
-    // No need to check further
-  }
-  // If switching to variant mode (variants array provided)
-  else if (hasVariants) {
-    if (willHaveVariants) {
-      // Validate variants
-      for (const v of variants) {
-        if (!v.name || v.price === undefined) {
-          res.status(400).json(
-            new ErrorResponse(400, "Each variant must have a name and price.")
-          );
-          return;
-        }
-      }
-    }
-    // If variants is empty array, that means clear all variants and also set price? No – you cannot have empty variants.
-    if (variants.length === 0) {
-      res.status(400).json(
-        new ErrorResponse(400, "If providing variants, at least one variant is required. To remove variants, switch to price mode by providing a price.")
-      );
-      return;
-    }
+  if (hasVariants && !willHaveVariants) {
+    res.status(400).json(new ErrorResponse(400, "If providing variants, at least one variant is required. To remove variants, switch to price mode."));
+    return;
   }
 
-  // Build update data
   const updateData: any = {};
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description;
+
   if (category_id !== undefined) {
-    const newCategory = await prisma.category.findUnique({
-      where: { id: category_id }
-    });
-    if (!newCategory) {
-      res.status(404).json(new ErrorResponse(404, `Category with id ${category_id} not found`));
+    const categoryIdStr = toString(category_id);
+    if (!categoryIdStr) {
+      res.status(400).json(new ErrorResponse(400, "category_id must be a valid string"));
       return;
     }
-    updateData.category_id = category_id;
+    const newCategory = await prisma.category.findUnique({ where: { publicId: categoryIdStr } });
+    if (!newCategory) {
+      res.status(404).json(new ErrorResponse(404, `Category with id ${categoryIdStr} not found`));
+      return;
+    }
+    updateData.category_id = categoryIdStr;
   }
 
-  // Handle price/variant switch
   if (hasPrice) {
-    // Set price, and delete all variants
-    updateData.price = price;
-    // We'll delete variants after or use transaction
+    updateData.price = priceNum;
   }
   if (hasVariants) {
-    // Set price to null, and replace variants
     updateData.price = null;
-    // We'll handle variant replacement
   }
 
-  // Use transaction to ensure consistency
   const updatedItem = await prisma.$transaction(async (tx) => {
-    // Apply basic updates
     const item = await tx.item.update({
-      where: { id: item_id },
+      where: { publicId: itemIdStr },
       data: updateData,
     });
 
-    // Handle variant changes
     if (hasPrice) {
-      // Delete all variants
-      await tx.variant.deleteMany({
-        where: { item_id },
-      });
+      await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
     } else if (hasVariants) {
-      // Replace all variants: delete existing, create new
-      await tx.variant.deleteMany({
-        where: { item_id },
-      });
+      await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
       if (willHaveVariants) {
         await tx.variant.createMany({
-          data: variants.map((v: { name: string; price: number }) => ({
+          data: variants.map((v: any) => ({
             name: v.name,
-            price: v.price,
-            item_id,
+            price: toNumber(v.price)!,
+            item_id: itemIdStr,
           })),
         });
       }
     }
 
-    // Return item with variants
     return tx.item.findUnique({
-      where: { id: item_id },
+      where: { publicId: itemIdStr },
       include: { variants: true },
     });
   });
 
-  res.status(200).json({
-    success: true,
-    data: updatedItem,
-  });
+  res.status(200).json({ success: true, data: updatedItem });
 });
+
 export const getItemsByCategory = asyncHandler(async (req: Request, res: Response) => {
   const category_id = req.query.c_id;
 
@@ -217,17 +177,16 @@ export const getItemsByCategory = asyncHandler(async (req: Request, res: Respons
     return;
   }
 
-  const categoryIdNum = toNumber(category_id);
-  if (categoryIdNum === null) {
-    res.status(400).json(new ErrorResponse(400, "c_id must be a valid number"));
+  const categoryIdStr = toString(category_id);
+  if (!categoryIdStr) {
+    res.status(400).json(new ErrorResponse(400, "c_id must be a valid string"));
     return;
   }
 
-  // Always include variants – no conditional needed
   const items = await prisma.item.findMany({
-    where: { category_id: categoryIdNum },
-    orderBy: { id: "asc" },
-    include: { variants: true }, // ✅ Always include variants
+    where: { category_id: categoryIdStr },
+    orderBy: { name: "asc" }, // Use name or createdAt – avoid numeric ordering on string id
+    include: { variants: true },
   });
 
   res.status(200).json({ success: true, data: items });
@@ -237,22 +196,22 @@ export const deleteItem = asyncHandler(async (req: Request, res: Response) => {
   const { item_id } = (req.body?.para || {}) as DeleteItemBody;
 
   if (!item_id) {
-    res.status(400).json(new ErrorResponse(400, "Missing 'item_id'"));
+    res.status(400).json(new ErrorResponse(400, "Missing 'item_id' in body.para"));
     return;
   }
 
-  const itemIdNum = toNumber(item_id);
-  if (itemIdNum === null) {
-    res.status(400).json(new ErrorResponse(400, "item_id must be a valid number"));
+  const itemIdStr = toString(item_id);
+  if (!itemIdStr) {
+    res.status(400).json(new ErrorResponse(400, "item_id must be a valid string"));
     return;
   }
 
-  const existingItem = await prisma.item.findUnique({ where: { id: itemIdNum } });
+  const existingItem = await prisma.item.findUnique({ where: { publicId: itemIdStr } });
   if (!existingItem) {
-    res.status(404).json(new ErrorResponse(404, `Item with id ${itemIdNum} not found`));
+    res.status(404).json(new ErrorResponse(404, `Item with id ${itemIdStr} not found`));
     return;
   }
 
-  await prisma.item.delete({ where: { id: itemIdNum } });
-  res.status(200).json({ success: true, message: `Item ${itemIdNum} deleted` });
+  await prisma.item.delete({ where: { publicId: itemIdStr } });
+  res.status(200).json({ success: true, message: `Item ${itemIdStr} deleted` });
 });

@@ -20,7 +20,7 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
 
   // Optional: verify that the restaurant exists before creating category
   const restaurantExists = await prisma.restaurant.findUnique({
-    where: { id: restaurant_id }
+    where: { publicId: restaurant_id }
   });
 
   if (!restaurantExists) {
@@ -45,17 +45,17 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
 });
 export const getCategoriesByRestaurant = asyncHandler(async (req: Request, res: Response) => {
 
-  const restaurant_id = Number(req.query.r_id);
+  const restaurant_id = String(req.query.r_id);
   // Query param ?incItem=true – default false if not provided or not "true"
   const includeItems = req.query.incItem === "true";
 
-  if (isNaN(restaurant_id)) {
+  if (!restaurant_id) {
     res.status(400).json(new ErrorResponse(400, "Valid restaurant_id is required in URL param :r_id"));
     return;
   }
 
   const restaurantExists = await prisma.restaurant.findUnique({
-    where: { id: restaurant_id }
+    where: { publicId: restaurant_id }
   });
   if (!restaurantExists) {
     res.status(404).json(new ErrorResponse(404, `Restaurant ${restaurant_id} not found`));
@@ -88,7 +88,7 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
 
   // Check if category exists
   const existingCategory = await prisma.category.findUnique({
-    where: { id: category_id }
+    where: {publicId: category_id }
   });
 
   if (!existingCategory) {
@@ -99,7 +99,7 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
   }
 
   // Build update data – only include fields that were provided
-  const updateData: { name?: string; restaurant_id?: number } = {};
+  const updateData: { name?: string; restaurant_id?: string } = {};
   if (name !== undefined) updateData.name = name;
   if (restaurant_id !== undefined) updateData.restaurant_id = restaurant_id;
 
@@ -126,7 +126,7 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
 
   // Perform update
   const updatedCategory = await prisma.category.update({
-    where: { id: category_id },
+    where: { publicId: category_id },
     data: updateData,
   });
 
@@ -150,7 +150,7 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response) =
 
   // Check if category exists
   const existingCategory = await prisma.category.findUnique({
-    where: { id: category_id }
+    where: { publicId: category_id }
   });
 
   if (!existingCategory) {
@@ -162,7 +162,7 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response) =
 
   // Delete category (items and variants will be cascade deleted automatically)
   await prisma.category.delete({
-    where: { id: category_id },
+    where: { publicId: category_id },
   });
 
   res.status(200).json({

@@ -36,7 +36,7 @@ export const addResturant = asyncHandler(async (req: Request, res: Response) => 
 // Also fix getRestaurantInfo to send response
 export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
 
-  const restaurant_id  = Number(req.query.r_id) || undefined;
+  const restaurant_id  = String(req.query.r_id) || undefined;
 
   // Validate presence of id
   if (!restaurant_id) {
@@ -48,7 +48,7 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 
   // Fetch restaurant from database
   const restaurant = await prisma.restaurant.findUnique({
-    where: { id: restaurant_id }
+    where: { publicId: restaurant_id }
   });
 
   // Handle case where id doesn't exist
@@ -80,7 +80,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
 
   // Check if restaurant exists first (optional but good practice)
   const existing = await prisma.restaurant.findUnique({
-    where: { id: restaurant_id }
+    where: { publicId: restaurant_id }
   });
 
   if (!existing) {
@@ -107,7 +107,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
 
   // Perform update
   const updatedRestaurant = await prisma.restaurant.update({
-    where: { id: restaurant_id },
+    where: { publicId: restaurant_id },
     data: updateData,
   });
 

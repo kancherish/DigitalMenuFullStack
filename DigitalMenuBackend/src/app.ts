@@ -22,15 +22,14 @@ app.use(cors({
 }))
 
 //import routera
-app.use("/api/v1/health/",HealthRouter)
-app.use("/api/v1/restaurant/",restaurantRouter)
+app.use("/api/v1/health",HealthRouter)
+app.use("/api/v1/restaurant",restaurantRouter)
 app.use("/api/v1/category",categoryRouter)
 app.use("/api/v1/item",itemRouter)
 
 
 //fallback for invalid api url
 app.use((req,res)=>{
-    console.log(req.originalUrl)
     res.json(new ErrorResponse(
         404,
         "INVALID API",

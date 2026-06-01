@@ -9,6 +9,7 @@ datasource db {
 
 model Restaurant {
   id           Int        @id @default(autoincrement())
+  publicId     String     @unique @default(uuid())
   name         String
   tagline      String?
   primaryColor String
@@ -18,26 +19,29 @@ model Restaurant {
 
 model Category {
   id            Int        @id @default(autoincrement())
+  publicId      String     @unique @default(uuid())
   name          String
-  restaurant    Restaurant @relation(fields: [restaurant_id], references: [id], onDelete: Cascade)
-  restaurant_id Int
+  restaurant_id String
+  restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
   items         Item[]
 }
 
 model Item {
   id          Int       @id @default(autoincrement())
+  publicId  String @unique @default(uuid())
   name        String
   description String?
   price       Float?    // null if item uses variants for pricing
-  category    Category  @relation(fields: [category_id], references: [id], onDelete: Cascade)
-  category_id Int
+  category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
+  category_id String
   variants    Variant[]
 }
 
 model Variant {
   id      Int    @id @default(autoincrement())
+  publicId  String @unique @default(uuid())
   name    String
   price   Float
-  item    Item   @relation(fields: [item_id], references: [id], onDelete: Cascade)
-  item_id Int
+  item    Item   @relation(fields: [item_id], references: [publicId], onDelete: Cascade)
+  item_id String
 }
