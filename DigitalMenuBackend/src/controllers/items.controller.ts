@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma.js";
 import { asyncHandler } from "../utils/asyncHandeler.js";
 import { ErrorResponse } from "../utils/Error-Response.js";
+import ApiResponse from "../utils/API-Response.js";
 
 type VariantInput = { name: string; price: number };
 type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] };
@@ -73,7 +74,8 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
   if (hasVariants) data.variants = { create: validatedVariants };
 
   const item = await prisma.item.create({ data, include: { variants: true } });
-  res.status(201).json({ success: true, data: item });
+
+  res.status(201).json(new ApiResponse(201, item, true, "Item created successfully"));
 });
 
 export const updateItem = asyncHandler(async (req: Request, res: Response) => {
@@ -92,7 +94,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
 
   const existingItem = await prisma.item.findUnique({
     where: { publicId: itemIdStr },
-    include: { variants: true }
+    include: { variants: true },
   });
   if (!existingItem) {
     res.status(404).json(new ErrorResponse(404, `Item with id ${itemIdStr} not found`));
@@ -166,7 +168,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
     });
   });
 
-  res.status(200).json({ success: true, data: updatedItem });
+  res.status(200).json(new ApiResponse(200, updatedItem, true, "Item updated successfully"));
 });
 
 export const getItemsByCategory = asyncHandler(async (req: Request, res: Response) => {
@@ -185,11 +187,11 @@ export const getItemsByCategory = asyncHandler(async (req: Request, res: Respons
 
   const items = await prisma.item.findMany({
     where: { category_id: categoryIdStr },
-    orderBy: { name: "asc" }, // Use name or createdAt – avoid numeric ordering on string id
+    orderBy: { name: "asc" },
     include: { variants: true },
   });
 
-  res.status(200).json({ success: true, data: items });
+  res.status(200).json(new ApiResponse(200, items, true, "Items fetched successfully"));
 });
 
 export const deleteItem = asyncHandler(async (req: Request, res: Response) => {
@@ -213,5 +215,6 @@ export const deleteItem = asyncHandler(async (req: Request, res: Response) => {
   }
 
   await prisma.item.delete({ where: { publicId: itemIdStr } });
-  res.status(200).json({ success: true, message: `Item ${itemIdStr} deleted` });
+
+  res.status(200).json(new ApiResponse(200, null, true, "Item deleted successfully"));
 });

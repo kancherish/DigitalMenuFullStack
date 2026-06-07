@@ -7,10 +7,22 @@ datasource db {
   provider = "postgresql"
 }
 
+model RestaurantAdmin {
+  id Int @id @default(autoincrement())
+  publicId String  @unique @default(uuid())
+  username String  @unique
+  password String
+  refreshToken String?
+  restaurant Restaurant?
+}
+
+
 model Restaurant {
   id           Int        @id @default(autoincrement())
   publicId     String     @unique @default(uuid())
   name         String
+  admin        RestaurantAdmin @relation(fields: [adminId], references: [publicId])
+  adminId      String @unique 
   tagline      String?
   primaryColor String
   accentColor  String

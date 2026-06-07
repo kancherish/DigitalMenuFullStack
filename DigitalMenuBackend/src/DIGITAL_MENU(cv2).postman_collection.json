@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "f7d2a9c5-4a7f-4b23-bbb0-d65acb994998",
+		"name": "DIGITAL_MENU",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "35561749"
+	},
+	"item": [
+		{
+			"name": "RESTAURANT",
+			"item": [
+				{
+					"name": "GET_RESTURANT",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{DMB}}restaurant/get?r_id=2c0253be-6036-4d4b-bc9b-e835789e2b28",
+							"host": [
+								"{{DMB}}restaurant"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "r_id",
+									"value": "2c0253be-6036-4d4b-bc9b-e835789e2b28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE_RESTURANT",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"para\": {\n    \"restaurant_id\": \"2c0253be-6036-4d4b-bc9b-e835789e2b28\",\n    \"name\": \"The Golden Spoon cherr\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}restaurant/update"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CATEGORY",
+			"item": [
+				{
+					"name": "ADD_CATEGORY",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n    \"name\": \"Appetizers 2\",\n    \"restaurant_id\": \"f72074ff-b2f6-4998-bada-063e8b17a5f8\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}category/add"
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ALL_CATEGORY",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DMB}}category/get?r_id=f72074ff-b2f6-4998-bada-063e8b17a5f8",
+							"host": [
+								"{{DMB}}category"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "r_id",
+									"value": "f72074ff-b2f6-4998-bada-063e8b17a5f8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE_CATEGORY",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"para\":{\n         \"restaurant_id\": \"f72074ff-b2f6-4998-bada-063e8b17a5f8\",\n        \"category_id\":\"3b0ec6cf-5368-431e-92d1-8e931aa9b9d9\",\n        \"name\":\"App\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}category/update"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_CATEGORY",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"para\":{\n           \"restaurant_id\": \"f72074ff-b2f6-4998-bada-063e8b17a5f8\",\n        \"category_id\":\"3b0ec6cf-5368-431e-92d1-8e931aa9b9d9\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}category/delete"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ITEMS",
+			"item": [
+				{
+					"name": "ADD_ITEM",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n    \"name\": \"Biryani 3\",\n    \"description\": \"Fragrant basmati rice with spices & meat\",\n    \"category_id\": \"e5186016-59ac-4677-973d-82e0609640ed\",\n    \"price\":9.0\n\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}item/add"
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ITEMS",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n    \"name\": \"Biryani\",\n    \"description\": \"Fragrant basmati rice with spices & meat\",\n    \"category_id\": 2,\n    \"variants\": [\n      { \"name\": \"Chicken\", \"price\": 249 },\n      { \"name\": \"Mutton\", \"price\": 349 },\n      { \"name\": \"Veg\", \"price\": 199 }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{DMB}}item/get?c_id= e5186016-59ac-4677-973d-82e0609640ed",
+							"host": [
+								"{{DMB}}item"
+							],
+							"path": [
+								"get"
+							],
+							"query": [
+								{
+									"key": "c_id",
+									"value": " e5186016-59ac-4677-973d-82e0609640ed"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE_ITEM",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n       \"category_id\": \"e5186016-59ac-4677-973d-82e0609640ed\",\n    \"item_id\": \"9085fb42-295b-4b0d-9a77-345cf12ccb80\",\n    \"name\": \"Premium Margherita\",\n    \"price\": 349\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}item/update"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_ITEM",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n        \"category_id\": \"e5186016-59ac-4677-973d-82e0609640ed\",\n    \"item_id\":\"9085fb42-295b-4b0d-9a77-345cf12ccb80\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}item/delete"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AUTH",
+			"item": [
+				{
+					"name": "CREATE_ADMIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\"para\" : {\n      \"username\": \"owner1\",\n      \"password\": \"secret123\",\n      \"restaurantName\": \"Tasty Bites\",\n      \"tagline\": \"Best food in town\",\n      \"primaryColor\": \"#FF5722\",\n      \"accentColor\": \"#FFC107\"\n  }\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN_ADMIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"para\": {\n      \"username\": \"owner1\",\n      \"password\": \"secret123\"\n    }\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{DMB}}auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "REFRESH",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"para\":{\n           \"restaurant_id\": \"f72074ff-b2f6-4998-bada-063e8b17a5f8\",\n        \"category_id\":\"3b0ec6cf-5368-431e-92d1-8e931aa9b9d9\"\n    }\n}"
+						},
+						"url": "{{DMB}}auth/refresh"
+					},
+					"response": []
+				},
+				{
+					"name": "LOGOUT",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"para\": {\n        \"category_id\": \"e5186016-59ac-4677-973d-82e0609640ed\",\n    \"item_id\":\"9085fb42-295b-4b0d-9a77-345cf12ccb80\"\n  }\n}"
+						},
+						"url": "{{DMB}}auth/logout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HEALTHCHECK",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{DMB}}health/"
+			},
+			"response": []
+		}
+	]
+}

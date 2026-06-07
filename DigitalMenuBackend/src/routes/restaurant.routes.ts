@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { addResturant,getRestaurantInfo,updateRestaurantInfo } from "../controllers/restaurant.controller.js";
+import { authenticate, verifyRestaurantOwnership } from '../middleware/auth.middleware';
 
 const restaurantRouter = Router();
 
-restaurantRouter.route("/add").post(addResturant)
+// restaurantRouter.route("/add").post(addResturant) NO NEED AS RESTURANT WILL BE CREATED WITH ADMIN ONLY
 
 restaurantRouter.route("/get").get(getRestaurantInfo)
 
-restaurantRouter.route("/update").patch(updateRestaurantInfo)
+restaurantRouter.route("/update").patch(authenticate,verifyRestaurantOwnership,updateRestaurantInfo)
 
 
 export default restaurantRouter

@@ -1,4 +1,6 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-export const { PORT , SECRET_KEY , DATABASE_URL} = process.env
+export const { PORT , SECRET_KEY , DATABASE_URL , 
+    JWT_ACCESS_SECRET , JWT_REFRESH_SECRET ,
+    JWT_ACCESS_EXPIRES_IN,JWT_REFRESH_EXPIRES_IN, JWT_ALGO, SALT_ROUND,CORNERAUTHSECRET,CORNERTECHROUND} = process.env
