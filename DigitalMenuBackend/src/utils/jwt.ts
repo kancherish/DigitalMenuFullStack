@@ -1,5 +1,5 @@
 import jwt, { Algorithm, SignOptions } from "jsonwebtoken"; // 1. Import Algorithm type
-import { JWT_ACCESS_EXPIRES_IN, JWT_ACCESS_SECRET, JWT_ALGO, JWT_REFRESH_EXPIRES_IN, JWT_REFRESH_SECRET } from "../env";
+import { JWT_ACCESS_EXPIRES_IN, JWT_ACCESS_SECRET, JWT_ALGO, JWT_REFRESH_EXPIRES_IN, JWT_REFRESH_SECRET } from "../env.js";
 import { Response , Request , NextFunction } from "express";
 
 export interface TokenPayload {

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addCategory, deleteCategory, getCategoriesByRestaurant, updateCategory } from "../controllers/category.controller.js";
-import { authenticate, verifyRestaurantOwnership } from '../middleware/auth.middleware';
+import { authenticate, verifyRestaurantOwnership } from '../middleware/auth.middleware.js';
 
 const categoryRouter = Router();
 

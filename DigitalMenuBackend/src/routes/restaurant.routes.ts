@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addResturant,getRestaurantInfo,updateRestaurantInfo } from "../controllers/restaurant.controller.js";
-import { authenticate, verifyRestaurantOwnership } from '../middleware/auth.middleware';
+import { authenticate, verifyRestaurantOwnership } from '../middleware/auth.middleware.js';
 
 const restaurantRouter = Router();
 

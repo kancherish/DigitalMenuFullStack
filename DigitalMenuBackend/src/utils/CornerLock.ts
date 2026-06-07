@@ -1,7 +1,7 @@
 import { Request,Response,NextFunction } from "express"
-import { asyncHandler } from "./asyncHandeler"
+import { asyncHandler } from "./asyncHandeler.js"
 import bcrypt from "bcryptjs";
-import { CORNERAUTHSECRET } from "../env";
+import { CORNERAUTHSECRET } from "../env.js";
 
 export const CornerLock = asyncHandler(async (req: Request, res:Response , next:NextFunction)=>{
     const secret_key = req.cookies.tempdata

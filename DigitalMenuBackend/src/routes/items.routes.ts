@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { addItem, deleteItem, getItemsByCategory, updateItem } from "../controllers/items.controller.js";
-import { authenticate, verifyItemOwnership } from '../middleware/auth.middleware';
+import { authenticate, verifyItemOwnership } from '../middleware/auth.middleware.js';
 
 const itemRouter = Router();
 

@@ -4,5 +4,5 @@ import { PORT} from "./env.js"
 
 app.listen(PORT,async ()=>{
     await connectdb();
-    console.log("DIGITAL MENU BACKEND RUNNING")
+    console.log(`DIGITAL MENU BACKEND RUNNING ${PORT}`)
 })

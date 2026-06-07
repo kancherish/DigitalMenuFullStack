@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { login, logout, refresh, register } from "../controllers/auth.controller";
-import { CornerLock } from '../utils/CornerLock';
+import { login, logout, refresh, register } from "../controllers/auth.controller.js";
+import { CornerLock } from '../utils/CornerLock.js';
 
 const authRouter = Router();
 
