@@ -1,4 +1,4 @@
-// src/middleware/auth.ts
+// src/middleware/auth.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken, TokenPayload } from '../utils/jwt.js';
 import { ErrorResponse } from '../utils/Error-Response.js';
@@ -8,12 +8,14 @@ declare global {
   namespace Express {
     interface Request {
       admin?: TokenPayload;
+      restaurantOwned?: { publicId: string };
     }
   }
 }
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
-  const accessToken = req.cookies.accessToken;
+  const authHeader = req.headers.authorization;
+  const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
   if (!accessToken) {
     res.status(401).json(new ErrorResponse(401, 'No access token provided'));
     return;
@@ -27,35 +29,60 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   next();
 };
 
-export const verifyRestaurantOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const restaurantId = req.body?.para?.restaurant_id;
-  if (!restaurantId) {
-    res.status(400).json(new ErrorResponse(400, 'restaurant_id missing in request body'));
+export const verifyRestaurantOwnership = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.admin?.restaurantId) {
+    res.status(403).json(new ErrorResponse(403, 'Admin does not own any restaurant'));
     return;
   }
-  const restaurant = await prisma.restaurant.findUnique({
-    where: { publicId: restaurantId },
-    include: { admin: true }
+  if (req.admin.restaurantId !== req.body.para?.restaurant_id) {
+    res.status(403).json(new ErrorResponse(403, 'Admin does not own any restaurant')); 
+  }
+  // Attach the restaurant ID from the token (no client input needed)
+  req.restaurantOwned = { publicId: req.admin.restaurantId };
+  next();
+};
+
+export const verifyCategoryOwnership = async (req: Request, res: Response, next: NextFunction) => {
+  const categoryId = req.body?.para?.category_id;
+  if (!categoryId) {
+    res.status(400).json(new ErrorResponse(400, 'category_id missing'));
+    return;
+  }
+  if (!req.admin?.restaurantId) {
+    res.status(403).json(new ErrorResponse(403, 'Admin has no restaurant'));
+    return;
+  }
+  const category = await prisma.category.findUnique({
+    where: { publicId: categoryId },
+    select: { restaurant_id: true }
   });
-  if (!restaurant || restaurant.admin.publicId !== req.admin?.publicId) {
-    res.status(403).json(new ErrorResponse(403, 'You do not own this restaurant'));
+  if (!category || category.restaurant_id !== req.admin.restaurantId) {
+    res.status(403).json(new ErrorResponse(403, 'Category does not belong to your restaurant'));
     return;
   }
   next();
 };
 
 export const verifyItemOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const categoryId = req.body?.para?.category_id;
-  if (!categoryId) {
-    res.status(400).json(new ErrorResponse(400, 'category_id missing in request body'));
+  const itemId = req.body?.para?.item_id;
+  if (!itemId) {
+    res.status(400).json(new ErrorResponse(400, 'item_id missing in request body'));
     return;
   }
-  const category = await prisma.category.findUnique({
-    where: { publicId: categoryId },
-    include: { restaurant: { include: { admin: true } } }
+  if (!req.admin?.restaurantId) {
+    res.status(403).json(new ErrorResponse(403, 'Admin has no associated restaurant'));
+    return;
+  }
+  const item = await prisma.item.findUnique({
+    where: { publicId: itemId },
+    include: { category: { select: { restaurant_id: true } } }
   });
-  if (!category || category.restaurant.admin.publicId !== req.admin?.publicId) {
-    res.status(403).json(new ErrorResponse(403, 'You do not own the restaurant that owns this category'));
+  if (!item) {
+    res.status(404).json(new ErrorResponse(404, 'Item not found'));
+    return;
+  }
+  if (item.category.restaurant_id !== req.admin.restaurantId) {
+    res.status(403).json(new ErrorResponse(403, 'Item does not belong to your restaurant'));
     return;
   }
   next();

@@ -1,5 +1,5 @@
 // src/controllers/auth.ts
-import { Request, Response } from 'express';
+import { Request, Response ,NextFunction} from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { prisma } from '../lib/prisma.js';
@@ -7,16 +7,18 @@ import { asyncHandler } from '../utils/asyncHandeler.js';
 import ApiResponse from '../utils/API-Response.js';
 import { ErrorResponse } from '../utils/Error-Response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
-import { setTokenCookies } from '../utils/jwt.js';
+
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
-
   const { username, password, restaurantName, tagline, primaryColor, accentColor } = req.body?.para || {};
-
-  console.log(req.body)
 
   if (!username || !password) {
     res.status(400).json(new ErrorResponse(400, 'Username and password required'));
+    return;
+  }
+
+  if (!restaurantName) {
+    res.status(400).json(new ErrorResponse(400, 'Restaurant name is required'));
     return;
   }
 
@@ -28,16 +30,23 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const adminPublicId = crypto.randomUUID();
+  const restaurantPublicId = crypto.randomUUID();
 
-  const admin = await prisma.restaurantAdmin.create({
-    data: { publicId: adminPublicId, username, password: hashedPassword },
-  });
-
-  let restaurant = null;
-  if (restaurantName) {
-    restaurant = await prisma.restaurant.create({
+  // Use transaction to create both admin and restaurant
+  const result = await prisma.$transaction(async (tx) => {
+    // 1. Create admin
+    const admin = await tx.restaurantAdmin.create({
       data: {
-        publicId: crypto.randomUUID(),
+        publicId: adminPublicId,
+        username,
+        password: hashedPassword,
+      },
+    });
+
+    // 2. Create restaurant linked to the admin
+    const restaurant = await tx.restaurant.create({
+      data: {
+        publicId: restaurantPublicId,
         name: restaurantName,
         tagline: tagline || null,
         primaryColor: primaryColor || '#000000',
@@ -45,25 +54,35 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
         adminId: admin.publicId,
       },
     });
-  }
 
-  if (!admin.publicId || !admin.username || !restaurant?.publicId) {
-    return res.status(400).json(new ErrorResponse(400,"Failed To create User"));
-  }
+    return { admin, restaurant };
+  });
 
-  const payload = { publicId: admin.publicId, username: admin.username, restaurantId: restaurant?.publicId };
+  const { admin, restaurant } = result;
+
+  // Prepare JWT payload
+  const payload = {
+    publicId: admin.publicId,
+    username: admin.username,
+    restaurantId: restaurant.publicId,
+  };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
 
+  // Store hashed refresh token
   const hashedRefresh = await bcrypt.hash(refreshToken, 10);
   await prisma.restaurantAdmin.update({
     where: { publicId: admin.publicId },
     data: { refreshToken: hashedRefresh },
   });
 
-  setTokenCookies(res, accessToken, refreshToken);
-
-  res.status(201).json(new ApiResponse(201, { admin: { publicId: admin.publicId, username: admin.username }, restaurant }, true, 'Registration successful'));
+  // Return tokens in response body
+  res.status(201).json(new ApiResponse(201, {
+    accessToken,
+    refreshToken,
+    admin: { publicId: admin.publicId, username: admin.username },
+    restaurant,
+  }, true, 'Registration successful'));
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -84,17 +103,17 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const isPasswordValid = await bcrypt.compare(password, admin.password);
-  
   if (!isPasswordValid) {
     res.status(401).json(new ErrorResponse(401, 'Invalid credentials'));
     return;
   }
 
   if (!admin.publicId || !admin.username || !admin.restaurant?.publicId) {
-    return res.status(400).json(new ErrorResponse(400,"Failed To create User"));
+    res.status(400).json(new ErrorResponse(400, 'Failed to create user'));
+    return;
   }
 
-  const payload = { publicId: admin.publicId, username: admin.username, restaurantId: admin.restaurant?.publicId };
+  const payload = { publicId: admin.publicId, username: admin.username, restaurantId: admin.restaurant.publicId };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
 
@@ -104,15 +123,20 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     data: { refreshToken: hashedRefresh },
   });
 
-  setTokenCookies(res, accessToken, refreshToken);
-
-  res.status(200).json(new ApiResponse(200, { admin: { publicId: admin.publicId, username: admin.username, restaurant: admin.restaurant } }, true, 'Login successful'));
+  // Return tokens in response body
+  res.status(200).json(new ApiResponse(200, {
+    accessToken,
+    refreshToken,
+    admin: { publicId: admin.publicId, username: admin.username, restaurant: admin.restaurant }
+  }, true, 'Login successful'));
 });
 
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken;
+  // Extract refresh token from Authorization header (Bearer <token>)
+  const authHeader = req.headers.authorization;
+  const refreshToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
   if (!refreshToken) {
-    res.status(401).json(new ErrorResponse(401, 'No refresh token'));
+    res.status(401).json(new ErrorResponse(401, 'No refresh token provided'));
     return;
   }
 
@@ -135,29 +159,32 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
     res.status(401).json(new ErrorResponse(401, 'Invalid refresh token'));
     return;
   }
+
   if (!admin.publicId || !admin.username || !decoded.restaurantId) {
-    return res.status(400).json(new ErrorResponse(400,"Failed To create User"));
+    res.status(400).json(new ErrorResponse(400, 'Failed to refresh token'));
+    return;
   }
 
-  const newAccessToken = generateAccessToken({
+  const payload = {
     publicId: admin.publicId,
     username: admin.username,
     restaurantId: decoded.restaurantId,
+  };
+
+  const newAccessToken = generateAccessToken(payload);
+  const newRefreshToken = generateRefreshToken(payload);
+  const hashedRefresh = await bcrypt.hash(newRefreshToken, 10);
+
+  await prisma.restaurantAdmin.update({
+    where: { publicId: admin.publicId },
+    data: { refreshToken: hashedRefresh },
   });
 
-  const isProduction = process.env.NODE_ENV === 'production';
-  res.cookie('accessToken', newAccessToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: 'strict',
-    maxAge: 15 * 60 * 1000,
-  });
-
-  res.status(200).json(new ApiResponse(200, null, true, 'Access token refreshed'));
+  res.status(200).json(new ApiResponse(200, { accessToken: newAccessToken, refreshToken: newRefreshToken }, true, 'Access token refreshed'));
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken;
+  const { refreshToken } = req.body?.para || {};
   if (refreshToken) {
     const decoded = verifyRefreshToken(refreshToken);
     if (decoded) {
@@ -167,7 +194,6 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
       });
     }
   }
-  res.clearCookie('accessToken');
-  res.clearCookie('refreshToken');
   res.status(200).json(new ApiResponse(200, null, true, 'Logged out successfully'));
 });
+

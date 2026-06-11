@@ -5,7 +5,9 @@ import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
 
 export const addCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { name, restaurant_id } = req.body?.para || {};
+  const { name } = req.body?.para || {};
+
+  const restaurant_id = req.admin?.restaurantId;
 
   if (!name || !restaurant_id) {
     res.status(400).json(
