@@ -13,8 +13,30 @@ import rateLimit from "express-rate-limit";
 
 const app = express()
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://192.168.1.12:3000",
+  "http://127.0.0.1:5500"
+];
+
+app.use(cors({
+  origin(origin, callback) {
+    // Allow requests with no origin (Postman, curl, mobile apps)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
+
 //protection
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false
+}));
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // Time window (e.g., 15 minutes)
@@ -31,31 +53,23 @@ app.use(limiter);
 app.use(cookieParser());
 
 //basic Config
-app.use(express.json({limit:"16KB"}));
-app.use(express.urlencoded({extended:true,limit:"16KB"}));
-
-//cors
-app.use(cors({
-    origin:["*"],
-    credentials:true,
-    methods:["GET","POST","PUT","DELETE","PATCH"],
-    allowedHeaders:["Content-Type","Authorization"]
-}))
+app.use(express.json({ limit: "16KB" }));
+app.use(express.urlencoded({ extended: true, limit: "16KB" }));
 
 //import routers
-app.use("/api/v1/health",HealthRouter)
-app.use("/api/v1/auth",authRouter)
-app.use("/api/v1/restaurant",restaurantRouter)
-app.use("/api/v1/category",categoryRouter)
-app.use("/api/v1/item",itemRouter)
+app.use("/api/v1/health", HealthRouter)
+app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/restaurant", restaurantRouter)
+app.use("/api/v1/category", categoryRouter)
+app.use("/api/v1/item", itemRouter)
 
 
 //fallback for invalid api url
-app.use((req,res)=>{
-    res.json(new ErrorResponse(
-        404,
-        "INVALID API",
-    ))
+app.use((req, res) => {
+  res.json(new ErrorResponse(
+    404,
+    "INVALID API",
+  ))
 })
 
 app.use(errorMiddleware);

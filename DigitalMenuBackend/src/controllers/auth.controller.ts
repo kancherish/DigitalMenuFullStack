@@ -7,10 +7,11 @@ import { asyncHandler } from '../utils/asyncHandeler.js';
 import ApiResponse from '../utils/API-Response.js';
 import { ErrorResponse } from '../utils/Error-Response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
+import { NavStyle } from '../generated/prisma/enums.js';
 
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { username, password, restaurantName, tagline, primaryColor, accentColor } = req.body?.para || {};
+  const { username, password, restaurantName, tagline, primaryColor, accentColor,tabStyle,roundness } = req.body?.para || {};
 
   if (!username || !password) {
     res.status(400).json(new ErrorResponse(400, 'Username and password required'));
@@ -51,6 +52,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
         tagline: tagline || null,
         primaryColor: primaryColor || '#000000',
         accentColor: accentColor || '#ffffff',
+        tabStyle : tabStyle || NavStyle.tabs,
+        roundness : roundness || "1rem",
         adminId: admin.publicId,
       },
     });

@@ -1,102 +1,58 @@
-import { tablesdb } from "../backend/appwrite";
-import { VITE_DB_ID, VITE_TABLE_ID, VITE_TABLE_ID_CAT } from "../env";
-import type {
-  restaurantConfigT,
-  categoryT,
-  itemT
-} from "../types";
+import { VITE_RESTAURANT_ID, VITE_SERVER_ADDRESS } from "../env";
+import type { ApiResponse, Category, RequestOptions, RestaurantConfig } from "../types";
 
-const itemCache = new Map<string, itemT[]>();
-const itemInflight = new Map<string, Promise<itemT[]>>();
+async function apiRequest<T>(endpoint:string,
+    {method = 'GET',params,body}:RequestOptions={}
+    ):Promise<T> {
+    let url = `${VITE_SERVER_ADDRESS}${endpoint}`
+    
+    if (params) {
+        const query = new URLSearchParams(params).toString()
+        url +=  `?${query}`
+    }
 
+    const res = await fetch(url,{
+        method,
+        headers:{'Content-Type':'application/json'},
+        body:body ? JSON.stringify(body) : undefined,
+    });
 
-const wait = (ms: number) =>
-  new Promise(resolve => setTimeout(resolve, ms));
+    const json : ApiResponse<T> = await res.json()
 
-export async function connectToDB() {
-  await wait(1000);
+    if (!res.ok || !json.success) {
+        console.log(json);
+        throw new Error(json.message || "Unkwon Error Occured During Fetching Data")
+    }
 
-  return true;
+    return json.data;
 }
 
-export async function getRestaurantConfig(): Promise<restaurantConfigT> {
+export async function getRestaurantInfo():Promise<RestaurantConfig | null>{
 
-  try {
-    const rows = await tablesdb.listRows({
-      databaseId: VITE_DB_ID,
-      tableId: VITE_TABLE_ID,
-      queries: []
-    })
+        try {
+            const restaurantInfo: RestaurantConfig = await apiRequest('/restaurant/get',{params:{r_id : VITE_RESTAURANT_ID}})
+            if (!restaurantInfo) {
+                throw new Error("Restaurant Info is Null")
+            }
+            return restaurantInfo
+        } catch (error) {
+            console.log(error,"Erorr While Fetching Restuarant Info");
+            return null
+        }
+}
 
-    return rows.rows[0] as unknown as restaurantConfigT
+export async function getCategoriesAndItems():Promise<Category[] | null>{
+try {
+    const categories = await apiRequest<Category[]>('/category/get', {
+      params: {
+        r_id: VITE_RESTAURANT_ID,
+        incItem: String(true), // URLSearchParams needs strings, not booleans
+      },
+    });
+
+    return categories;
   } catch (error) {
-      console.log(error)
-      throw new Error(error as string)
+    console.log(error, "Error while fetching categories");
+    return null;
   }
-
-}
-
-export async function getCategories(): Promise<categoryT[]> {
-
-  const rows = await tablesdb.listRows({
-    databaseId: VITE_DB_ID,
-    tableId: VITE_TABLE_ID_CAT,
-    queries: []
-  })
-
-
-
-  return rows.rows as unknown as categoryT[]
-}
-
-export async function fetchItemsFromDB(category: string): Promise<itemT[]> {
-
-  await wait(1000);
-
-  if (category === "momos") {
-    return [
-      {
-        name: "Veg Steam Momos",
-        description: "Fresh handmade momos",
-        price: "120",
-      },
-      {
-        name: "Paneer Fried Momos",
-        description: "Crispy fried paneer momos",
-        variants: [
-          {
-            name: "Half",
-            price: "100",
-          },
-          {
-            name: "Full",
-            price: "180",
-          },
-        ],
-      },
-    ];
-  }
-
-  return [];
-}
-
-
-export async function getItems(categoryId: string): Promise<itemT[]> {
-  if (itemCache.has(categoryId)) {
-    return itemCache.get(categoryId)!;
-  }
-
-  // If a request is already in-flight for this key, reuse it
-  if (itemInflight.has(categoryId)) {
-    return itemInflight.get(categoryId)!;
-  }
-
-  const promise = fetchItemsFromDB(categoryId).then((result) => {
-    itemCache.set(categoryId, result);
-    itemInflight.delete(categoryId);  // clean up after settling
-    return result;
-  });
-
-  itemInflight.set(categoryId, promise);
-  return promise;
 }

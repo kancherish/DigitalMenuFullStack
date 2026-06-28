@@ -1,29 +1,48 @@
-// types.ts
-
-export type restaurantConfigT = {
+// src/types/index.ts
+export interface RestaurantConfig {
+  publicId: string;
   name: string;
-  tagline: string;
+  tagline: string | null;
   primaryColor: string;
   accentColor: string;
-  logo: string | null;
-};
+  tabStyle : string;
+  cardRadius : string;
+}
 
-export type variantT = {
+export interface Category {
+  publicId: string;
   name: string;
-  price: string;
-};
+  restaurant_id: string;
+  items?: Item[];
+}
 
-export type itemT = {
+export interface Item {
+  publicId: string;
   name: string;
-  description: string;
-  price?: string;
-  $id : string;
-  variants?: variantT[];
-};
+  description: string | null;
+  price: number | null;
+  category_id: string;
+  variants: Variant[];
+}
 
-export type categoryT = {
-  $id: string;
+export interface Variant {
+  publicId: string;
   name: string;
-  icon?: string;
-  items: itemT[];
-};
+  price: number;
+  item_id: string;
+}
+
+export interface ApiResponse<T> {
+  statusCode: number;
+  data: T;
+  success: boolean;
+  message: string;
+}
+
+export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
+
+export interface RequestOptions {
+  method?: HttpMethod;
+  params?: Record<string, string>;
+  body?: unknown;
+}

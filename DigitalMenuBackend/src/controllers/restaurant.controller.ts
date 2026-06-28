@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { asyncHandler } from "../utils/asyncHandeler.js";
 import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
+import { NavStyle } from '../generated/prisma/enums';
 
 export const addResturant = asyncHandler(async (req: Request, res: Response) => {
        //NO NEED AS OF NOW RESTAURANT WILL BE CREATED WITH ADMIN
@@ -33,7 +34,7 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 });
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  const { restaurant_id, name, tagline, primaryColor, accentColor } = req.body?.para || {};
+  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,roundness } = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -53,11 +54,13 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     return;
   }
 
-  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string } = {};
+  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string; tabStyle?: NavStyle;roundness?:string} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
   if (accentColor !== undefined) updateData.accentColor = accentColor;
+  if (tabStyle  !== undefined) updateData.tabStyle = tabStyle;
+  if (roundness  !== undefined) updateData.roundness = roundness;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

@@ -1,13 +1,13 @@
-import type { itemT } from "../types"
+import type { Item } from "../types"
 
 type ItemProps = {
-    itemStructure:itemT;
+    itemStructure:Item;
     index:number;
     primaryColor:string;
     accentColor:string;
 }
 
-const Item = ({itemStructure,index,primaryColor,accentColor}:ItemProps) => {
+const ItemCard = ({itemStructure,index,primaryColor,accentColor}:ItemProps) => {
   return (
     
               <div
@@ -28,7 +28,7 @@ const Item = ({itemStructure,index,primaryColor,accentColor}:ItemProps) => {
                   </h3>
 
 
-                  {itemStructure.price && !itemStructure.variants && (
+                  {itemStructure.price && itemStructure.variants.length == 0 && (
 
                     <span
                       className="text-xl font-bold ml-4 whitespace-nowrap"
@@ -52,7 +52,7 @@ const Item = ({itemStructure,index,primaryColor,accentColor}:ItemProps) => {
 
 
                 {/* VARIANTS */}
-                {itemStructure.variants && (
+                {itemStructure.variants.length > 0 && (
 
                   <div className="flex flex-wrap gap-3 mt-4">
 
@@ -108,4 +108,4 @@ const Item = ({itemStructure,index,primaryColor,accentColor}:ItemProps) => {
   )
 }
 
-export default Item
+export default ItemCard

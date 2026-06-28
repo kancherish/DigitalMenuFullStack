@@ -1,59 +1,66 @@
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
+  generator client {
+    provider = "prisma-client"
+    output   = "../generated/prisma"
+  }
 
-datasource db {
-  provider = "postgresql"
-}
+  datasource db {
+    provider = "postgresql"
+  }
 
-model RestaurantAdmin {
-  id Int @id @default(autoincrement())
-  publicId String  @unique @default(uuid())
-  username String  @unique
-  password String
-  refreshToken String?
-  restaurant Restaurant?
-}
+  enum NavStyle {
+    tabs
+    dropdown
+  }
+
+  model RestaurantAdmin {
+    id Int @id @default(autoincrement())
+    publicId String  @unique @default(uuid())
+    username String  @unique
+    password String
+    refreshToken String?
+    restaurant Restaurant?
+  }
 
 
-model Restaurant {
-  id           Int        @id @default(autoincrement())
-  publicId     String     @unique @default(uuid())
-  name         String
-  admin        RestaurantAdmin @relation(fields: [adminId], references: [publicId])
-  adminId      String @unique 
-  tagline      String?
-  primaryColor String
-  accentColor  String
-  categories   Category[]
-}
+  model Restaurant {
+    id           Int        @id @default(autoincrement())
+    publicId     String     @unique @default(uuid())
+    name         String
+    admin        RestaurantAdmin @relation(fields: [adminId], references: [publicId])
+    adminId      String @unique 
+    tagline      String?
+    primaryColor String
+    tabStyle     NavStyle
+    roundness    String
+    accentColor  String
+    categories   Category[]
+  }
 
-model Category {
-  id            Int        @id @default(autoincrement())
-  publicId      String     @unique @default(uuid())
-  name          String
-  restaurant_id String
-  restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
-  items         Item[]
-}
+  model Category {
+    id            Int        @id @default(autoincrement())
+    publicId      String     @unique @default(uuid())
+    name          String
+    restaurant_id String
+    restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
+    items         Item[]
+  }
 
-model Item {
-  id          Int       @id @default(autoincrement())
-  publicId  String @unique @default(uuid())
-  name        String
-  description String?
-  price       Float?    // null if item uses variants for pricing
-  category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
-  category_id String
-  variants    Variant[]
-}
+  model Item {
+    id          Int       @id @default(autoincrement())
+    publicId  String @unique @default(uuid())
+    name        String
+    description String?
+    price       Float?    // null if item uses variants for pricing
+    category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
+    category_id String
+    variants    Variant[]
+  }
 
-model Variant {
-  id      Int    @id @default(autoincrement())
-  publicId  String @unique @default(uuid())
-  name    String
-  price   Float
-  item    Item   @relation(fields: [item_id], references: [publicId], onDelete: Cascade)
-  item_id String
-}
+  model Variant {
+    id      Int    @id @default(autoincrement())
+    publicId  String @unique @default(uuid())
+    name    String
+    price   Float
+    item    Item   @relation(fields: [item_id], references: [publicId], onDelete: Cascade)
+    item_id String
+  }
