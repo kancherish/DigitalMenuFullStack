@@ -12,6 +12,7 @@ export interface RestaurantConfig {
 export interface Category {
   publicId: string;
   name: string;
+  icon: string;
   restaurant_id: string;
   items?: Item[];
 }

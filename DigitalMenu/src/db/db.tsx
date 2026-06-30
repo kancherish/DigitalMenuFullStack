@@ -2,7 +2,7 @@ import { VITE_RESTAURANT_ID, VITE_SERVER_ADDRESS } from "../env";
 import type { ApiResponse, Category, RequestOptions, RestaurantConfig } from "../types";
 
 async function apiRequest<T>(endpoint:string,
-    {method = 'GET',params,body}:RequestOptions={}
+    {method = 'GET',params,body}:RequestOptions={},signal?:AbortSignal
     ):Promise<T> {
     let url = `${VITE_SERVER_ADDRESS}${endpoint}`
     
@@ -14,7 +14,7 @@ async function apiRequest<T>(endpoint:string,
     const res = await fetch(url,{
         method,
         headers:{'Content-Type':'application/json'},
-        body:body ? JSON.stringify(body) : undefined,
+        body:body ? JSON.stringify(body) : undefined,signal,
     });
 
     const json : ApiResponse<T> = await res.json()
@@ -27,31 +27,33 @@ async function apiRequest<T>(endpoint:string,
     return json.data;
 }
 
-export async function getRestaurantInfo():Promise<RestaurantConfig | null>{
+export async function getRestaurantInfo(signal?:AbortSignal):Promise<RestaurantConfig | null>{
 
         try {
-            const restaurantInfo: RestaurantConfig = await apiRequest('/restaurant/get',{params:{r_id : VITE_RESTAURANT_ID}})
+            const restaurantInfo: RestaurantConfig = await apiRequest('/restaurant/get',{params:{r_id : VITE_RESTAURANT_ID}},signal)
             if (!restaurantInfo) {
                 throw new Error("Restaurant Info is Null")
             }
             return restaurantInfo
-        } catch (error) {
+        } catch (error: unknown) {
+            if (error instanceof DOMException && error.name === 'AbortError') throw error;
             console.log(error,"Erorr While Fetching Restuarant Info");
             return null
         }
 }
 
-export async function getCategoriesAndItems():Promise<Category[] | null>{
+export async function getCategoriesAndItems(signal?:AbortSignal):Promise<Category[] | null>{
 try {
     const categories = await apiRequest<Category[]>('/category/get', {
       params: {
         r_id: VITE_RESTAURANT_ID,
         incItem: String(true), // URLSearchParams needs strings, not booleans
       },
-    });
+    },signal);
 
     return categories;
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error;
     console.log(error, "Error while fetching categories");
     return null;
   }

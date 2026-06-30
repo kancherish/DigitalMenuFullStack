@@ -42,6 +42,7 @@
     name          String
     restaurant_id String
     restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
+    icon          String    @default ("Utensils")
     items         Item[]
   }
 
