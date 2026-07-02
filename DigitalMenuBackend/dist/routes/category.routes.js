@@ -1,0 +1,9 @@
+import { Router } from "express";
+import { addCategory, deleteCategory, getCategoriesByRestaurant, updateCategory } from "../controllers/category.controller.js";
+import { authenticate, verifyCategoryOwnership, verifyRestaurantOwnership } from '../middleware/auth.middleware.js';
+const categoryRouter = Router();
+categoryRouter.route("/add").post(authenticate, verifyRestaurantOwnership, addCategory);
+categoryRouter.route("/get").get(getCategoriesByRestaurant);
+categoryRouter.route("/update").patch(authenticate, verifyCategoryOwnership, updateCategory);
+categoryRouter.route("/delete").delete(authenticate, verifyCategoryOwnership, deleteCategory);
+export default categoryRouter;

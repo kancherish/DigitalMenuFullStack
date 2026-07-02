@@ -5,7 +5,7 @@ import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
 
 type VariantInput = { name: string; price: number };
-type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] };
+type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] ; badges: String[]};
 type DeleteItemBody = { item_id?: unknown };
 
 // Helper to safely extract string from unknown
@@ -23,7 +23,7 @@ const toNumber = (val: unknown): number | null => {
 };
 
 export const addItem = asyncHandler(async (req: Request, res: Response) => {
-  const { name, description, price, category_id, variants } = (req.body?.para || {}) as AddItemBody;
+  const { name, description, price, category_id, variants,badges } = (req.body?.para || {}) as AddItemBody;
 
   if (!name || !category_id) {
     res.status(400).json(new ErrorResponse(400, "Missing required fields: name, category_id"));
@@ -44,6 +44,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 
   const priceNum = toNumber(price);
   const hasPrice = priceNum !== null;
+  const badgesToAdd = Array.isArray(badges) && badges.length > 0 && badges;
   const hasVariants = Array.isArray(variants) && variants.length > 0;
 
   if (hasPrice && hasVariants) {
@@ -69,7 +70,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  const data: any = { name, description: description || null, category_id: categoryIdStr };
+  const data: any = { name, description: description || null, category_id: categoryIdStr , badges : badgesToAdd || []};
   if (hasPrice) data.price = priceNum;
   if (hasVariants) data.variants = { create: validatedVariants };
 
@@ -79,7 +80,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const updateItem = asyncHandler(async (req: Request, res: Response) => {
-  const { item_id, name, description, price, category_id, variants } = req.body?.para || {};
+  const { item_id, name, description, price, category_id, variants ,badges} = req.body?.para || {};
 
   if (!item_id) {
     res.status(400).json(new ErrorResponse(400, "Missing 'item_id' in request body.para"));
@@ -104,6 +105,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   const priceNum = toNumber(price);
   const hasPrice = priceNum !== null;
   const hasVariants = variants !== undefined;
+  const badgesToadd = Array.isArray(badges) && badges.length > 0 && badges;
   const willHaveVariants = hasVariants && Array.isArray(variants) && variants.length > 0;
 
   if (hasPrice && hasVariants) {
@@ -119,8 +121,10 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   const updateData: any = {};
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description;
+  if (badgesToadd !== false) updateData.badges = badgesToadd;
 
   if (category_id !== undefined) {
+
     const categoryIdStr = toString(category_id);
     if (!categoryIdStr) {
       res.status(400).json(new ErrorResponse(400, "category_id must be a valid string"));

@@ -34,6 +34,10 @@
     roundness    String
     accentColor  String
     categories   Category[]
+    showSearch   Boolean @default(false)                      
+    showItemCount Boolean @default(false)                   
+    stickyNav Boolean @default(false)     
+    domain String?    
   }
 
   model Category {
@@ -54,6 +58,7 @@
     price       Float?    // null if item uses variants for pricing
     category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
     category_id String
+    badges      String[] @default([])
     variants    Variant[]
   }
 

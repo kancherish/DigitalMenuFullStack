@@ -1,17 +1,17 @@
 # Logs
-DigitalMenu/logs
-DigitalMenu/*.log
-DigitalMenu/npm-debug.log*
-DigitalMenu/yarn-debug.log*
-DigitalMenu/yarn-error.log*
-DigitalMenu/pnpm-debug.log*
-DigitalMenu/lerna-debug.log*
+DigitalMenuFrontend/logs
+DigitalMenuFrontend/*.log
+DigitalMenuFrontend/npm-debug.log*
+DigitalMenuFrontend/yarn-debug.log*
+DigitalMenuFrontend/pnpm-debug.log*
+DigitalMenuFrontend/lerna-debug.log*
+DigitalMenuFrontend/yarn-error.log*
 
-DigitalMenu/node_modules
-DigitalMenu/dist
-DigitalMenu/dist-ssr
-DigitalMenu/*.local
-DigitalMenu/.env
+DigitalMenuFrontend/node_modules
+DigitalMenuFrontend/dist
+DigitalMenuFrontend/dist-ssr
+DigitalMenuFrontend/*.local
+DigitalMenuFrontend/.env
 
 # Editor directories and files
 .vscode/*

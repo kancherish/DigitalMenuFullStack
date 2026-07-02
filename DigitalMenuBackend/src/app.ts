@@ -10,21 +10,33 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { prisma } from "./lib/prisma.js";
 
 const app = express()
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://192.168.1.12:3000",
-  "http://127.0.0.1:5500"
-];
+const STATIC_ORIGINS = new Set([
+   "http://localhost:3000",
+])
+
+let allowedOrigins = new Set([""]);
+
+export async function refreshOrigins() {
+  const restaurants = await prisma.restaurant.findMany({
+    select: { domain: true },
+    where: { domain: { not: "" } },
+  });
+
+  allowedOrigins = new Set(restaurants.map(r => r.domain));
+  console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
+}
+
 
 app.use(cors({
   origin(origin, callback) {
     // Allow requests with no origin (Postman, curl, mobile apps)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.has(origin) || STATIC_ORIGINS.has(origin)) {
       return callback(null, true);
     }
 

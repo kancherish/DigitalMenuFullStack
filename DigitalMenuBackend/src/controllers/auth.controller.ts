@@ -1,5 +1,5 @@
 // src/controllers/auth.ts
-import { Request, Response ,NextFunction} from 'express';
+import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { prisma } from '../lib/prisma.js';
@@ -8,10 +8,12 @@ import ApiResponse from '../utils/API-Response.js';
 import { ErrorResponse } from '../utils/Error-Response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { NavStyle } from '../generated/prisma/enums.js';
+import { refreshOrigins } from '../app.js';
 
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { username, password, restaurantName, tagline, primaryColor, accentColor,tabStyle,roundness } = req.body?.para || {};
+  const { username, password, restaurantName, tagline, primaryColor, accentColor, tabStyle, roundness,
+     showSearch ,showItemCount,stickyNav,domain} = req.body?.para || {};
 
   if (!username || !password) {
     res.status(400).json(new ErrorResponse(400, 'Username and password required'));
@@ -52,17 +54,22 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
         tagline: tagline || null,
         primaryColor: primaryColor || '#000000',
         accentColor: accentColor || '#ffffff',
-        tabStyle : tabStyle || NavStyle.tabs,
-        roundness : roundness || "1rem",
+        tabStyle: tabStyle || NavStyle.tabs,
+        roundness: roundness || "1rem",
         adminId: admin.publicId,
+        showSearch,
+        showItemCount,
+        stickyNav,
+        domain
       },
     });
 
+    
     return { admin, restaurant };
   });
-
+  
   const { admin, restaurant } = result;
-
+  
   // Prepare JWT payload
   const payload = {
     publicId: admin.publicId,
@@ -71,13 +78,15 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
-
+  
   // Store hashed refresh token
   const hashedRefresh = await bcrypt.hash(refreshToken, 10);
   await prisma.restaurantAdmin.update({
     where: { publicId: admin.publicId },
     data: { refreshToken: hashedRefresh },
   });
+  
+  await refreshOrigins();
 
   // Return tokens in response body
   res.status(201).json(new ApiResponse(201, {

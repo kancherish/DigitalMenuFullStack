@@ -34,7 +34,8 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 });
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,roundness } = req.body?.para || {};
+  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,roundness,showSearch 
+    ,showItemCount,stickyNav,domain} = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -54,13 +55,18 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     return;
   }
 
-  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string; tabStyle?: NavStyle;roundness?:string} = {};
+  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string; tabStyle?: NavStyle;roundness?:string;
+    showSearch?:boolean ,showItemCount?:boolean ,stickyNav?:boolean,domain?:string} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
   if (accentColor !== undefined) updateData.accentColor = accentColor;
   if (tabStyle  !== undefined) updateData.tabStyle = tabStyle;
   if (roundness  !== undefined) updateData.roundness = roundness;
+  if (showSearch  !== undefined) updateData.showSearch = showSearch;
+  if (showItemCount  !== undefined) updateData.showItemCount = showItemCount;
+  if (stickyNav  !== undefined) updateData.stickyNav = stickyNav;
+  if (domain  !== undefined) updateData.domain = domain;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(
