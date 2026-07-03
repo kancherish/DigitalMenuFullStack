@@ -28,3 +28,5 @@ DigitalMenuBackend/node_modules/
 DigitalMenuBackend/dist/
 DigitalMenuBackend/.env
 DigitalMenuBackend/src/generated/prisma
+
+super-admin-panel/node_modules
