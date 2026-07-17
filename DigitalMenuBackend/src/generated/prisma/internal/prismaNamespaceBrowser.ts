@@ -91,12 +91,16 @@ export const RestaurantScalarFieldEnum = {
   name: 'name',
   adminId: 'adminId',
   tagline: 'tagline',
+  backgroundUrl: 'backgroundUrl',
+  logoUrl: 'logoUrl',
   primaryColor: 'primaryColor',
   tabStyle: 'tabStyle',
   roundness: 'roundness',
   accentColor: 'accentColor',
+  headerText: 'headerText',
   showSearch: 'showSearch',
   showItemCount: 'showItemCount',
+  showDivider: 'showDivider',
   stickyNav: 'stickyNav',
   domain: 'domain'
 } as const

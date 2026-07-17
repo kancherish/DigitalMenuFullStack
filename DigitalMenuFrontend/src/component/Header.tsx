@@ -8,7 +8,7 @@ interface HeaderProps {
   textColor: string;
   align?: "center" | "left";
   size?: "compact" | "default" | "large";
-  showDivider?: boolean;
+  showDivider: boolean;
 }
 
 const sizeStyles = {

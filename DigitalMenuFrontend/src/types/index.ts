@@ -7,12 +7,16 @@ export interface RestaurantConfig {
   name: string;
   tagline: string | null;
   primaryColor: string;
+  logoUrl?: string;
+  backgroundUrl?: string;
   accentColor: string;
   tabStyle: string;
   cardRadius: string;
   showSearch: boolean;                       
   showItemCount: boolean;             
-  stickyNav: boolean;       
+  stickyNav: boolean;     
+  showDivider: boolean;  
+  headerText: string;
 }
 
 export interface Category {

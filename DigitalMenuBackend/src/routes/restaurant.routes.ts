@@ -6,7 +6,7 @@ const restaurantRouter = Router();
 
 // restaurantRouter.route("/add").post(addResturant) NO NEED AS RESTURANT WILL BE CREATED WITH ADMIN ONLY
 
-restaurantRouter.route("/get").get(getRestaurantInfo)
+restaurantRouter.route("/get/:rid").get(getRestaurantInfo)
 
 restaurantRouter.route("/update").patch(authenticate,verifyRestaurantOwnership,updateRestaurantInfo)
 

@@ -1,5 +1,5 @@
 // src/controllers/auth.ts
-import { Request, Response } from 'express';
+import { Request, Response,NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { prisma } from '../lib/prisma.js';
@@ -11,9 +11,29 @@ import { NavStyle } from '../generated/prisma/enums.js';
 import { refreshOrigins } from '../app.js';
 
 
+interface UpdateRestaurantBody {
+  admin?: {
+    username?: string;
+    password?: string; // plain text in request, hashed before save
+  };
+  restaurant?: {
+    name?: string;
+    tagline?: string;
+    primaryColor?: string;
+    accentColor?: string;
+    tabStyle?: string; // match your NavStyle enum values
+    roundness?: string;
+    showSearch?: boolean;
+    showItemCount?: boolean;
+    stickyNav?: boolean;
+    domain?: string;
+  };
+}
+
+
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { username, password, restaurantName, tagline, primaryColor, accentColor, tabStyle, roundness,
-     showSearch ,showItemCount,stickyNav,domain} = req.body?.para || {};
+    showSearch, showItemCount, stickyNav, domain } = req.body?.para || {};
 
   if (!username || !password) {
     res.status(400).json(new ErrorResponse(400, 'Username and password required'));
@@ -64,12 +84,12 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       },
     });
 
-    
+
     return { admin, restaurant };
   });
-  
+
   const { admin, restaurant } = result;
-  
+
   // Prepare JWT payload
   const payload = {
     publicId: admin.publicId,
@@ -78,14 +98,14 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
-  
+
   // Store hashed refresh token
   const hashedRefresh = await bcrypt.hash(refreshToken, 10);
   await prisma.restaurantAdmin.update({
     where: { publicId: admin.publicId },
     data: { refreshToken: hashedRefresh },
   });
-  
+
   await refreshOrigins();
 
   // Return tokens in response body
@@ -209,3 +229,116 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json(new ApiResponse(200, null, true, 'Logged out successfully'));
 });
 
+
+export const updateRestaurant = async (
+  req: Request<{ restaurantPublicId: string }, {}, UpdateRestaurantBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { restaurantPublicId } = req.params;
+    const { admin, restaurant } = req.body;
+
+    const existingRestaurant = await prisma.restaurant.findUnique({
+      where: { publicId: restaurantPublicId },
+      include: { admin: true },
+    });
+
+    if (!existingRestaurant) {
+      const error = new Error('Restaurant not found');
+      (error as any).statusCode = 404;
+      throw error;
+    }
+
+    // Build admin update payload
+    const adminData: Record<string, unknown> = {};
+    if (admin?.username) adminData.username = admin.username;
+    if (admin?.password) {
+      adminData.password = await bcrypt.hash(admin.password, 10);
+    }
+
+    // Build restaurant update payload
+    const restaurantData: Record<string, unknown> = {};
+    if (restaurant?.name !== undefined) restaurantData.name = restaurant.name;
+    if (restaurant?.tagline !== undefined) restaurantData.tagline = restaurant.tagline;
+    if (restaurant?.primaryColor !== undefined) restaurantData.primaryColor = restaurant.primaryColor;
+    if (restaurant?.accentColor !== undefined) restaurantData.accentColor = restaurant.accentColor;
+    if (restaurant?.tabStyle !== undefined) restaurantData.tabStyle = restaurant.tabStyle;
+    if (restaurant?.roundness !== undefined) restaurantData.roundness = restaurant.roundness;
+    if (restaurant?.showSearch !== undefined) restaurantData.showSearch = restaurant.showSearch;
+    if (restaurant?.showItemCount !== undefined) restaurantData.showItemCount = restaurant.showItemCount;
+    if (restaurant?.stickyNav !== undefined) restaurantData.stickyNav = restaurant.stickyNav;
+    if (restaurant?.domain !== undefined) restaurantData.domain = restaurant.domain;
+    
+
+    const [updatedRestaurant, updatedAdmin] = await prisma.$transaction([
+      prisma.restaurant.update({
+        where: { publicId: restaurantPublicId },
+        data: restaurantData,
+      }),
+      prisma.restaurantAdmin.update({
+        where: { publicId: existingRestaurant.adminId },
+        data: adminData,
+      }),
+    ]);
+
+    const { password: _pw, refreshToken: _rt, ...safeAdmin } = updatedAdmin;
+
+    if (restaurant?.domain) {
+      await refreshOrigins();
+    }
+
+    return res.json(
+      new ApiResponse(
+        200,
+        { restaurant: updatedRestaurant, admin: safeAdmin },
+        true,
+        'Restaurant and admin updated successfully'
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get all restaurant admins
+export const getAllAdmins = asyncHandler(async (req: Request, res: Response) => {
+  const admins = await prisma.restaurantAdmin.findMany({
+    include: {
+      restaurant: true,   // optional: include restaurant data
+    },
+  });
+
+  res.status(200).json(
+    new ApiResponse(200, admins, true, 'Admins fetched successfully')
+  );
+});
+
+// Delete a restaurant admin (and its associated restaurant)
+export const deleteAdmin = asyncHandler(async (req: Request, res: Response) => {
+  let { publicId } = req.params; // assumes you pass admin publicId in URL
+  publicId = String(publicId)
+
+  if (!publicId && typeof publicId) {
+    res.status(400).json(new ErrorResponse(400, 'Admin publicId is required'));
+    return;
+  }
+
+  // Use transaction to delete restaurant first, then admin
+  await prisma.$transaction(async (tx) => {
+    // Delete the restaurant linked to this admin (if any)
+    await tx.restaurant.deleteMany({
+      where: { adminId: publicId },
+    });
+    // Delete the admin
+    await tx.restaurantAdmin.delete({
+      where: { publicId },
+    });
+  });
+
+  await refreshOrigins(); // if domain changes need refreshing
+
+  res.status(200).json(
+    new ApiResponse(200, null, true, 'Admin deleted successfully')
+  );
+});

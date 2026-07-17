@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { login, logout, refresh, register } from "../controllers/auth.controller.js";
+import { deleteAdmin, getAllAdmins, login, logout, refresh, register, updateRestaurant } from "../controllers/auth.controller.js";
 import { CornerLock } from '../utils/CornerLock.js';
 
 const authRouter = Router();
 
 authRouter.route("/register").post(CornerLock,register);
+
+authRouter.route("/updateAdmin/:restaurantPublicId").put(CornerLock,updateRestaurant);
+
+authRouter.route("/getAllAdmins").get(CornerLock,getAllAdmins);
+
+authRouter.route("/delete/:publicId").delete(CornerLock,deleteAdmin);
 
 authRouter.route("/login").post(login);
 

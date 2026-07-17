@@ -24,7 +24,7 @@ export function CategoryTabs({
   onSelect,
   itemCounts,
   size = "md",
-  showItemCount ,
+  showItemCount,
 }: CategoryTabsProps) {
   const activeRef = useRef<HTMLButtonElement>(null);
   const { padding, text, icon } = tabSizeStyles[size];
@@ -87,11 +87,16 @@ interface CategoryDropdownProps {
   categories: Category[];
   activeIndex: number;
   onSelect: (i: number) => void;
+  showItemCount?: boolean;
+  itemCounts: number[];
 }
 
 export function CategoryDropdown({
   categories,
   activeIndex,
+  itemCounts,
+  showItemCount,
+
   onSelect,
 }: CategoryDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -140,7 +145,18 @@ export function CategoryDropdown({
               const Icon = getCategoryIcon(active.icon);
               return <Icon size={20} />;
             })()}
-          {active?.name ?? "Select a category"}
+          {active?.name ?? "Select a category"}{showItemCount && (
+            <span
+              className="text-xs rounded-full"
+              style={{
+                backgroundColor: active
+                  ? "rgba(255,255,255,0.25)"
+                  : "var(--accent-soft-strong)",
+              }}
+            >
+             {"("} {itemCounts[activeIndex] ?? 0} {")"}
+            </span>
+          )}
         </span>
         <ChevronDown
           size={24}
@@ -170,9 +186,8 @@ export function CategoryDropdown({
                   onSelect(idx);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-6 py-4 transition-all hover:brightness-95 ${
-                  isActive ? "font-semibold" : ""
-                }`}
+                className={`w-full flex items-center gap-3 px-6 py-4 transition-all hover:brightness-95 ${isActive ? "font-semibold" : ""
+                  }`}
                 style={{
                   backgroundColor: isActive ? "var(--accent-soft)" : "transparent",
                   color: "var(--primary)",
@@ -180,6 +195,7 @@ export function CategoryDropdown({
               >
                 <Icon size={20} />
                 <span>{category.name}</span>
+
               </button>
             );
           })}

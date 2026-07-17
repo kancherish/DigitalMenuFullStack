@@ -16,6 +16,7 @@ const app = express()
 
 const STATIC_ORIGINS = new Set([
    "http://localhost:3000",
+    "http://localhost:5173",
 ])
 
 let allowedOrigins = new Set([""]);
@@ -78,6 +79,7 @@ app.use("/api/v1/item", itemRouter)
 
 //fallback for invalid api url
 app.use((req, res) => {
+  console.log(req.url)
   res.json(new ErrorResponse(
     404,
     "INVALID API",

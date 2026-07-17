@@ -121,8 +121,11 @@ export default function DigitalMenu() {
         color={restaurantConfig!.primaryColor}
         accent={restaurantConfig!.accentColor}
         name={restaurantConfig!.name}
+        logoUrl={restaurantConfig!.logoUrl || undefined}
+        backgroundImage={restaurantConfig!.backgroundUrl || undefined}
         tagline={restaurantConfig!.tagline || ''}
-        textColor={restaurantConfig!.primaryColor ?? 'white'}
+        textColor={restaurantConfig!.headerText ?? 'white'}
+        showDivider={restaurantConfig!.showDivider}
       />
 
       {categoriesAndItems.length === 0 ? (
@@ -151,6 +154,8 @@ export default function DigitalMenu() {
                 <CategoryDropdown
                   categories={categoriesAndItems}
                   activeIndex={activeCategory ?? 0}
+                  itemCounts={itemCounts}
+                  showItemCount={restaurantConfig!.showItemCount}
                   onSelect={(idx: number) => {
                     setActiveCategory(idx)
                     setSearchQuery("");

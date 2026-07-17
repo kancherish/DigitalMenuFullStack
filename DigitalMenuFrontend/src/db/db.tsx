@@ -19,8 +19,8 @@ async function apiRequest<T>(endpoint:string,
 
     const json : ApiResponse<T> = await res.json()
 
+
     if (!res.ok || !json.success) {
-        console.log(json);
         throw new Error(json.message || "Unkwon Error Occured During Fetching Data")
     }
 
@@ -30,7 +30,7 @@ async function apiRequest<T>(endpoint:string,
 export async function getRestaurantInfo(signal?:AbortSignal):Promise<RestaurantConfig | null>{
 
         try {
-            const restaurantInfo: RestaurantConfig = await apiRequest('/restaurant/get',{params:{r_id : VITE_RESTAURANT_ID}},signal)
+            const restaurantInfo: RestaurantConfig = await apiRequest(`/restaurant/get/${VITE_RESTAURANT_ID}`,{},signal)
             if (!restaurantInfo) {
                 throw new Error("Restaurant Info is Null")
             }
@@ -44,9 +44,8 @@ export async function getRestaurantInfo(signal?:AbortSignal):Promise<RestaurantC
 
 export async function getCategoriesAndItems(signal?:AbortSignal):Promise<Category[] | null>{
 try {
-    const categories = await apiRequest<Category[]>('/category/get', {
+    const categories = await apiRequest<Category[]>(`/category/get/${VITE_RESTAURANT_ID}`, {
       params: {
-        r_id: VITE_RESTAURANT_ID,
         incItem: String(true), // URLSearchParams needs strings, not booleans
       },
     },signal);

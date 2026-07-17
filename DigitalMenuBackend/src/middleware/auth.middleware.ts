@@ -43,7 +43,7 @@ export const verifyRestaurantOwnership = (req: Request, res: Response, next: Nex
 };
 
 export const verifyCategoryOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const categoryId = req.body?.para?.category_id;
+  const categoryId = req.body?.para?.category_id || req.params.categoryid;
   if (!categoryId) {
     res.status(400).json(new ErrorResponse(400, 'category_id missing'));
     return;
@@ -64,7 +64,7 @@ export const verifyCategoryOwnership = async (req: Request, res: Response, next:
 };
 
 export const verifyItemOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const itemId = req.body?.para?.item_id;
+  const itemId = req.body?.para?.item_id || req.params.itemid;
   if (!itemId) {
     res.status(400).json(new ErrorResponse(400, 'item_id missing in request body'));
     return;

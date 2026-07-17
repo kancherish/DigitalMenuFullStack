@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
-@import "tailwindcss";
-
+@import 'tailwindcss';
 .font-serif {
     font-family: 'Fraunces', serif;
 }
@@ -12,4 +11,10 @@
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+@layer components {
+  .input {
+    @apply w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+           focus:outline-none focus:ring-2 focus:ring-indigo-500;
+  }
 }

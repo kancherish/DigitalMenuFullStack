@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs";
 import { CORNERAUTHSECRET } from "../env.js";
 
 export const CornerLock = asyncHandler(async (req: Request, res:Response , next:NextFunction)=>{
-    const secret_key = req.cookies.tempdata
+    const secret_key = req.headers['x-tempdata'];
  
-    const valid = await bcrypt.compare(secret_key || "",CORNERAUTHSECRET || "");
+    const valid = await bcrypt.compare(String(secret_key)|| "",CORNERAUTHSECRET || "");
     if (valid) {
         next()
     } else {

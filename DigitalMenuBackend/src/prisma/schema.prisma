@@ -29,13 +29,17 @@
     admin        RestaurantAdmin @relation(fields: [adminId], references: [publicId])
     adminId      String @unique 
     tagline      String?
+    backgroundUrl String?
+    logoUrl String?
     primaryColor String
     tabStyle     NavStyle
     roundness    String
     accentColor  String
+    headerText   String @default("#ffffff")
     categories   Category[]
     showSearch   Boolean @default(false)                      
-    showItemCount Boolean @default(false)                   
+    showItemCount Boolean @default(false)        
+    showDivider   Boolean @default(false)         
     stickyNav Boolean @default(false)     
     domain String?    
   }

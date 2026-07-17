@@ -6,10 +6,10 @@ const itemRouter = Router();
 
 itemRouter.route("/add").post(authenticate,verifyCategoryOwnership,addItem);
 
-itemRouter.route("/get").get(getItemsByCategory);
+itemRouter.route("/get/:cid").get(getItemsByCategory);
 
 itemRouter.route("/update").patch(authenticate,verifyItemOwnership,updateItem);
 
-itemRouter.route("/delete").delete(authenticate,verifyItemOwnership,deleteItem);
+itemRouter.route("/delete/:itemid").delete(authenticate,verifyItemOwnership,deleteItem);
 
 export default itemRouter

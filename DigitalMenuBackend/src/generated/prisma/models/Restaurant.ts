@@ -40,12 +40,16 @@ export type RestaurantMinAggregateOutputType = {
   name: string | null
   adminId: string | null
   tagline: string | null
+  backgroundUrl: string | null
+  logoUrl: string | null
   primaryColor: string | null
   tabStyle: $Enums.NavStyle | null
   roundness: string | null
   accentColor: string | null
+  headerText: string | null
   showSearch: boolean | null
   showItemCount: boolean | null
+  showDivider: boolean | null
   stickyNav: boolean | null
   domain: string | null
 }
@@ -56,12 +60,16 @@ export type RestaurantMaxAggregateOutputType = {
   name: string | null
   adminId: string | null
   tagline: string | null
+  backgroundUrl: string | null
+  logoUrl: string | null
   primaryColor: string | null
   tabStyle: $Enums.NavStyle | null
   roundness: string | null
   accentColor: string | null
+  headerText: string | null
   showSearch: boolean | null
   showItemCount: boolean | null
+  showDivider: boolean | null
   stickyNav: boolean | null
   domain: string | null
 }
@@ -72,12 +80,16 @@ export type RestaurantCountAggregateOutputType = {
   name: number
   adminId: number
   tagline: number
+  backgroundUrl: number
+  logoUrl: number
   primaryColor: number
   tabStyle: number
   roundness: number
   accentColor: number
+  headerText: number
   showSearch: number
   showItemCount: number
+  showDivider: number
   stickyNav: number
   domain: number
   _all: number
@@ -98,12 +110,16 @@ export type RestaurantMinAggregateInputType = {
   name?: true
   adminId?: true
   tagline?: true
+  backgroundUrl?: true
+  logoUrl?: true
   primaryColor?: true
   tabStyle?: true
   roundness?: true
   accentColor?: true
+  headerText?: true
   showSearch?: true
   showItemCount?: true
+  showDivider?: true
   stickyNav?: true
   domain?: true
 }
@@ -114,12 +130,16 @@ export type RestaurantMaxAggregateInputType = {
   name?: true
   adminId?: true
   tagline?: true
+  backgroundUrl?: true
+  logoUrl?: true
   primaryColor?: true
   tabStyle?: true
   roundness?: true
   accentColor?: true
+  headerText?: true
   showSearch?: true
   showItemCount?: true
+  showDivider?: true
   stickyNav?: true
   domain?: true
 }
@@ -130,12 +150,16 @@ export type RestaurantCountAggregateInputType = {
   name?: true
   adminId?: true
   tagline?: true
+  backgroundUrl?: true
+  logoUrl?: true
   primaryColor?: true
   tabStyle?: true
   roundness?: true
   accentColor?: true
+  headerText?: true
   showSearch?: true
   showItemCount?: true
+  showDivider?: true
   stickyNav?: true
   domain?: true
   _all?: true
@@ -233,14 +257,18 @@ export type RestaurantGroupByOutputType = {
   name: string
   adminId: string
   tagline: string | null
+  backgroundUrl: string | null
+  logoUrl: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText: string
   showSearch: boolean
   showItemCount: boolean
+  showDivider: boolean
   stickyNav: boolean
-  domain: string
+  domain: string | null
   _count: RestaurantCountAggregateOutputType | null
   _avg: RestaurantAvgAggregateOutputType | null
   _sum: RestaurantSumAggregateOutputType | null
@@ -272,14 +300,18 @@ export type RestaurantWhereInput = {
   name?: Prisma.StringFilter<"Restaurant"> | string
   adminId?: Prisma.StringFilter<"Restaurant"> | string
   tagline?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  backgroundUrl?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   primaryColor?: Prisma.StringFilter<"Restaurant"> | string
   tabStyle?: Prisma.EnumNavStyleFilter<"Restaurant"> | $Enums.NavStyle
   roundness?: Prisma.StringFilter<"Restaurant"> | string
   accentColor?: Prisma.StringFilter<"Restaurant"> | string
+  headerText?: Prisma.StringFilter<"Restaurant"> | string
   showSearch?: Prisma.BoolFilter<"Restaurant"> | boolean
   showItemCount?: Prisma.BoolFilter<"Restaurant"> | boolean
+  showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
-  domain?: Prisma.StringFilter<"Restaurant"> | string
+  domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }
@@ -290,14 +322,18 @@ export type RestaurantOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   tagline?: Prisma.SortOrderInput | Prisma.SortOrder
+  backgroundUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryColor?: Prisma.SortOrder
   tabStyle?: Prisma.SortOrder
   roundness?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
+  headerText?: Prisma.SortOrder
   showSearch?: Prisma.SortOrder
   showItemCount?: Prisma.SortOrder
+  showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
+  domain?: Prisma.SortOrderInput | Prisma.SortOrder
   admin?: Prisma.RestaurantAdminOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
@@ -311,14 +347,18 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RestaurantWhereInput | Prisma.RestaurantWhereInput[]
   name?: Prisma.StringFilter<"Restaurant"> | string
   tagline?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  backgroundUrl?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  logoUrl?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   primaryColor?: Prisma.StringFilter<"Restaurant"> | string
   tabStyle?: Prisma.EnumNavStyleFilter<"Restaurant"> | $Enums.NavStyle
   roundness?: Prisma.StringFilter<"Restaurant"> | string
   accentColor?: Prisma.StringFilter<"Restaurant"> | string
+  headerText?: Prisma.StringFilter<"Restaurant"> | string
   showSearch?: Prisma.BoolFilter<"Restaurant"> | boolean
   showItemCount?: Prisma.BoolFilter<"Restaurant"> | boolean
+  showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
-  domain?: Prisma.StringFilter<"Restaurant"> | string
+  domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "publicId" | "adminId">
@@ -329,14 +369,18 @@ export type RestaurantOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   tagline?: Prisma.SortOrderInput | Prisma.SortOrder
+  backgroundUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  logoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   primaryColor?: Prisma.SortOrder
   tabStyle?: Prisma.SortOrder
   roundness?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
+  headerText?: Prisma.SortOrder
   showSearch?: Prisma.SortOrder
   showItemCount?: Prisma.SortOrder
+  showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
-  domain?: Prisma.SortOrder
+  domain?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RestaurantCountOrderByAggregateInput
   _avg?: Prisma.RestaurantAvgOrderByAggregateInput
   _max?: Prisma.RestaurantMaxOrderByAggregateInput
@@ -353,28 +397,36 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   adminId?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   tagline?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  backgroundUrl?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  logoUrl?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   primaryColor?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   tabStyle?: Prisma.EnumNavStyleWithAggregatesFilter<"Restaurant"> | $Enums.NavStyle
   roundness?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   accentColor?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  headerText?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   showSearch?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   showItemCount?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
+  showDivider?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
-  domain?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  domain?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
 }
 
 export type RestaurantCreateInput = {
   publicId?: string
   name: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
@@ -385,14 +437,18 @@ export type RestaurantUncheckedCreateInput = {
   name: string
   adminId: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -400,14 +456,18 @@ export type RestaurantUpdateInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
@@ -418,14 +478,18 @@ export type RestaurantUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -435,28 +499,36 @@ export type RestaurantCreateManyInput = {
   name: string
   adminId: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
 }
 
 export type RestaurantUpdateManyMutationInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantUncheckedUpdateManyInput = {
@@ -465,14 +537,18 @@ export type RestaurantUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RestaurantNullableScalarRelationFilter = {
@@ -486,12 +562,16 @@ export type RestaurantCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   tagline?: Prisma.SortOrder
+  backgroundUrl?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   primaryColor?: Prisma.SortOrder
   tabStyle?: Prisma.SortOrder
   roundness?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
+  headerText?: Prisma.SortOrder
   showSearch?: Prisma.SortOrder
   showItemCount?: Prisma.SortOrder
+  showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
 }
@@ -506,12 +586,16 @@ export type RestaurantMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   tagline?: Prisma.SortOrder
+  backgroundUrl?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   primaryColor?: Prisma.SortOrder
   tabStyle?: Prisma.SortOrder
   roundness?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
+  headerText?: Prisma.SortOrder
   showSearch?: Prisma.SortOrder
   showItemCount?: Prisma.SortOrder
+  showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
 }
@@ -522,12 +606,16 @@ export type RestaurantMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   adminId?: Prisma.SortOrder
   tagline?: Prisma.SortOrder
+  backgroundUrl?: Prisma.SortOrder
+  logoUrl?: Prisma.SortOrder
   primaryColor?: Prisma.SortOrder
   tabStyle?: Prisma.SortOrder
   roundness?: Prisma.SortOrder
   accentColor?: Prisma.SortOrder
+  headerText?: Prisma.SortOrder
   showSearch?: Prisma.SortOrder
   showItemCount?: Prisma.SortOrder
+  showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
 }
@@ -599,14 +687,18 @@ export type RestaurantCreateWithoutAdminInput = {
   publicId?: string
   name: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
 
@@ -615,14 +707,18 @@ export type RestaurantUncheckedCreateWithoutAdminInput = {
   publicId?: string
   name: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -646,14 +742,18 @@ export type RestaurantUpdateWithoutAdminInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -662,14 +762,18 @@ export type RestaurantUncheckedUpdateWithoutAdminInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -677,14 +781,18 @@ export type RestaurantCreateWithoutCategoriesInput = {
   publicId?: string
   name: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
 }
 
@@ -694,14 +802,18 @@ export type RestaurantUncheckedCreateWithoutCategoriesInput = {
   name: string
   adminId: string
   tagline?: string | null
+  backgroundUrl?: string | null
+  logoUrl?: string | null
   primaryColor: string
   tabStyle: $Enums.NavStyle
   roundness: string
   accentColor: string
+  headerText?: string
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
-  domain: string
+  domain?: string | null
 }
 
 export type RestaurantCreateOrConnectWithoutCategoriesInput = {
@@ -724,14 +836,18 @@ export type RestaurantUpdateWithoutCategoriesInput = {
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
 }
 
@@ -741,14 +857,18 @@ export type RestaurantUncheckedUpdateWithoutCategoriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   adminId?: Prisma.StringFieldUpdateOperationsInput | string
   tagline?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  backgroundUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   primaryColor?: Prisma.StringFieldUpdateOperationsInput | string
   tabStyle?: Prisma.EnumNavStyleFieldUpdateOperationsInput | $Enums.NavStyle
   roundness?: Prisma.StringFieldUpdateOperationsInput | string
   accentColor?: Prisma.StringFieldUpdateOperationsInput | string
+  headerText?: Prisma.StringFieldUpdateOperationsInput | string
   showSearch?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  domain?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -788,12 +908,16 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   name?: boolean
   adminId?: boolean
   tagline?: boolean
+  backgroundUrl?: boolean
+  logoUrl?: boolean
   primaryColor?: boolean
   tabStyle?: boolean
   roundness?: boolean
   accentColor?: boolean
+  headerText?: boolean
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
@@ -807,12 +931,16 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   adminId?: boolean
   tagline?: boolean
+  backgroundUrl?: boolean
+  logoUrl?: boolean
   primaryColor?: boolean
   tabStyle?: boolean
   roundness?: boolean
   accentColor?: boolean
+  headerText?: boolean
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
@@ -824,12 +952,16 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   adminId?: boolean
   tagline?: boolean
+  backgroundUrl?: boolean
+  logoUrl?: boolean
   primaryColor?: boolean
   tabStyle?: boolean
   roundness?: boolean
   accentColor?: boolean
+  headerText?: boolean
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
@@ -841,17 +973,21 @@ export type RestaurantSelectScalar = {
   name?: boolean
   adminId?: boolean
   tagline?: boolean
+  backgroundUrl?: boolean
+  logoUrl?: boolean
   primaryColor?: boolean
   tabStyle?: boolean
   roundness?: boolean
   accentColor?: boolean
+  headerText?: boolean
   showSearch?: boolean
   showItemCount?: boolean
+  showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "showSearch" | "showItemCount" | "stickyNav" | "domain", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain", ExtArgs["result"]["restaurant"]>
 export type RestaurantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
@@ -876,14 +1012,18 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     name: string
     adminId: string
     tagline: string | null
+    backgroundUrl: string | null
+    logoUrl: string | null
     primaryColor: string
     tabStyle: $Enums.NavStyle
     roundness: string
     accentColor: string
+    headerText: string
     showSearch: boolean
     showItemCount: boolean
+    showDivider: boolean
     stickyNav: boolean
-    domain: string
+    domain: string | null
   }, ExtArgs["result"]["restaurant"]>
   composites: {}
 }
@@ -1314,12 +1454,16 @@ export interface RestaurantFieldRefs {
   readonly name: Prisma.FieldRef<"Restaurant", 'String'>
   readonly adminId: Prisma.FieldRef<"Restaurant", 'String'>
   readonly tagline: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly backgroundUrl: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly logoUrl: Prisma.FieldRef<"Restaurant", 'String'>
   readonly primaryColor: Prisma.FieldRef<"Restaurant", 'String'>
   readonly tabStyle: Prisma.FieldRef<"Restaurant", 'NavStyle'>
   readonly roundness: Prisma.FieldRef<"Restaurant", 'String'>
   readonly accentColor: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly headerText: Prisma.FieldRef<"Restaurant", 'String'>
   readonly showSearch: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly showItemCount: Prisma.FieldRef<"Restaurant", 'Boolean'>
+  readonly showDivider: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly stickyNav: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly domain: Prisma.FieldRef<"Restaurant", 'String'>
 }

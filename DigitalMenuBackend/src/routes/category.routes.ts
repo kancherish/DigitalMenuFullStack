@@ -6,10 +6,10 @@ const categoryRouter = Router();
 
 categoryRouter.route("/add").post(authenticate,verifyRestaurantOwnership,addCategory);
 
-categoryRouter.route("/get").get(getCategoriesByRestaurant);
+categoryRouter.route("/get/:rid").get(getCategoriesByRestaurant);
 
 categoryRouter.route("/update").patch(authenticate,verifyCategoryOwnership,updateCategory);
 
-categoryRouter.route("/delete").delete(authenticate,verifyCategoryOwnership,deleteCategory);
+categoryRouter.route("/delete/:categoryid").delete(authenticate,verifyCategoryOwnership,deleteCategory);
 
 export default categoryRouter

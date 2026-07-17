@@ -6,7 +6,7 @@ import ApiResponse from "../utils/API-Response.js";
 
 type VariantInput = { name: string; price: number };
 type AddItemBody = { name?: string; description?: string; price?: unknown; category_id?: unknown; variants?: unknown[] ; badges: String[]};
-type DeleteItemBody = { item_id?: unknown };
+type DeleteItemBody = { itemid?: unknown };
 
 // Helper to safely extract string from unknown
 const toString = (val: unknown): string | null => {
@@ -176,7 +176,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getItemsByCategory = asyncHandler(async (req: Request, res: Response) => {
-  const category_id = req.query.c_id;
+  const category_id = req.params.cid;
 
   if (!category_id) {
     res.status(400).json(new ErrorResponse(400, "Missing 'c_id' query parameter"));
@@ -199,16 +199,16 @@ export const getItemsByCategory = asyncHandler(async (req: Request, res: Respons
 });
 
 export const deleteItem = asyncHandler(async (req: Request, res: Response) => {
-  const { item_id } = (req.body?.para || {}) as DeleteItemBody;
+  const { itemid } = (req.params|| {}) as DeleteItemBody;
 
-  if (!item_id) {
-    res.status(400).json(new ErrorResponse(400, "Missing 'item_id' in body.para"));
+  if (!itemid) {
+    res.status(400).json(new ErrorResponse(400, "Missing 'itemid' in body.para"));
     return;
   }
 
-  const itemIdStr = toString(item_id);
+  const itemIdStr = toString(itemid);
   if (!itemIdStr) {
-    res.status(400).json(new ErrorResponse(400, "item_id must be a valid string"));
+    res.status(400).json(new ErrorResponse(400, "itemid must be a valid string"));
     return;
   }
 

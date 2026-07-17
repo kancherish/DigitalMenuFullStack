@@ -10,7 +10,7 @@ export const addResturant = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  const restaurant_id = String(req.query.r_id) || undefined;
+  const restaurant_id = String(req.params.rid) || undefined;
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -34,8 +34,8 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 });
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,roundness,showSearch 
-    ,showItemCount,stickyNav,domain} = req.body?.para || {};
+  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,logoUrl,backgroundUrl,roundness,showSearch 
+    ,showItemCount,stickyNav,domain,showDivider,headerText} = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -55,7 +55,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     return;
   }
 
-  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string; tabStyle?: NavStyle;roundness?:string;
+  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string;logoUrl? : string ;backgroundUrl? : string 
+    ;tabStyle?: NavStyle;roundness?:string;showDivider?:boolean;headerText?:string;
     showSearch?:boolean ,showItemCount?:boolean ,stickyNav?:boolean,domain?:string} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
@@ -67,6 +68,10 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (showItemCount  !== undefined) updateData.showItemCount = showItemCount;
   if (stickyNav  !== undefined) updateData.stickyNav = stickyNav;
   if (domain  !== undefined) updateData.domain = domain;
+  if (logoUrl  !== undefined) updateData.logoUrl = logoUrl;
+  if (backgroundUrl  !== undefined) updateData.backgroundUrl = backgroundUrl;
+  if (showDivider  !== undefined) updateData.showDivider = showDivider;
+  if (headerText  !== undefined) updateData.headerText = headerText;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

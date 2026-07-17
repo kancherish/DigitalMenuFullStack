@@ -1,29 +1,13 @@
 import type { Item } from "../types";
-import { Flame, ChefHat, TrendingUp } from "lucide-react";
 import type { TagBadge, DietBadge } from "../types";
-
-const tagBadgeConfig: Record<TagBadge, { label: string; icon: typeof Flame; color: string }> = {
-  "chef-special": { label: "Chef's Special", icon: ChefHat, color: "#b45309" },
-  spicy: { label: "Spicy", icon: Flame, color: "#dc2626" },
-  bestseller: { label: "Bestseller", icon: TrendingUp, color: "#0f766e" },
-};
+import { TAG_BADGE_CONFIG,isDietBadge,isTagBadge } from "../util/util";
 
 const dietColors: Record<DietBadge, string> = {
   veg: "#0f8a3c",
   "non-veg": "#8b1d1d",
 };
 
-// Type guards to safely narrow raw strings coming from the backend.
-// Anything that doesn't match a known key is silently dropped —
-// this keeps the UI resilient to typos or future badge values
-// the frontend doesn't know how to render yet.
-function isDietBadge(value: string): value is DietBadge {
-  return value === "veg" || value === "non-veg";
-}
 
-function isTagBadge(value: string): value is TagBadge {
-  return value in tagBadgeConfig;
-}
 
 // the familiar FSSAI-style mark — a green dot for veg, a brown triangle for
 // non-veg — carries real dietary meaning, so it keeps its own fixed colors
@@ -55,7 +39,7 @@ function DietMark({ type }: { type: DietBadge }) {
 }
 
 function TagMark({ type }: { type: TagBadge }) {
-  const { label, icon: Icon, color } = tagBadgeConfig[type];
+  const { label, icon: Icon, color } = TAG_BADGE_CONFIG[type];
   return (
     <span
       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"

@@ -35,7 +35,7 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getCategoriesByRestaurant = asyncHandler(async (req: Request, res: Response) => {
-  const restaurant_id = String(req.query.r_id);
+  const restaurant_id = String(req.params.rid);
   const includeItems = req.query.incItem === "true";
 
   if (!restaurant_id) {
@@ -108,28 +108,30 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
 });
 
 export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { category_id } = req.body?.para || {};
+  let { categoryid } = req.params || {};
 
-  if (!category_id) {
+  categoryid = String(categoryid)
+
+  if (!categoryid) {
     res.status(400).json(
-      new ErrorResponse(400, "Missing 'category_id' in request body.para")
+      new ErrorResponse(400, "Missing 'categoryid' in request body.para")
     );
     return;
   }
 
   const existingCategory = await prisma.category.findUnique({
-    where: { publicId: category_id },
+    where: { publicId: categoryid },
   });
 
   if (!existingCategory) {
     res.status(404).json(
-      new ErrorResponse(404, `Category with id ${category_id} not found`)
+      new ErrorResponse(404, `Category with id ${categoryid} not found`)
     );
     return;
   }
 
   await prisma.category.delete({
-    where: { publicId: category_id },
+    where: { publicId: categoryid },
   });
 
   res.status(200).json(new ApiResponse(200, null, true, "Category deleted successfully"));
