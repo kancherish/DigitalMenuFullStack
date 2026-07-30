@@ -5,7 +5,7 @@ import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
 
 export const addCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { name , icon} = req.body?.para || {};
+  const { name, icon } = req.body?.para || {};
 
   const restaurant_id = req.admin?.restaurantId;
 
@@ -27,8 +27,24 @@ export const addCategory = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
 
+  const existingCategories = await prisma.category.findMany({
+    where: {
+      name: {
+        equals: name,
+        mode: "insensitive"
+      }
+    },
+  })
+
+  if (existingCategories.length !== 0) {
+    res.status(409).json(
+      new ErrorResponse(409, "Category name Already Exist")
+    );
+    return;
+  }
+
   const category = await prisma.category.create({
-    data: { name, restaurant_id , icon},
+    data: { name, restaurant_id, icon },
   });
 
   res.status(201).json(new ApiResponse(201, category, true, "Category created successfully"));
@@ -68,7 +84,7 @@ export const getCategoriesByRestaurant = asyncHandler(async (req: Request, res: 
 });
 
 export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { category_id, name,icon } = req.body?.para || {};
+  const { category_id, name, icon } = req.body?.para || {};
 
   if (!category_id) {
     res.status(400).json(
@@ -88,9 +104,28 @@ export const updateCategory = asyncHandler(async (req: Request, res: Response) =
     return;
   }
 
-  const updateData: { name?: string; restaurant_id?: string ,icon? : string} = {};
+  const updateData: { name?: string; restaurant_id?: string, icon?: string } = {};
   if (name !== undefined) updateData.name = name;
   if (icon !== undefined) updateData.icon = icon;
+
+  if (name !== undefined) {
+
+    const existingCategories = await prisma.category.findMany({
+      where: {
+        name: {
+          equals: name,
+          mode: "insensitive"
+        }
+      },
+    })
+
+    if (existingCategories.length !== 0) {
+      res.status(409).json(
+        new ErrorResponse(409, "Category name Already Exist")
+      );
+      return;
+    }
+  }
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

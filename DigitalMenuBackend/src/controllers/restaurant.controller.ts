@@ -35,7 +35,7 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
   const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,logoUrl,backgroundUrl,roundness,showSearch 
-    ,showItemCount,stickyNav,domain,showDivider,headerText} = req.body?.para || {};
+    ,showItemCount,stickyNav,domain,showDivider,headerText,defaultImageUrl,showItemImage} = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -57,7 +57,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
 
   const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string;logoUrl? : string ;backgroundUrl? : string 
     ;tabStyle?: NavStyle;roundness?:string;showDivider?:boolean;headerText?:string;
-    showSearch?:boolean ,showItemCount?:boolean ,stickyNav?:boolean,domain?:string} = {};
+    showSearch?:boolean ,showItemCount?:boolean ,stickyNav?:boolean,domain?:string,showItemImage?: boolean
+  defaultImageUrl?: string} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
@@ -72,6 +73,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (backgroundUrl  !== undefined) updateData.backgroundUrl = backgroundUrl;
   if (showDivider  !== undefined) updateData.showDivider = showDivider;
   if (headerText  !== undefined) updateData.headerText = headerText;
+  if (showItemImage  !== undefined) updateData.showItemImage = showItemImage;
+  if (defaultImageUrl  !== undefined) updateData.defaultImageUrl = defaultImageUrl;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

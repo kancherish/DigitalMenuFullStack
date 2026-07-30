@@ -6,7 +6,7 @@ import { ErrorResponse } from "./utils/Error-Response.js";
 import restaurantRouter from "./routes/restaurant.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import itemRouter from "./routes/items.routes.js";
-import cookieParser from "cookie-parser";
+// import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -16,10 +16,11 @@ const app = express()
 
 const STATIC_ORIGINS = new Set([
    "http://localhost:3000",
+   "http://192.168.1.12:3000",
     "http://localhost:5173",
 ])
 
-let allowedOrigins = new Set([""]);
+let allowedOrigins: Set<string|null> = new Set([""]);
 
 export async function refreshOrigins() {
   const restaurants = await prisma.restaurant.findMany({
@@ -27,10 +28,9 @@ export async function refreshOrigins() {
     where: { domain: { not: "" } },
   });
 
-  allowedOrigins = new Set(restaurants.map(r => r.domain));
+  allowedOrigins = new Set((restaurants ?? []).map(r => r.domain));
   console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
 }
-
 
 app.use(cors({
   origin(origin, callback) {
@@ -62,8 +62,8 @@ const limiter = rateLimit({
 // Apply to all requests
 app.use(limiter);
 
-//cookie parsing for jwt auth
-app.use(cookieParser());
+// //cookie parsing for jwt auth
+// app.use(cookieParser());
 
 //basic Config
 app.use(express.json({ limit: "16KB" }));

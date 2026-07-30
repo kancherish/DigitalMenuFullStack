@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { Search, X } from 'lucide-react';
 import { Header } from './component/Header';
 import LoadingScreen from './component/Loader';
 import Footer from './component/Footer';
-import type { Category, Item, RestaurantConfig } from './types';
+import type { Category, RestaurantConfig, SearchResultItem } from './types';
 import { getCategoriesAndItems, getRestaurantInfo } from './db/db';
 import ItemCard from './component/Item';
-import { CategoryTabs } from './component/CatgoriesNavs';
-import { CategoryDropdown } from './component/CatgoriesNavs';
+import { CategoryTabs, CategoryDropdown } from './component/CatgoriesNavs';
 import { useThemeVars } from './util/util';
+import { useParams } from 'react-router-dom';
 
 export default function DigitalMenu() {
   const [restaurantConfig, setRestaurantConfig] = useState<RestaurantConfig | null>(null);
@@ -19,19 +20,22 @@ export default function DigitalMenu() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const activeCategoryData = activeCategory !== null ? categoriesAndItems[activeCategory] : null;
+
+  const {RestaurantId} = useParams();
+
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchRestaurantConfig = async () => {
       try {
-        const res = await getRestaurantInfo(controller.signal);
+        const res = await getRestaurantInfo(RestaurantId || "",controller.signal);
         if (!res) {
           setConfigError(true);
           return;
         }
         setRestaurantConfig(res as RestaurantConfig);
       } catch (error: unknown) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;   // ✅ just ignore aborts – no error
+        if (error instanceof DOMException && error.name === 'AbortError') return;
         console.error(error);
         setConfigError(true);
       }
@@ -39,7 +43,7 @@ export default function DigitalMenu() {
 
     const fetchCategories = async () => {
       try {
-        const res = await getCategoriesAndItems(controller.signal);
+        const res = await getCategoriesAndItems(RestaurantId || "",controller.signal);
         if (!res) {
           setConfigError(true);
           return;
@@ -48,31 +52,32 @@ export default function DigitalMenu() {
         setCategoriesAndItems(categories);
         if (categories.length > 0) setActiveCategory(0);
       } catch (error: unknown) {
-        if (error instanceof DOMException && error.name === 'AbortError') return;   // ✅ ignore aborts
+        if (error instanceof DOMException && error.name === 'AbortError') return;
         console.error(error);
         setConfigError(true);
       }
     };
 
-    // Timeout: abort both fetches after 8 seconds
     const timeoutId = setTimeout(() => controller.abort(), 8000);
-
     fetchRestaurantConfig();
     fetchCategories();
 
     return () => {
       clearTimeout(timeoutId);
-      controller.abort();   // cleanup on unmount or dependency change
+      controller.abort();
     };
-  }, [categoryConfigRetryCount]);
-  // Items for the active category, filtered by search query.
-  // Falls back gracefully if Item doesn't have a `name` field at runtime.
-  const items: Item[] = useMemo(() => {
-    const base = activeCategoryData?.items ?? [];
-    if (!searchQuery.trim()) return base;
+  }, [categoryConfigRetryCount,RestaurantId]);
+
+  // Global search across all categories
+  const globalSearchResults = useMemo<SearchResultItem[]>(() => {
+    if (!searchQuery.trim()) return [];
     const q = searchQuery.trim().toLowerCase();
-    return base.filter((item: Item) => (item.name ?? '').toLowerCase().includes(q));
-  }, [activeCategoryData, searchQuery]);
+    return categoriesAndItems.flatMap((cat) =>
+      (cat.items ?? [])
+        .filter((item) => (item.name ?? '').toLowerCase().includes(q))
+        .map((item) => ({ ...item, categoryName: cat.name }))
+    );
+  }, [categoriesAndItems, searchQuery]);
 
   const itemCounts = useMemo(
     () => categoriesAndItems.map((c) => c.items?.length ?? 0),
@@ -80,6 +85,7 @@ export default function DigitalMenu() {
   );
 
   const navStyle = restaurantConfig?.tabStyle ?? 'tabs';
+  const isSearching = searchQuery.trim().length > 0;
 
   const themeVars = useThemeVars(
     restaurantConfig?.primaryColor ?? '#1e293b',
@@ -88,7 +94,7 @@ export default function DigitalMenu() {
   );
 
   // LOADING SCREEN
-  if (!configError && (!restaurantConfig)) {
+  if (!configError && !restaurantConfig) {
     return <LoadingScreen />;
   }
 
@@ -134,34 +140,13 @@ export default function DigitalMenu() {
         </div>
       ) : (
         <>
+          {/* Sticky nav bar with search */}
           <div
             className={`${restaurantConfig!.stickyNav ? 'sticky top-0 z-20' : ''} shadow-md`}
             style={{ backgroundColor: 'var(--surface, #fff)' }}
           >
             <div className="max-w-4xl mx-auto px-4 py-3 space-y-3">
-              {navStyle === 'tabs' ? (
-                <CategoryTabs
-                  categories={categoriesAndItems}
-                  showItemCount={restaurantConfig!.showItemCount}
-                  activeIndex={activeCategory ?? 0}
-                  onSelect={(idx: number) => {
-                    setActiveCategory(idx)
-                    setSearchQuery("");
-                  }}
-                  itemCounts={itemCounts}
-                />
-              ) : (
-                <CategoryDropdown
-                  categories={categoriesAndItems}
-                  activeIndex={activeCategory ?? 0}
-                  itemCounts={itemCounts}
-                  showItemCount={restaurantConfig!.showItemCount}
-                  onSelect={(idx: number) => {
-                    setActiveCategory(idx)
-                    setSearchQuery("");
-                  }}
-                />
-              )}
+              {/* Show category nav ONLY when NOT searching */}
 
               {restaurantConfig!.showSearch && (
                 <div className="relative">
@@ -172,7 +157,7 @@ export default function DigitalMenu() {
                   <input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={`Search in ${activeCategoryData?.name ?? 'menu'}...`}
+                    placeholder={"Search Across All Categories "}
                     className="w-full pl-9 pr-9 py-2 text-sm border border-slate-200 focus:outline-none transition-shadow"
                     style={{
                       borderRadius: 'var(--radius)',
@@ -195,48 +180,125 @@ export default function DigitalMenu() {
                   )}
                 </div>
               )}
+
+              {!isSearching && (
+                navStyle === 'tabs' ? (
+                  <CategoryTabs
+                    categories={categoriesAndItems}
+                    showItemCount={restaurantConfig!.showItemCount}
+                    activeIndex={activeCategory ?? 0}
+                    onSelect={(idx: number) => {
+                      setActiveCategory(idx);
+                      setSearchQuery('');
+                    }}
+                    itemCounts={itemCounts}
+                  />
+                ) : (
+                  <CategoryDropdown
+                    categories={categoriesAndItems}
+                    activeIndex={activeCategory ?? 0}
+                    itemCounts={itemCounts}
+                    showItemCount={restaurantConfig!.showItemCount}
+                    onSelect={(idx: number) => {
+                      setActiveCategory(idx);
+                      setSearchQuery('');
+                    }}
+                  />
+                )
+              )}
             </div>
           </div>
 
+          {/* Main content */}
           <div className="max-w-4xl mx-auto px-6 py-8">
-            <h2
-              className="font-serif text-3xl font-semibold mb-6"
-              style={{ color: 'var(--primary)' }}
-            >
-              {activeCategoryData?.name}
-            </h2>
-
-            <div
-              key={activeCategory} // remounts on category change → quick fade-in instead of an abrupt swap
-              className="space-y-6 animate-[fadein_0.25s_ease]"
-            >
-              <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-
-              {items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-2 py-20 text-center">
-                  <p className="text-slate-500">
-                    {searchQuery ? `No items match "${searchQuery}".` : 'No items in this category yet.'}
+            {isSearching ? (
+              // SEARCH RESULTS VIEW
+              <>
+                <h2
+                  className="font-serif text-3xl font-semibold mb-6"
+                  style={{ color: 'var(--primary)' }}
+                >
+                  Search results for “{searchQuery}”
+                </h2>
+                {globalSearchResults.length === 0 ? (
+                  <p className="text-slate-500 text-center py-20">
+                    No items match “{searchQuery}”.
                   </p>
+                ) : (
+                  <div
+                    key="search-results" // remount on each search to trigger fade-in
+                    className="space-y-6 animate-[fadein_0.25s_ease]"
+                  >
+                    <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+                    {globalSearchResults.map((result, idx, arr) => {
+                      const prevCategory = idx > 0 ? arr[idx - 1].categoryName : null;
+                      return (
+                        <React.Fragment key={result.publicId}>
+                          {result.categoryName !== prevCategory && (
+                            <h3
+                              className="text-xl font-semibold text-slate-600 mt-8 mb-4 first:mt-0"
+                              style={{ color: 'var(--primary)' }}
+                            >
+                              {result.categoryName}
+                            </h3>
+                          )}
+                          <ItemCard
+                            itemStructure={result}
+                            index={idx}
+                            primaryColor={restaurantConfig!.primaryColor}
+                            accentColor={restaurantConfig!.accentColor}
+                            showImage={restaurantConfig!.showItemImage}
+                            defaultImage={restaurantConfig!.defaultImageUrl}
+                          />
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            ) : (
+              // NORMAL CATEGORY VIEW
+              <>
+                <h2
+                  className="font-serif text-3xl font-semibold mb-6"
+                  style={{ color: 'var(--primary)' }}
+                >
+                  {activeCategoryData?.name}
+                </h2>
+                <div
+                  key={activeCategory}
+                  className="space-y-6 animate-[fadein_0.25s_ease]"
+                >
+                  <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+                  {(activeCategoryData?.items ?? []).length === 0 ? (
+                    <div className="flex flex-col items-center justify-center gap-2 py-20 text-center">
+                      <p className="text-slate-500">
+                        {searchQuery
+                          ? `No items match "${searchQuery}".`
+                          : 'No items in this category yet.'}
+                      </p>
+                    </div>
+                  ) : (
+                    (activeCategoryData?.items ?? []).map((item, idx) => (
+                      <ItemCard
+                        key={item.publicId}
+                        itemStructure={item}
+                          showImage={restaurantConfig!.showItemImage}
+                        index={idx}
+                        primaryColor={restaurantConfig!.primaryColor}
+                        accentColor={restaurantConfig!.accentColor}
+                        defaultImage={restaurantConfig!.defaultImageUrl}
+                      />
+                    ))
+                  )}
                 </div>
-              ) : (
-                items.map((item, idx) => (
-                  <ItemCard
-                    key={item.publicId}
-                    itemStructure={item}
-                    index={idx}
-                    primaryColor={restaurantConfig!.primaryColor}
-                    accentColor={restaurantConfig!.accentColor}
-                  />
-                ))
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           <Footer />
         </>
       )}
-
-
     </div>
   );
 }

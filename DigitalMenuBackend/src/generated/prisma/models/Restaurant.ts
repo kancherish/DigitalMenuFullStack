@@ -52,6 +52,8 @@ export type RestaurantMinAggregateOutputType = {
   showDivider: boolean | null
   stickyNav: boolean | null
   domain: string | null
+  defaultImageUrl: string | null
+  showItemImage: boolean | null
 }
 
 export type RestaurantMaxAggregateOutputType = {
@@ -72,6 +74,8 @@ export type RestaurantMaxAggregateOutputType = {
   showDivider: boolean | null
   stickyNav: boolean | null
   domain: string | null
+  defaultImageUrl: string | null
+  showItemImage: boolean | null
 }
 
 export type RestaurantCountAggregateOutputType = {
@@ -92,6 +96,8 @@ export type RestaurantCountAggregateOutputType = {
   showDivider: number
   stickyNav: number
   domain: number
+  defaultImageUrl: number
+  showItemImage: number
   _all: number
 }
 
@@ -122,6 +128,8 @@ export type RestaurantMinAggregateInputType = {
   showDivider?: true
   stickyNav?: true
   domain?: true
+  defaultImageUrl?: true
+  showItemImage?: true
 }
 
 export type RestaurantMaxAggregateInputType = {
@@ -142,6 +150,8 @@ export type RestaurantMaxAggregateInputType = {
   showDivider?: true
   stickyNav?: true
   domain?: true
+  defaultImageUrl?: true
+  showItemImage?: true
 }
 
 export type RestaurantCountAggregateInputType = {
@@ -162,6 +172,8 @@ export type RestaurantCountAggregateInputType = {
   showDivider?: true
   stickyNav?: true
   domain?: true
+  defaultImageUrl?: true
+  showItemImage?: true
   _all?: true
 }
 
@@ -269,6 +281,8 @@ export type RestaurantGroupByOutputType = {
   showDivider: boolean
   stickyNav: boolean
   domain: string | null
+  defaultImageUrl: string
+  showItemImage: boolean
   _count: RestaurantCountAggregateOutputType | null
   _avg: RestaurantAvgAggregateOutputType | null
   _sum: RestaurantSumAggregateOutputType | null
@@ -312,6 +326,8 @@ export type RestaurantWhereInput = {
   showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
+  showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }
@@ -334,6 +350,8 @@ export type RestaurantOrderByWithRelationInput = {
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
+  defaultImageUrl?: Prisma.SortOrder
+  showItemImage?: Prisma.SortOrder
   admin?: Prisma.RestaurantAdminOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
@@ -359,6 +377,8 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
+  defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
+  showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "publicId" | "adminId">
@@ -381,6 +401,8 @@ export type RestaurantOrderByWithAggregationInput = {
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
+  defaultImageUrl?: Prisma.SortOrder
+  showItemImage?: Prisma.SortOrder
   _count?: Prisma.RestaurantCountOrderByAggregateInput
   _avg?: Prisma.RestaurantAvgOrderByAggregateInput
   _max?: Prisma.RestaurantMaxOrderByAggregateInput
@@ -409,6 +431,8 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   showDivider?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
+  defaultImageUrl?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  showItemImage?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
 }
 
 export type RestaurantCreateInput = {
@@ -427,6 +451,8 @@ export type RestaurantCreateInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
@@ -449,6 +475,8 @@ export type RestaurantUncheckedCreateInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -468,6 +496,8 @@ export type RestaurantUpdateInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
@@ -490,6 +520,8 @@ export type RestaurantUncheckedUpdateInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -511,6 +543,8 @@ export type RestaurantCreateManyInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
 }
 
 export type RestaurantUpdateManyMutationInput = {
@@ -529,6 +563,8 @@ export type RestaurantUpdateManyMutationInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantUncheckedUpdateManyInput = {
@@ -549,6 +585,8 @@ export type RestaurantUncheckedUpdateManyInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type RestaurantNullableScalarRelationFilter = {
@@ -574,6 +612,8 @@ export type RestaurantCountOrderByAggregateInput = {
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
+  defaultImageUrl?: Prisma.SortOrder
+  showItemImage?: Prisma.SortOrder
 }
 
 export type RestaurantAvgOrderByAggregateInput = {
@@ -598,6 +638,8 @@ export type RestaurantMaxOrderByAggregateInput = {
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
+  defaultImageUrl?: Prisma.SortOrder
+  showItemImage?: Prisma.SortOrder
 }
 
 export type RestaurantMinOrderByAggregateInput = {
@@ -618,6 +660,8 @@ export type RestaurantMinOrderByAggregateInput = {
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
   domain?: Prisma.SortOrder
+  defaultImageUrl?: Prisma.SortOrder
+  showItemImage?: Prisma.SortOrder
 }
 
 export type RestaurantSumOrderByAggregateInput = {
@@ -699,6 +743,8 @@ export type RestaurantCreateWithoutAdminInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
 
@@ -719,6 +765,8 @@ export type RestaurantUncheckedCreateWithoutAdminInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -754,6 +802,8 @@ export type RestaurantUpdateWithoutAdminInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -774,6 +824,8 @@ export type RestaurantUncheckedUpdateWithoutAdminInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -793,6 +845,8 @@ export type RestaurantCreateWithoutCategoriesInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
 }
 
@@ -814,6 +868,8 @@ export type RestaurantUncheckedCreateWithoutCategoriesInput = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: string | null
+  defaultImageUrl?: string
+  showItemImage?: boolean
 }
 
 export type RestaurantCreateOrConnectWithoutCategoriesInput = {
@@ -848,6 +904,8 @@ export type RestaurantUpdateWithoutCategoriesInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
 }
 
@@ -869,6 +927,8 @@ export type RestaurantUncheckedUpdateWithoutCategoriesInput = {
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -920,6 +980,8 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
+  defaultImageUrl?: boolean
+  showItemImage?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.RestaurantCountOutputTypeDefaultArgs<ExtArgs>
@@ -943,6 +1005,8 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
+  defaultImageUrl?: boolean
+  showItemImage?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -964,6 +1028,8 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
+  defaultImageUrl?: boolean
+  showItemImage?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -985,9 +1051,11 @@ export type RestaurantSelectScalar = {
   showDivider?: boolean
   stickyNav?: boolean
   domain?: boolean
+  defaultImageUrl?: boolean
+  showItemImage?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage", ExtArgs["result"]["restaurant"]>
 export type RestaurantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
@@ -1024,6 +1092,8 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     showDivider: boolean
     stickyNav: boolean
     domain: string | null
+    defaultImageUrl: string
+    showItemImage: boolean
   }, ExtArgs["result"]["restaurant"]>
   composites: {}
 }
@@ -1466,6 +1536,8 @@ export interface RestaurantFieldRefs {
   readonly showDivider: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly stickyNav: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly domain: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly defaultImageUrl: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly showItemImage: Prisma.FieldRef<"Restaurant", 'Boolean'>
 }
     
 

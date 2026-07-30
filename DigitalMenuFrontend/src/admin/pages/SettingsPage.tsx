@@ -27,6 +27,7 @@ export function SettingsPage() {
       .getInfo(restaurantId)
       .then((data) => {
         if (cancelled) return;
+        console.log(data)
         setOriginal(data);
         setForm(data);
       })
@@ -120,6 +121,20 @@ export function SettingsPage() {
             value={form.backgroundUrl ?? ''}
             onChange={(e) => update('backgroundUrl', e.target.value || null)}
             className="input"
+          />
+        </Field>
+
+        <Field label="Default Item Image URL">
+          <input
+            type="text"
+            value={form.defaultImageUrl ?? ''}
+            onChange={(e) => update('defaultImageUrl', e.target.value || null)}
+            className="input"
+          />
+          <Toggle
+            label="Enable Item Image"
+            checked={form.showItemImage}
+            onChange={(v) => update('showItemImage', v)}
           />
         </Field>
 

@@ -78,7 +78,7 @@ export function AdminLayout() {
           <Menu size={22} className="text-slate-700" />
         </button>
         <span className="text-sm font-semibold text-slate-900">{activeLabel}</span>
-        <div className="w-[22px]" /> {/* spacer to balance the flex row */}
+        <div className="w-5.5" /> {/* spacer to balance the flex row */}
       </div>
 
       {/* Mobile drawer + backdrop */}

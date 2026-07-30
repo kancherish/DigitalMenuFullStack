@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { addCategory, deleteCategory, getCategoriesByRestaurant, updateCategory } from "../controllers/category.controller.js";
-import { authenticate, verifyCategoryOwnership, verifyRestaurantOwnership } from '../middleware/auth.middleware.js';
+import { authenticate, verifyCategoryOwnership } from '../middleware/auth.middleware.js';
 
 const categoryRouter = Router();
 
-categoryRouter.route("/add").post(authenticate,verifyRestaurantOwnership,addCategory);
+categoryRouter.route("/add").post(authenticate,addCategory);
 
 categoryRouter.route("/get/:rid").get(getCategoriesByRestaurant);
 

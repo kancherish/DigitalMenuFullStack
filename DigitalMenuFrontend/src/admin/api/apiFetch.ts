@@ -31,15 +31,19 @@ async function refreshAccessToken(): Promise<string | null> {
   }
 }
 
-
 export async function apiFetch(path: string, options: ApiFetchOptions = {}): Promise<Response> {
   const token = getAccessToken();
 
   const headers = new Headers(options.headers);
   if (token) headers.set('Authorization', `Bearer ${token}`);
-  if (options.body && !headers.has('Content-Type')) {
+
+  // Only set JSON content-type for string bodies (not FormData, not Blob, etc.)
+  const isJsonBody = typeof options.body === 'string' || typeof options.body === 'undefined';
+  console.log(isJsonBody)
+  if (isJsonBody && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
+
 
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
 
@@ -47,7 +51,7 @@ export async function apiFetch(path: string, options: ApiFetchOptions = {}): Pro
     return res;
   }
 
-  // 401 and not yet retried — attempt refresh (queues if one's already in flight)
+  // 401 and not yet retried — attempt refresh
   if (!refreshPromise) {
     refreshPromise = refreshAccessToken().finally(() => {
       refreshPromise = null;
@@ -58,13 +62,14 @@ export async function apiFetch(path: string, options: ApiFetchOptions = {}): Pro
 
   if (!newToken) {
     triggerForceLogout();
-    return res; // original 401, caller handles it
+    return res;
   }
 
   // Retry original request once, with new token
   const retryHeaders = new Headers(options.headers);
   retryHeaders.set('Authorization', `Bearer ${newToken}`);
-  if (options.body && !retryHeaders.has('Content-Type')) {
+
+  if (isJsonBody && !retryHeaders.has('Content-Type')) {
     retryHeaders.set('Content-Type', 'application/json');
   }
 

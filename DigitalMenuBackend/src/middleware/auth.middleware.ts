@@ -30,12 +30,15 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
 };
 
 export const verifyRestaurantOwnership = (req: Request, res: Response, next: NextFunction) => {
+
+
   if (!req.admin?.restaurantId) {
     res.status(403).json(new ErrorResponse(403, 'Admin does not own any restaurant'));
     return;
   }
   if (req.admin.restaurantId !== req.body.para?.restaurant_id) {
-    res.status(403).json(new ErrorResponse(403, 'Admin does not own any restaurant')); 
+    res.status(403).json(new ErrorResponse(403, 'Admin does not own any restaurant'));
+    return
   }
   // Attach the restaurant ID from the token (no client input needed)
   req.restaurantOwned = { publicId: req.admin.restaurantId };
@@ -43,7 +46,10 @@ export const verifyRestaurantOwnership = (req: Request, res: Response, next: Nex
 };
 
 export const verifyCategoryOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const categoryId = req.body?.para?.category_id || req.params.categoryid;
+  const rawPara = req.body?.para 
+  const para =typeof req.body?.para === 'string' ? JSON.parse(rawPara) : rawPara;
+
+  const categoryId = para?.category_id || req.params.categoryid;
   if (!categoryId) {
     res.status(400).json(new ErrorResponse(400, 'category_id missing'));
     return;
@@ -64,8 +70,11 @@ export const verifyCategoryOwnership = async (req: Request, res: Response, next:
 };
 
 export const verifyItemOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const itemId = req.body?.para?.item_id || req.params.itemid;
-  if (!itemId) {
+  const rawPara = req.body?.para || req.params;
+  const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+
+  const { item_id } = para ;
+  if (!item_id) {
     res.status(400).json(new ErrorResponse(400, 'item_id missing in request body'));
     return;
   }
@@ -74,7 +83,7 @@ export const verifyItemOwnership = async (req: Request, res: Response, next: Nex
     return;
   }
   const item = await prisma.item.findUnique({
-    where: { publicId: itemId },
+    where: { publicId: item_id },
     include: { category: { select: { restaurant_id: true } } }
   });
   if (!item) {

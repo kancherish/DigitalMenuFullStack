@@ -8,6 +8,7 @@ import { SettingsPage } from './admin/pages/SettingsPage';
 import { CategoriesPage } from './admin/pages/CategoriesPage';
 import { ItemsPage } from './admin/pages/ItemPage';
 import { AdminLayout } from './admin/pages/AdminLayout';
+import Home from './Home';
 
 
 export default function App() {
@@ -25,7 +26,8 @@ export default function App() {
             </Route>
           </Route>
 
-          <Route path='/' element={<DigitalMenu />} />
+          <Route path='/:RestaurantId' element={<DigitalMenu />} />
+          <Route path='/' element={<Home />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

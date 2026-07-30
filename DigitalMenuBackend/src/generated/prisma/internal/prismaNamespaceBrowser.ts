@@ -102,7 +102,9 @@ export const RestaurantScalarFieldEnum = {
   showItemCount: 'showItemCount',
   showDivider: 'showDivider',
   stickyNav: 'stickyNav',
-  domain: 'domain'
+  domain: 'domain',
+  defaultImageUrl: 'defaultImageUrl',
+  showItemImage: 'showItemImage'
 } as const
 
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
@@ -126,7 +128,8 @@ export const ItemScalarFieldEnum = {
   description: 'description',
   price: 'price',
   category_id: 'category_id',
-  badges: 'badges'
+  badges: 'badges',
+  imageURL: 'imageURL'
 } as const
 
 export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]

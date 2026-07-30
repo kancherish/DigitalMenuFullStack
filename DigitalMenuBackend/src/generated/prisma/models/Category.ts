@@ -233,15 +233,15 @@ export type CategoryOrderByWithRelationInput = {
 export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   publicId?: string
+  name?: string
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
-  name?: Prisma.StringFilter<"Category"> | string
   restaurant_id?: Prisma.StringFilter<"Category"> | string
   icon?: Prisma.StringFilter<"Category"> | string
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
   items?: Prisma.ItemListRelationFilter
-}, "id" | "publicId">
+}, "id" | "publicId" | "name">
 
 export type CategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

@@ -42,12 +42,14 @@
     showDivider   Boolean @default(false)         
     stickyNav Boolean @default(false)     
     domain String?    
+    defaultImageUrl String @default("https://order.pennentertainment.com/assets/img/png/default-menu-image-placeholder.png")
+    showItemImage Boolean @default(false)
   }
 
   model Category {
     id            Int        @id @default(autoincrement())
     publicId      String     @unique @default(uuid())
-    name          String
+    name          String     @unique
     restaurant_id String
     restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
     icon          String    @default ("Utensils")
@@ -57,13 +59,14 @@
   model Item {
     id          Int       @id @default(autoincrement())
     publicId  String @unique @default(uuid())
-    name        String
+    name        String   @unique
     description String?
     price       Float?    // null if item uses variants for pricing
     category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
     category_id String
     badges      String[] @default([])
     variants    Variant[]
+    imageURL    String?
   }
 
   model Variant {

@@ -4,7 +4,7 @@ import { categoryService } from '../services/categoryService';
 import { itemService } from '../services/itemService';
 import { diffChanged } from '../../util/util';
 import ItemForm from './ItemForm';
-import type { Category, Item ,ItemFormValues} from '../types';
+import type { Category, Item, ItemFormValues } from '../types';
 import { emptyItemForm } from '../components/ItemFormValues';
 
 function itemToFormValues(item: Item): ItemFormValues {
@@ -18,12 +18,14 @@ function itemToFormValues(item: Item): ItemFormValues {
       ? item.variants.map((v) => ({ name: v.name, price: String(v.price) }))
       : [{ name: '', price: '' }],
     badges: item.badges,
+    imageUrl: ((item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageUrl ??
+      (item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageURL) ?? undefined,
+    imageFile: null,
+    removeImage: false,
   };
 }
 
-// Builds only the fields that actually need to go to the backend.
-// Price/variants are mutually exclusive on the wire, so this isn't a plain
-// shallow diff — only the active pricing mode is ever included.
+// Builds only JSON fields that changed. Image changes are handled separately.
 function buildItemChanges(original: Item, form: ItemFormValues) {
   const changes: Record<string, unknown> = {};
 
@@ -137,7 +139,8 @@ export function ItemsPage() {
     setSavingAdd(true);
     setError(null);
     try {
-      const created = await itemService.add(buildNewItemPayload(addForm, activeCategoryId));
+      const payload = buildNewItemPayload(addForm, activeCategoryId);
+      const created = await itemService.add(payload, addForm.imageFile || undefined);
       setItems((prev) => [...prev, created]);
       setAddForm(emptyItemForm);
       setAdding(false);
@@ -160,9 +163,11 @@ export function ItemsPage() {
 
   async function handleSaveEdit(item: Item) {
     if (!editForm) return;
-
     const changes = buildItemChanges(item, editForm);
-    if (Object.keys(changes).length === 0) {
+    const hasJsonChanges = Object.keys(changes).length > 0;
+    const hasImageChange = editForm.imageFile !== null || editForm.removeImage;
+    console.log(changes)
+    if (!hasJsonChanges && !hasImageChange) {
       cancelEdit();
       return;
     }
@@ -170,7 +175,12 @@ export function ItemsPage() {
     setSavingEdit(true);
     setError(null);
     try {
-      const updated = await itemService.update(item.publicId, changes);
+      const updated = await itemService.update(
+        item.publicId,
+        changes,
+        editForm.imageFile || undefined,
+        editForm.removeImage
+      );
       setItems((prev) => prev.map((i) => (i.publicId === updated.publicId ? updated : i)));
       cancelEdit();
     } catch (err) {
@@ -284,15 +294,28 @@ export function ItemsPage() {
                 key={item.publicId}
                 className="bg-white rounded-lg border border-slate-200 p-4 flex items-start justify-between gap-4"
               >
-                <div>
-                  <div className="text-sm font-medium text-slate-900">{item.name}</div>
-                  {item.description && (
-                    <div className="text-xs text-slate-500 mt-0.5">{item.description}</div>
-                  )}
-                  <div className="text-sm text-slate-700 mt-1">
-                    {item.variants.length > 0
-                      ? item.variants.map((v) => `${v.name}: ₹${v.price}`).join(' · ')
-                      : `₹${item.price}`}
+                <div className="flex items-start gap-3 min-w-0">
+                  {(() => {
+                    const imageUrl = (item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageUrl ??
+                      (item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageURL;
+                    return imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={item.name}
+                        className="h-16 w-16 object-cover rounded-md border border-slate-200 shrink-0"
+                      />
+                    ) : null;
+                  })()}
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-slate-900">{item.name}</div>
+                    {item.description && (
+                      <div className="text-xs text-slate-500 mt-0.5">{item.description}</div>
+                    )}
+                    <div className="text-sm text-slate-700 mt-1">
+                      {item.variants.length > 0
+                        ? item.variants.map((v) => `${v.name}: ₹${v.price}`).join(' · ')
+                        : `₹${item.price}`}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">

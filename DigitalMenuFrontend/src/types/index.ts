@@ -16,6 +16,8 @@ export interface RestaurantConfig {
   showItemCount: boolean;             
   stickyNav: boolean;     
   showDivider: boolean;  
+  defaultImageUrl?: string;
+  showItemImage: boolean;
   headerText: string;
 }
 
@@ -31,6 +33,7 @@ export interface Item {
   publicId: string;
   name: string;
   description: string | null;
+  imageURL? : string;
   price: number | null;
   badges: string[];
   category_id: string;
@@ -52,7 +55,7 @@ export interface ApiResponse<T> {
 }
 
 export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
-
+export type SearchResultItem = Item & { categoryName: string };
 export interface RequestOptions {
   method?: HttpMethod;
   params?: Record<string, string>;

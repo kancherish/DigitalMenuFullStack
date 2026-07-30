@@ -8,6 +8,7 @@ import ApiResponse from '../utils/API-Response.js';
 import { ErrorResponse } from '../utils/Error-Response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { NavStyle } from '../generated/prisma/enums.js';
+import { MAIN_DOMAIN } from '../env.js';
 import { refreshOrigins } from '../app.js';
 
 

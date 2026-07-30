@@ -47,8 +47,10 @@ export interface Restaurant {
   showItemCount: boolean;
   stickyNav: boolean;
   domain: string | null;
-  showDivider : boolean;
-   headerText  : string;
+  showDivider: boolean;
+  headerText: string;
+  defaultImageUrl: string | null;
+   showItemImage: boolean;
 }
 
 export interface AdminInfo {
@@ -63,12 +65,14 @@ export interface ApiFetchOptions extends RequestInit {
 }
 
 export interface ItemPayload {
+  item_id?: string;
   name?: string;
   description?: string;
   price?: number;
   category_id?: string;
   variants?: Pick<Variant, 'name' | 'price'>[];
   badges?: string[];
+  removeImage?: boolean;
 }
 
 export type DietBadge = 'veg' | 'non-veg';
@@ -82,6 +86,9 @@ export interface ItemFormValues {
   price: string;
   variants: { name: string; price: string }[];
   badges: string[];
+  removeImage?: boolean;
+  imageUrl?: string;
+  imageFile: File | null;
 }
 
 
@@ -93,4 +100,4 @@ export interface ItemFormProps {
   submitLabel: string;
   submitting: boolean;
 }
-export type SearchResultItem = Item & { categoryName: string };
+

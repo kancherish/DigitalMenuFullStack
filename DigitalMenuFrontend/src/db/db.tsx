@@ -1,4 +1,4 @@
-import { VITE_RESTAURANT_ID, VITE_SERVER_ADDRESS } from "../env";
+import { VITE_SERVER_ADDRESS } from "../env";
 import type { ApiResponse, Category, RequestOptions, RestaurantConfig } from "../types";
 
 async function apiRequest<T>(endpoint:string,
@@ -27,10 +27,10 @@ async function apiRequest<T>(endpoint:string,
     return json.data;
 }
 
-export async function getRestaurantInfo(signal?:AbortSignal):Promise<RestaurantConfig | null>{
+export async function getRestaurantInfo(RestaurantId:string,signal?:AbortSignal):Promise<RestaurantConfig | null>{
 
         try {
-            const restaurantInfo: RestaurantConfig = await apiRequest(`/restaurant/get/${VITE_RESTAURANT_ID}`,{},signal)
+            const restaurantInfo: RestaurantConfig = await apiRequest(`/restaurant/get/${RestaurantId}`,{},signal)
             if (!restaurantInfo) {
                 throw new Error("Restaurant Info is Null")
             }
@@ -42,9 +42,9 @@ export async function getRestaurantInfo(signal?:AbortSignal):Promise<RestaurantC
         }
 }
 
-export async function getCategoriesAndItems(signal?:AbortSignal):Promise<Category[] | null>{
+export async function getCategoriesAndItems(RestaurantId:string,signal?:AbortSignal):Promise<Category[] | null>{
 try {
-    const categories = await apiRequest<Category[]>(`/category/get/${VITE_RESTAURANT_ID}`, {
+    const categories = await apiRequest<Category[]>(`/category/get/${RestaurantId}`, {
       params: {
         incItem: String(true), // URLSearchParams needs strings, not booleans
       },

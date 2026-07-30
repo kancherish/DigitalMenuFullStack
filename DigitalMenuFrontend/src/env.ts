@@ -1,4 +1,3 @@
 
-export const {VITE_SERVER_ADDRESS ,
-    VITE_RESTAURANT_ID 
+export const {VITE_SERVER_ADDRESS  
 } = import.meta.env
