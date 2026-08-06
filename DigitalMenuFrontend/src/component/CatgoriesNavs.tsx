@@ -14,8 +14,9 @@ interface CategoryTabsProps {
   activeIndex: number;
   onSelect: (i: number) => void;
   itemCounts: number[];
-  size?: keyof typeof tabSizeStyles;
-  showItemCount?: boolean;
+  size: keyof typeof tabSizeStyles;
+  showItemCount: boolean;
+  variant: "pill" | "underline"; // pill: filled background per tab (current look). underline: minimal, indicator bar under active tab
 }
 
 export function CategoryTabs({
@@ -23,14 +24,13 @@ export function CategoryTabs({
   activeIndex,
   onSelect,
   itemCounts,
-  size = "md",
+  size,
   showItemCount,
+  variant,
 }: CategoryTabsProps) {
   const activeRef = useRef<HTMLButtonElement>(null);
   const { padding, text, icon } = tabSizeStyles[size];
-
-  // keep the active pill in view when selection changes programmatically
-  // (e.g. tapping a category from a search result, not just clicking the tab itself)
+  
   useEffect(() => {
     activeRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -43,7 +43,7 @@ export function CategoryTabs({
     <div
       role="tablist"
       aria-label="Menu categories"
-      className="flex gap-2 overflow-x-auto py-1 px-1 scrollbar-hide snap-x"
+      className={"flex gap-2 overflow-x-auto py-1 px-1 scrollbar-hide snap-x justify-left"}
     >
       {categories.map((category, idx) => {
         const Icon = getCategoryIcon(category.icon);
@@ -55,12 +55,18 @@ export function CategoryTabs({
             role="tab"
             aria-selected={active}
             onClick={() => onSelect(idx)}
-            className={`shrink-0 snap-start flex items-center gap-2 font-medium transition-all duration-200 ${padding} ${text}`}
+            className={`shrink-0 snap-start flex items-center gap-2 font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${padding} ${text} ${
+              variant === "underline" ? "border-b-2" : ""
+            }`}
             style={{
-              borderRadius: "var(--radius)",
-              backgroundColor: active ? "var(--accent)" : "var(--accent-soft)",
-              color: active ? "#fff" : "var(--primary)",
-            }}
+              borderRadius: variant === "pill" ? "var(--radius)" : "0",
+              backgroundColor:
+                variant === "pill" ? (active ? "var(--accent)" : "var(--accent-soft)") : "transparent",
+              borderColor: variant === "underline" ? (active ? "var(--accent)" : "transparent") : undefined,
+              color: variant === "pill" ? (active ? "#fff" : "var(--primary)") : "var(--primary)",
+              opacity: variant === "underline" && !active ? 0.6 : 1,
+              "--tw-ring-color": "var(--accent)",
+            } as React.CSSProperties}
           >
             <Icon size={icon} />
             <span>{category.name}</span>
@@ -68,9 +74,11 @@ export function CategoryTabs({
               <span
                 className="text-xs px-1.5 py-0.5 rounded-full"
                 style={{
-                  backgroundColor: active
-                    ? "rgba(255,255,255,0.25)"
-                    : "var(--accent-soft-strong)",
+                  backgroundColor:
+                    variant === "pill" && active
+                      ? "rgba(255,255,255,0.25)"
+                      : "var(--accent-soft-strong)",
+                  color: variant === "pill" && active ? "#fff" : "var(--primary)",
                 }}
               >
                 {itemCounts[idx] ?? 0}
@@ -89,6 +97,7 @@ interface CategoryDropdownProps {
   onSelect: (i: number) => void;
   showItemCount?: boolean;
   itemCounts: number[];
+  size: keyof typeof tabSizeStyles; // reuse the same size scale as tabs, since restaurants pick one nav style not both
 }
 
 export function CategoryDropdown({
@@ -96,15 +105,14 @@ export function CategoryDropdown({
   activeIndex,
   itemCounts,
   showItemCount,
-
   onSelect,
+  size,
 }: CategoryDropdownProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const active = categories[activeIndex];
+  const { padding, text, icon } = tabSizeStyles[size];
 
-  // close on outside click, and on Escape — a dropdown that only closes
-  // via its own button feels stuck to anyone used to native selects
   useEffect(() => {
     if (!open) return;
 
@@ -131,43 +139,40 @@ export function CategoryDropdown({
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="w-full flex items-center justify-between px-6 py-4 border-2 transition-all"
+        className={`w-full flex items-center justify-between border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${padding} ${text}`}
         style={{
           backgroundColor: "var(--surface, #fff)",
           borderColor: "var(--accent)",
           color: "var(--primary)",
           borderRadius: "var(--radius)",
-        }}
+          "--tw-ring-color": "var(--accent)",
+        } as React.CSSProperties}
       >
         <span className="flex items-center gap-3 font-semibold">
           {active &&
             (() => {
               const Icon = getCategoryIcon(active.icon);
-              return <Icon size={20} />;
+              return <Icon size={icon} />;
             })()}
-          {active?.name ?? "Select a category"}{showItemCount && (
-            <span
-              className="text-xs rounded-full"
-              style={{
-                backgroundColor: active
-                  ? "rgba(255,255,255,0.25)"
-                  : "var(--accent-soft-strong)",
-              }}
-            >
-             {"("} {itemCounts[activeIndex] ?? 0} {")"}
-            </span>
-          )}
+          <span className="flex items-center gap-2">
+            {active?.name ?? "Select a category"}
+            {showItemCount && (
+              <span
+                className="text-xs rounded-full px-1.5 py-0.5"
+                style={{ backgroundColor: "var(--accent-soft-strong)" }}
+              >
+                {itemCounts[activeIndex] ?? 0}
+              </span>
+            )}
+          </span>
         </span>
-        <ChevronDown
-          size={24}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
-        />
+        <ChevronDown size={icon + 4} className={`shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
         <div
           role="listbox"
-          className="absolute top-full left-0 right-0 mt-2 border-2 shadow-lg overflow-hidden z-30"
+          className="absolute top-full left-0 right-0 mt-2 border-2 shadow-lg overflow-hidden z-30 max-h-72 overflow-y-auto"
           style={{
             backgroundColor: "var(--surface, #fff)",
             borderColor: "var(--accent)",
@@ -186,16 +191,26 @@ export function CategoryDropdown({
                   onSelect(idx);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-6 py-4 transition-all hover:brightness-95 ${isActive ? "font-semibold" : ""
-                  }`}
+                className={`w-full flex items-center justify-between gap-3 px-6 py-4 transition-all hover:brightness-95 focus-visible:outline-none focus-visible:bg-black/5 ${
+                  isActive ? "font-semibold" : ""
+                }`}
                 style={{
                   backgroundColor: isActive ? "var(--accent-soft)" : "transparent",
                   color: "var(--primary)",
                 }}
               >
-                <Icon size={20} />
-                <span>{category.name}</span>
-
+                <span className="flex items-center gap-3">
+                  <Icon size={20} />
+                  <span>{category.name}</span>
+                </span>
+                {showItemCount && (
+                  <span
+                    className="text-xs rounded-full px-1.5 py-0.5"
+                    style={{ backgroundColor: "var(--accent-soft-strong)" }}
+                  >
+                    {itemCounts[idx] ?? 0}
+                  </span>
+                )}
               </button>
             );
           })}

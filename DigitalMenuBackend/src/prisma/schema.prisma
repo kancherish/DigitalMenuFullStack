@@ -12,6 +12,69 @@
     dropdown
   }
 
+  enum headerLayoutN{
+    banner
+    minimal  
+    split
+  }
+
+  enum logoShapeN {
+    circle 
+    rounded 
+    square
+  }
+
+  enum overlayStyleN{
+    gradient 
+    solid 
+    none
+  }
+
+  enum headingFontN{
+    serif
+    sans 
+    display
+  }
+
+  enum headerAlignN{
+    center
+    left
+  }
+
+  enum headerSizeN{
+    compact
+    default
+    large
+  }
+
+  enum categoryVariantN{
+    pill
+    underline
+  }
+
+  enum categorySizeN {
+    sm
+    md
+    lg
+  }
+
+  enum itemSizeN {
+    sm
+    md
+    lg
+  }
+
+  enum itemImagePositionN {
+     left
+     right
+  }
+
+  enum itemImageShapeN {
+    rounded
+    square
+    circle
+  }
+
   model RestaurantAdmin {
     id Int @id @default(autoincrement())
     publicId String  @unique @default(uuid())
@@ -44,6 +107,22 @@
     domain String?    
     defaultImageUrl String @default("https://order.pennentertainment.com/assets/img/png/default-menu-image-placeholder.png")
     showItemImage Boolean @default(false)
+    headerLayout headerLayoutN @default(banner)
+    logoShape    logoShapeN @default(circle)
+    overlayStyle overlayStyleN @default(solid)
+    overlayIntensity Float  @default(1)
+    headingFont headingFontN @default(sans)
+    headerAlign headerAlignN @default(center)
+    headerSize  headerSizeN @default(compact)
+    categoryVariant categoryVariantN @default(pill) 
+    categorySize categorySizeN @default(sm)
+    itemSize itemSizeN @default(sm)
+    itemImagePosition itemImagePositionN @default(left)
+    itemImageShape itemImageShapeN @default(square)
+    currencySymbol String @default("₹")
+    surfaceColor String @default("#ffffff")
+    boardEnabled Boolean @default(false)
+    boardText String @default("")
   }
 
   model Category {
@@ -67,6 +146,7 @@
     badges      String[] @default([])
     variants    Variant[]
     imageURL    String?
+    available Boolean @default(true)
   }
 
   model Variant {

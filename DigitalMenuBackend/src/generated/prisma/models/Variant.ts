@@ -406,14 +406,6 @@ export type VariantUncheckedUpdateManyWithoutItemNestedInput = {
   deleteMany?: Prisma.VariantScalarWhereInput | Prisma.VariantScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type VariantCreateWithoutItemInput = {
   publicId?: string
   name: string

@@ -28,10 +28,12 @@ export type AggregateRestaurant = {
 
 export type RestaurantAvgAggregateOutputType = {
   id: number | null
+  overlayIntensity: number | null
 }
 
 export type RestaurantSumAggregateOutputType = {
   id: number | null
+  overlayIntensity: number | null
 }
 
 export type RestaurantMinAggregateOutputType = {
@@ -54,6 +56,22 @@ export type RestaurantMinAggregateOutputType = {
   domain: string | null
   defaultImageUrl: string | null
   showItemImage: boolean | null
+  headerLayout: $Enums.headerLayoutN | null
+  logoShape: $Enums.logoShapeN | null
+  overlayStyle: $Enums.overlayStyleN | null
+  overlayIntensity: number | null
+  headingFont: $Enums.headingFontN | null
+  headerAlign: $Enums.headerAlignN | null
+  headerSize: $Enums.headerSizeN | null
+  categoryVariant: $Enums.categoryVariantN | null
+  categorySize: $Enums.categorySizeN | null
+  itemSize: $Enums.itemSizeN | null
+  itemImagePosition: $Enums.itemImagePositionN | null
+  itemImageShape: $Enums.itemImageShapeN | null
+  currencySymbol: string | null
+  surfaceColor: string | null
+  boardEnabled: boolean | null
+  boardText: string | null
 }
 
 export type RestaurantMaxAggregateOutputType = {
@@ -76,6 +94,22 @@ export type RestaurantMaxAggregateOutputType = {
   domain: string | null
   defaultImageUrl: string | null
   showItemImage: boolean | null
+  headerLayout: $Enums.headerLayoutN | null
+  logoShape: $Enums.logoShapeN | null
+  overlayStyle: $Enums.overlayStyleN | null
+  overlayIntensity: number | null
+  headingFont: $Enums.headingFontN | null
+  headerAlign: $Enums.headerAlignN | null
+  headerSize: $Enums.headerSizeN | null
+  categoryVariant: $Enums.categoryVariantN | null
+  categorySize: $Enums.categorySizeN | null
+  itemSize: $Enums.itemSizeN | null
+  itemImagePosition: $Enums.itemImagePositionN | null
+  itemImageShape: $Enums.itemImageShapeN | null
+  currencySymbol: string | null
+  surfaceColor: string | null
+  boardEnabled: boolean | null
+  boardText: string | null
 }
 
 export type RestaurantCountAggregateOutputType = {
@@ -98,16 +132,34 @@ export type RestaurantCountAggregateOutputType = {
   domain: number
   defaultImageUrl: number
   showItemImage: number
+  headerLayout: number
+  logoShape: number
+  overlayStyle: number
+  overlayIntensity: number
+  headingFont: number
+  headerAlign: number
+  headerSize: number
+  categoryVariant: number
+  categorySize: number
+  itemSize: number
+  itemImagePosition: number
+  itemImageShape: number
+  currencySymbol: number
+  surfaceColor: number
+  boardEnabled: number
+  boardText: number
   _all: number
 }
 
 
 export type RestaurantAvgAggregateInputType = {
   id?: true
+  overlayIntensity?: true
 }
 
 export type RestaurantSumAggregateInputType = {
   id?: true
+  overlayIntensity?: true
 }
 
 export type RestaurantMinAggregateInputType = {
@@ -130,6 +182,22 @@ export type RestaurantMinAggregateInputType = {
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
+  headerLayout?: true
+  logoShape?: true
+  overlayStyle?: true
+  overlayIntensity?: true
+  headingFont?: true
+  headerAlign?: true
+  headerSize?: true
+  categoryVariant?: true
+  categorySize?: true
+  itemSize?: true
+  itemImagePosition?: true
+  itemImageShape?: true
+  currencySymbol?: true
+  surfaceColor?: true
+  boardEnabled?: true
+  boardText?: true
 }
 
 export type RestaurantMaxAggregateInputType = {
@@ -152,6 +220,22 @@ export type RestaurantMaxAggregateInputType = {
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
+  headerLayout?: true
+  logoShape?: true
+  overlayStyle?: true
+  overlayIntensity?: true
+  headingFont?: true
+  headerAlign?: true
+  headerSize?: true
+  categoryVariant?: true
+  categorySize?: true
+  itemSize?: true
+  itemImagePosition?: true
+  itemImageShape?: true
+  currencySymbol?: true
+  surfaceColor?: true
+  boardEnabled?: true
+  boardText?: true
 }
 
 export type RestaurantCountAggregateInputType = {
@@ -174,6 +258,22 @@ export type RestaurantCountAggregateInputType = {
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
+  headerLayout?: true
+  logoShape?: true
+  overlayStyle?: true
+  overlayIntensity?: true
+  headingFont?: true
+  headerAlign?: true
+  headerSize?: true
+  categoryVariant?: true
+  categorySize?: true
+  itemSize?: true
+  itemImagePosition?: true
+  itemImageShape?: true
+  currencySymbol?: true
+  surfaceColor?: true
+  boardEnabled?: true
+  boardText?: true
   _all?: true
 }
 
@@ -283,6 +383,22 @@ export type RestaurantGroupByOutputType = {
   domain: string | null
   defaultImageUrl: string
   showItemImage: boolean
+  headerLayout: $Enums.headerLayoutN
+  logoShape: $Enums.logoShapeN
+  overlayStyle: $Enums.overlayStyleN
+  overlayIntensity: number
+  headingFont: $Enums.headingFontN
+  headerAlign: $Enums.headerAlignN
+  headerSize: $Enums.headerSizeN
+  categoryVariant: $Enums.categoryVariantN
+  categorySize: $Enums.categorySizeN
+  itemSize: $Enums.itemSizeN
+  itemImagePosition: $Enums.itemImagePositionN
+  itemImageShape: $Enums.itemImageShapeN
+  currencySymbol: string
+  surfaceColor: string
+  boardEnabled: boolean
+  boardText: string
   _count: RestaurantCountAggregateOutputType | null
   _avg: RestaurantAvgAggregateOutputType | null
   _sum: RestaurantSumAggregateOutputType | null
@@ -328,6 +444,22 @@ export type RestaurantWhereInput = {
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFilter<"Restaurant"> | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFilter<"Restaurant"> | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFilter<"Restaurant"> | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFilter<"Restaurant"> | number
+  headingFont?: Prisma.EnumheadingFontNFilter<"Restaurant"> | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFilter<"Restaurant"> | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFilter<"Restaurant"> | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFilter<"Restaurant"> | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFilter<"Restaurant"> | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFilter<"Restaurant"> | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFilter<"Restaurant"> | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFilter<"Restaurant"> | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFilter<"Restaurant"> | string
+  surfaceColor?: Prisma.StringFilter<"Restaurant"> | string
+  boardEnabled?: Prisma.BoolFilter<"Restaurant"> | boolean
+  boardText?: Prisma.StringFilter<"Restaurant"> | string
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }
@@ -352,6 +484,22 @@ export type RestaurantOrderByWithRelationInput = {
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
+  headerLayout?: Prisma.SortOrder
+  logoShape?: Prisma.SortOrder
+  overlayStyle?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
+  headingFont?: Prisma.SortOrder
+  headerAlign?: Prisma.SortOrder
+  headerSize?: Prisma.SortOrder
+  categoryVariant?: Prisma.SortOrder
+  categorySize?: Prisma.SortOrder
+  itemSize?: Prisma.SortOrder
+  itemImagePosition?: Prisma.SortOrder
+  itemImageShape?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  surfaceColor?: Prisma.SortOrder
+  boardEnabled?: Prisma.SortOrder
+  boardText?: Prisma.SortOrder
   admin?: Prisma.RestaurantAdminOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
@@ -379,6 +527,22 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFilter<"Restaurant"> | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFilter<"Restaurant"> | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFilter<"Restaurant"> | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFilter<"Restaurant"> | number
+  headingFont?: Prisma.EnumheadingFontNFilter<"Restaurant"> | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFilter<"Restaurant"> | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFilter<"Restaurant"> | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFilter<"Restaurant"> | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFilter<"Restaurant"> | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFilter<"Restaurant"> | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFilter<"Restaurant"> | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFilter<"Restaurant"> | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFilter<"Restaurant"> | string
+  surfaceColor?: Prisma.StringFilter<"Restaurant"> | string
+  boardEnabled?: Prisma.BoolFilter<"Restaurant"> | boolean
+  boardText?: Prisma.StringFilter<"Restaurant"> | string
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "publicId" | "adminId">
@@ -403,6 +567,22 @@ export type RestaurantOrderByWithAggregationInput = {
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
+  headerLayout?: Prisma.SortOrder
+  logoShape?: Prisma.SortOrder
+  overlayStyle?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
+  headingFont?: Prisma.SortOrder
+  headerAlign?: Prisma.SortOrder
+  headerSize?: Prisma.SortOrder
+  categoryVariant?: Prisma.SortOrder
+  categorySize?: Prisma.SortOrder
+  itemSize?: Prisma.SortOrder
+  itemImagePosition?: Prisma.SortOrder
+  itemImageShape?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  surfaceColor?: Prisma.SortOrder
+  boardEnabled?: Prisma.SortOrder
+  boardText?: Prisma.SortOrder
   _count?: Prisma.RestaurantCountOrderByAggregateInput
   _avg?: Prisma.RestaurantAvgOrderByAggregateInput
   _max?: Prisma.RestaurantMaxOrderByAggregateInput
@@ -433,6 +613,22 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   domain?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNWithAggregatesFilter<"Restaurant"> | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNWithAggregatesFilter<"Restaurant"> | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNWithAggregatesFilter<"Restaurant"> | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatWithAggregatesFilter<"Restaurant"> | number
+  headingFont?: Prisma.EnumheadingFontNWithAggregatesFilter<"Restaurant"> | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNWithAggregatesFilter<"Restaurant"> | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNWithAggregatesFilter<"Restaurant"> | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNWithAggregatesFilter<"Restaurant"> | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNWithAggregatesFilter<"Restaurant"> | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNWithAggregatesFilter<"Restaurant"> | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNWithAggregatesFilter<"Restaurant"> | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNWithAggregatesFilter<"Restaurant"> | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  surfaceColor?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  boardEnabled?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
+  boardText?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
 }
 
 export type RestaurantCreateInput = {
@@ -453,6 +649,22 @@ export type RestaurantCreateInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
@@ -477,6 +689,22 @@ export type RestaurantUncheckedCreateInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -498,6 +726,22 @@ export type RestaurantUpdateInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
@@ -522,6 +766,22 @@ export type RestaurantUncheckedUpdateInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -545,6 +805,22 @@ export type RestaurantCreateManyInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
 }
 
 export type RestaurantUpdateManyMutationInput = {
@@ -565,6 +841,22 @@ export type RestaurantUpdateManyMutationInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type RestaurantUncheckedUpdateManyInput = {
@@ -587,6 +879,22 @@ export type RestaurantUncheckedUpdateManyInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type RestaurantNullableScalarRelationFilter = {
@@ -614,10 +922,27 @@ export type RestaurantCountOrderByAggregateInput = {
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
+  headerLayout?: Prisma.SortOrder
+  logoShape?: Prisma.SortOrder
+  overlayStyle?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
+  headingFont?: Prisma.SortOrder
+  headerAlign?: Prisma.SortOrder
+  headerSize?: Prisma.SortOrder
+  categoryVariant?: Prisma.SortOrder
+  categorySize?: Prisma.SortOrder
+  itemSize?: Prisma.SortOrder
+  itemImagePosition?: Prisma.SortOrder
+  itemImageShape?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  surfaceColor?: Prisma.SortOrder
+  boardEnabled?: Prisma.SortOrder
+  boardText?: Prisma.SortOrder
 }
 
 export type RestaurantAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
 }
 
 export type RestaurantMaxOrderByAggregateInput = {
@@ -640,6 +965,22 @@ export type RestaurantMaxOrderByAggregateInput = {
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
+  headerLayout?: Prisma.SortOrder
+  logoShape?: Prisma.SortOrder
+  overlayStyle?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
+  headingFont?: Prisma.SortOrder
+  headerAlign?: Prisma.SortOrder
+  headerSize?: Prisma.SortOrder
+  categoryVariant?: Prisma.SortOrder
+  categorySize?: Prisma.SortOrder
+  itemSize?: Prisma.SortOrder
+  itemImagePosition?: Prisma.SortOrder
+  itemImageShape?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  surfaceColor?: Prisma.SortOrder
+  boardEnabled?: Prisma.SortOrder
+  boardText?: Prisma.SortOrder
 }
 
 export type RestaurantMinOrderByAggregateInput = {
@@ -662,10 +1003,27 @@ export type RestaurantMinOrderByAggregateInput = {
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
+  headerLayout?: Prisma.SortOrder
+  logoShape?: Prisma.SortOrder
+  overlayStyle?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
+  headingFont?: Prisma.SortOrder
+  headerAlign?: Prisma.SortOrder
+  headerSize?: Prisma.SortOrder
+  categoryVariant?: Prisma.SortOrder
+  categorySize?: Prisma.SortOrder
+  itemSize?: Prisma.SortOrder
+  itemImagePosition?: Prisma.SortOrder
+  itemImageShape?: Prisma.SortOrder
+  currencySymbol?: Prisma.SortOrder
+  surfaceColor?: Prisma.SortOrder
+  boardEnabled?: Prisma.SortOrder
+  boardText?: Prisma.SortOrder
 }
 
 export type RestaurantSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  overlayIntensity?: Prisma.SortOrder
 }
 
 export type RestaurantScalarRelationFilter = {
@@ -713,6 +1071,58 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
+export type EnumheaderLayoutNFieldUpdateOperationsInput = {
+  set?: $Enums.headerLayoutN
+}
+
+export type EnumlogoShapeNFieldUpdateOperationsInput = {
+  set?: $Enums.logoShapeN
+}
+
+export type EnumoverlayStyleNFieldUpdateOperationsInput = {
+  set?: $Enums.overlayStyleN
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type EnumheadingFontNFieldUpdateOperationsInput = {
+  set?: $Enums.headingFontN
+}
+
+export type EnumheaderAlignNFieldUpdateOperationsInput = {
+  set?: $Enums.headerAlignN
+}
+
+export type EnumheaderSizeNFieldUpdateOperationsInput = {
+  set?: $Enums.headerSizeN
+}
+
+export type EnumcategoryVariantNFieldUpdateOperationsInput = {
+  set?: $Enums.categoryVariantN
+}
+
+export type EnumcategorySizeNFieldUpdateOperationsInput = {
+  set?: $Enums.categorySizeN
+}
+
+export type EnumitemSizeNFieldUpdateOperationsInput = {
+  set?: $Enums.itemSizeN
+}
+
+export type EnumitemImagePositionNFieldUpdateOperationsInput = {
+  set?: $Enums.itemImagePositionN
+}
+
+export type EnumitemImageShapeNFieldUpdateOperationsInput = {
+  set?: $Enums.itemImageShapeN
+}
+
 export type RestaurantCreateNestedOneWithoutCategoriesInput = {
   create?: Prisma.XOR<Prisma.RestaurantCreateWithoutCategoriesInput, Prisma.RestaurantUncheckedCreateWithoutCategoriesInput>
   connectOrCreate?: Prisma.RestaurantCreateOrConnectWithoutCategoriesInput
@@ -745,6 +1155,22 @@ export type RestaurantCreateWithoutAdminInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
 
@@ -767,6 +1193,22 @@ export type RestaurantUncheckedCreateWithoutAdminInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -804,6 +1246,22 @@ export type RestaurantUpdateWithoutAdminInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -826,6 +1284,22 @@ export type RestaurantUncheckedUpdateWithoutAdminInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -847,6 +1321,22 @@ export type RestaurantCreateWithoutCategoriesInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
 }
 
@@ -870,6 +1360,22 @@ export type RestaurantUncheckedCreateWithoutCategoriesInput = {
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
+  headerLayout?: $Enums.headerLayoutN
+  logoShape?: $Enums.logoShapeN
+  overlayStyle?: $Enums.overlayStyleN
+  overlayIntensity?: number
+  headingFont?: $Enums.headingFontN
+  headerAlign?: $Enums.headerAlignN
+  headerSize?: $Enums.headerSizeN
+  categoryVariant?: $Enums.categoryVariantN
+  categorySize?: $Enums.categorySizeN
+  itemSize?: $Enums.itemSizeN
+  itemImagePosition?: $Enums.itemImagePositionN
+  itemImageShape?: $Enums.itemImageShapeN
+  currencySymbol?: string
+  surfaceColor?: string
+  boardEnabled?: boolean
+  boardText?: string
 }
 
 export type RestaurantCreateOrConnectWithoutCategoriesInput = {
@@ -906,6 +1412,22 @@ export type RestaurantUpdateWithoutCategoriesInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
 }
 
@@ -929,6 +1451,22 @@ export type RestaurantUncheckedUpdateWithoutCategoriesInput = {
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  headerLayout?: Prisma.EnumheaderLayoutNFieldUpdateOperationsInput | $Enums.headerLayoutN
+  logoShape?: Prisma.EnumlogoShapeNFieldUpdateOperationsInput | $Enums.logoShapeN
+  overlayStyle?: Prisma.EnumoverlayStyleNFieldUpdateOperationsInput | $Enums.overlayStyleN
+  overlayIntensity?: Prisma.FloatFieldUpdateOperationsInput | number
+  headingFont?: Prisma.EnumheadingFontNFieldUpdateOperationsInput | $Enums.headingFontN
+  headerAlign?: Prisma.EnumheaderAlignNFieldUpdateOperationsInput | $Enums.headerAlignN
+  headerSize?: Prisma.EnumheaderSizeNFieldUpdateOperationsInput | $Enums.headerSizeN
+  categoryVariant?: Prisma.EnumcategoryVariantNFieldUpdateOperationsInput | $Enums.categoryVariantN
+  categorySize?: Prisma.EnumcategorySizeNFieldUpdateOperationsInput | $Enums.categorySizeN
+  itemSize?: Prisma.EnumitemSizeNFieldUpdateOperationsInput | $Enums.itemSizeN
+  itemImagePosition?: Prisma.EnumitemImagePositionNFieldUpdateOperationsInput | $Enums.itemImagePositionN
+  itemImageShape?: Prisma.EnumitemImageShapeNFieldUpdateOperationsInput | $Enums.itemImageShapeN
+  currencySymbol?: Prisma.StringFieldUpdateOperationsInput | string
+  surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
+  boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  boardText?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -982,6 +1520,22 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
+  headerLayout?: boolean
+  logoShape?: boolean
+  overlayStyle?: boolean
+  overlayIntensity?: boolean
+  headingFont?: boolean
+  headerAlign?: boolean
+  headerSize?: boolean
+  categoryVariant?: boolean
+  categorySize?: boolean
+  itemSize?: boolean
+  itemImagePosition?: boolean
+  itemImageShape?: boolean
+  currencySymbol?: boolean
+  surfaceColor?: boolean
+  boardEnabled?: boolean
+  boardText?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.RestaurantCountOutputTypeDefaultArgs<ExtArgs>
@@ -1007,6 +1561,22 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
+  headerLayout?: boolean
+  logoShape?: boolean
+  overlayStyle?: boolean
+  overlayIntensity?: boolean
+  headingFont?: boolean
+  headerAlign?: boolean
+  headerSize?: boolean
+  categoryVariant?: boolean
+  categorySize?: boolean
+  itemSize?: boolean
+  itemImagePosition?: boolean
+  itemImageShape?: boolean
+  currencySymbol?: boolean
+  surfaceColor?: boolean
+  boardEnabled?: boolean
+  boardText?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -1030,6 +1600,22 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
+  headerLayout?: boolean
+  logoShape?: boolean
+  overlayStyle?: boolean
+  overlayIntensity?: boolean
+  headingFont?: boolean
+  headerAlign?: boolean
+  headerSize?: boolean
+  categoryVariant?: boolean
+  categorySize?: boolean
+  itemSize?: boolean
+  itemImagePosition?: boolean
+  itemImageShape?: boolean
+  currencySymbol?: boolean
+  surfaceColor?: boolean
+  boardEnabled?: boolean
+  boardText?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -1053,9 +1639,25 @@ export type RestaurantSelectScalar = {
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
+  headerLayout?: boolean
+  logoShape?: boolean
+  overlayStyle?: boolean
+  overlayIntensity?: boolean
+  headingFont?: boolean
+  headerAlign?: boolean
+  headerSize?: boolean
+  categoryVariant?: boolean
+  categorySize?: boolean
+  itemSize?: boolean
+  itemImagePosition?: boolean
+  itemImageShape?: boolean
+  currencySymbol?: boolean
+  surfaceColor?: boolean
+  boardEnabled?: boolean
+  boardText?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage" | "headerLayout" | "logoShape" | "overlayStyle" | "overlayIntensity" | "headingFont" | "headerAlign" | "headerSize" | "categoryVariant" | "categorySize" | "itemSize" | "itemImagePosition" | "itemImageShape" | "currencySymbol" | "surfaceColor" | "boardEnabled" | "boardText", ExtArgs["result"]["restaurant"]>
 export type RestaurantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
@@ -1094,6 +1696,22 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     domain: string | null
     defaultImageUrl: string
     showItemImage: boolean
+    headerLayout: $Enums.headerLayoutN
+    logoShape: $Enums.logoShapeN
+    overlayStyle: $Enums.overlayStyleN
+    overlayIntensity: number
+    headingFont: $Enums.headingFontN
+    headerAlign: $Enums.headerAlignN
+    headerSize: $Enums.headerSizeN
+    categoryVariant: $Enums.categoryVariantN
+    categorySize: $Enums.categorySizeN
+    itemSize: $Enums.itemSizeN
+    itemImagePosition: $Enums.itemImagePositionN
+    itemImageShape: $Enums.itemImageShapeN
+    currencySymbol: string
+    surfaceColor: string
+    boardEnabled: boolean
+    boardText: string
   }, ExtArgs["result"]["restaurant"]>
   composites: {}
 }
@@ -1538,6 +2156,22 @@ export interface RestaurantFieldRefs {
   readonly domain: Prisma.FieldRef<"Restaurant", 'String'>
   readonly defaultImageUrl: Prisma.FieldRef<"Restaurant", 'String'>
   readonly showItemImage: Prisma.FieldRef<"Restaurant", 'Boolean'>
+  readonly headerLayout: Prisma.FieldRef<"Restaurant", 'headerLayoutN'>
+  readonly logoShape: Prisma.FieldRef<"Restaurant", 'logoShapeN'>
+  readonly overlayStyle: Prisma.FieldRef<"Restaurant", 'overlayStyleN'>
+  readonly overlayIntensity: Prisma.FieldRef<"Restaurant", 'Float'>
+  readonly headingFont: Prisma.FieldRef<"Restaurant", 'headingFontN'>
+  readonly headerAlign: Prisma.FieldRef<"Restaurant", 'headerAlignN'>
+  readonly headerSize: Prisma.FieldRef<"Restaurant", 'headerSizeN'>
+  readonly categoryVariant: Prisma.FieldRef<"Restaurant", 'categoryVariantN'>
+  readonly categorySize: Prisma.FieldRef<"Restaurant", 'categorySizeN'>
+  readonly itemSize: Prisma.FieldRef<"Restaurant", 'itemSizeN'>
+  readonly itemImagePosition: Prisma.FieldRef<"Restaurant", 'itemImagePositionN'>
+  readonly itemImageShape: Prisma.FieldRef<"Restaurant", 'itemImageShapeN'>
+  readonly currencySymbol: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly surfaceColor: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly boardEnabled: Prisma.FieldRef<"Restaurant", 'Boolean'>
+  readonly boardText: Prisma.FieldRef<"Restaurant", 'String'>
 }
     
 

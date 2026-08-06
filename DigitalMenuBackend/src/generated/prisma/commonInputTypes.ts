@@ -124,6 +124,94 @@ export type BoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type EnumheaderLayoutNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerLayoutN | Prisma.EnumheaderLayoutNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel> | $Enums.headerLayoutN
+}
+
+export type EnumlogoShapeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoShapeN | Prisma.EnumlogoShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel> | $Enums.logoShapeN
+}
+
+export type EnumoverlayStyleNFilter<$PrismaModel = never> = {
+  equals?: $Enums.overlayStyleN | Prisma.EnumoverlayStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel> | $Enums.overlayStyleN
+}
+
+export type FloatFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatFilter<$PrismaModel> | number
+}
+
+export type EnumheadingFontNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headingFontN | Prisma.EnumheadingFontNFieldRefInput<$PrismaModel>
+  in?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel> | $Enums.headingFontN
+}
+
+export type EnumheaderAlignNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerAlignN | Prisma.EnumheaderAlignNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel> | $Enums.headerAlignN
+}
+
+export type EnumheaderSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSizeN | Prisma.EnumheaderSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel> | $Enums.headerSizeN
+}
+
+export type EnumcategoryVariantNFilter<$PrismaModel = never> = {
+  equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
+  in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel> | $Enums.categoryVariantN
+}
+
+export type EnumcategorySizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.categorySizeN | Prisma.EnumcategorySizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel> | $Enums.categorySizeN
+}
+
+export type EnumitemSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemSizeN | Prisma.EnumitemSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel> | $Enums.itemSizeN
+}
+
+export type EnumitemImagePositionNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImagePositionN | Prisma.EnumitemImagePositionNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel> | $Enums.itemImagePositionN
+}
+
+export type EnumitemImageShapeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImageShapeN | Prisma.EnumitemImageShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel> | $Enums.itemImageShapeN
+}
+
 export type EnumNavStyleWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.NavStyle | Prisma.EnumNavStyleFieldRefInput<$PrismaModel>
   in?: $Enums.NavStyle[] | Prisma.ListEnumNavStyleFieldRefInput<$PrismaModel>
@@ -140,6 +228,132 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumheaderLayoutNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerLayoutN | Prisma.EnumheaderLayoutNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderLayoutNWithAggregatesFilter<$PrismaModel> | $Enums.headerLayoutN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel>
+}
+
+export type EnumlogoShapeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoShapeN | Prisma.EnumlogoShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoShapeNWithAggregatesFilter<$PrismaModel> | $Enums.logoShapeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel>
+}
+
+export type EnumoverlayStyleNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.overlayStyleN | Prisma.EnumoverlayStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumoverlayStyleNWithAggregatesFilter<$PrismaModel> | $Enums.overlayStyleN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel>
+}
+
+export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatWithAggregatesFilter<$PrismaModel> | number
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
+  _sum?: Prisma.NestedFloatFilter<$PrismaModel>
+  _min?: Prisma.NestedFloatFilter<$PrismaModel>
+  _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type EnumheadingFontNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headingFontN | Prisma.EnumheadingFontNFieldRefInput<$PrismaModel>
+  in?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheadingFontNWithAggregatesFilter<$PrismaModel> | $Enums.headingFontN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel>
+}
+
+export type EnumheaderAlignNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerAlignN | Prisma.EnumheaderAlignNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderAlignNWithAggregatesFilter<$PrismaModel> | $Enums.headerAlignN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel>
+}
+
+export type EnumheaderSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSizeN | Prisma.EnumheaderSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSizeNWithAggregatesFilter<$PrismaModel> | $Enums.headerSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+}
+
+export type EnumcategoryVariantNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
+  in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategoryVariantNWithAggregatesFilter<$PrismaModel> | $Enums.categoryVariantN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel>
+}
+
+export type EnumcategorySizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.categorySizeN | Prisma.EnumcategorySizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategorySizeNWithAggregatesFilter<$PrismaModel> | $Enums.categorySizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel>
+}
+
+export type EnumitemSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemSizeN | Prisma.EnumitemSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemSizeNWithAggregatesFilter<$PrismaModel> | $Enums.itemSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel>
+}
+
+export type EnumitemImagePositionNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImagePositionN | Prisma.EnumitemImagePositionNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImagePositionNWithAggregatesFilter<$PrismaModel> | $Enums.itemImagePositionN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel>
+}
+
+export type EnumitemImageShapeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImageShapeN | Prisma.EnumitemImageShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImageShapeNWithAggregatesFilter<$PrismaModel> | $Enums.itemImageShapeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
 }
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -167,33 +381,6 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
-}
-
-export type FloatFilter<$PrismaModel = never> = {
-  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedFloatFilter<$PrismaModel> | number
-}
-
-export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedFloatWithAggregatesFilter<$PrismaModel> | number
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
-  _sum?: Prisma.NestedFloatFilter<$PrismaModel>
-  _min?: Prisma.NestedFloatFilter<$PrismaModel>
-  _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
 export type NestedIntFilter<$PrismaModel = never> = {
@@ -319,6 +506,83 @@ export type NestedBoolFilter<$PrismaModel = never> = {
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
 }
 
+export type NestedEnumheaderLayoutNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerLayoutN | Prisma.EnumheaderLayoutNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel> | $Enums.headerLayoutN
+}
+
+export type NestedEnumlogoShapeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoShapeN | Prisma.EnumlogoShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel> | $Enums.logoShapeN
+}
+
+export type NestedEnumoverlayStyleNFilter<$PrismaModel = never> = {
+  equals?: $Enums.overlayStyleN | Prisma.EnumoverlayStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel> | $Enums.overlayStyleN
+}
+
+export type NestedEnumheadingFontNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headingFontN | Prisma.EnumheadingFontNFieldRefInput<$PrismaModel>
+  in?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel> | $Enums.headingFontN
+}
+
+export type NestedEnumheaderAlignNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerAlignN | Prisma.EnumheaderAlignNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel> | $Enums.headerAlignN
+}
+
+export type NestedEnumheaderSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSizeN | Prisma.EnumheaderSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel> | $Enums.headerSizeN
+}
+
+export type NestedEnumcategoryVariantNFilter<$PrismaModel = never> = {
+  equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
+  in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel> | $Enums.categoryVariantN
+}
+
+export type NestedEnumcategorySizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.categorySizeN | Prisma.EnumcategorySizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel> | $Enums.categorySizeN
+}
+
+export type NestedEnumitemSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemSizeN | Prisma.EnumitemSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel> | $Enums.itemSizeN
+}
+
+export type NestedEnumitemImagePositionNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImagePositionN | Prisma.EnumitemImagePositionNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel> | $Enums.itemImagePositionN
+}
+
+export type NestedEnumitemImageShapeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImageShapeN | Prisma.EnumitemImageShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel> | $Enums.itemImageShapeN
+}
+
 export type NestedEnumNavStyleWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.NavStyle | Prisma.EnumNavStyleFieldRefInput<$PrismaModel>
   in?: $Enums.NavStyle[] | Prisma.ListEnumNavStyleFieldRefInput<$PrismaModel>
@@ -335,6 +599,132 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumheaderLayoutNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerLayoutN | Prisma.EnumheaderLayoutNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerLayoutN[] | Prisma.ListEnumheaderLayoutNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderLayoutNWithAggregatesFilter<$PrismaModel> | $Enums.headerLayoutN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderLayoutNFilter<$PrismaModel>
+}
+
+export type NestedEnumlogoShapeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoShapeN | Prisma.EnumlogoShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoShapeN[] | Prisma.ListEnumlogoShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoShapeNWithAggregatesFilter<$PrismaModel> | $Enums.logoShapeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumlogoShapeNFilter<$PrismaModel>
+}
+
+export type NestedEnumoverlayStyleNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.overlayStyleN | Prisma.EnumoverlayStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.overlayStyleN[] | Prisma.ListEnumoverlayStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumoverlayStyleNWithAggregatesFilter<$PrismaModel> | $Enums.overlayStyleN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumoverlayStyleNFilter<$PrismaModel>
+}
+
+export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
+  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedFloatWithAggregatesFilter<$PrismaModel> | number
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
+  _sum?: Prisma.NestedFloatFilter<$PrismaModel>
+  _min?: Prisma.NestedFloatFilter<$PrismaModel>
+  _max?: Prisma.NestedFloatFilter<$PrismaModel>
+}
+
+export type NestedEnumheadingFontNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headingFontN | Prisma.EnumheadingFontNFieldRefInput<$PrismaModel>
+  in?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headingFontN[] | Prisma.ListEnumheadingFontNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheadingFontNWithAggregatesFilter<$PrismaModel> | $Enums.headingFontN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheadingFontNFilter<$PrismaModel>
+}
+
+export type NestedEnumheaderAlignNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerAlignN | Prisma.EnumheaderAlignNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerAlignN[] | Prisma.ListEnumheaderAlignNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderAlignNWithAggregatesFilter<$PrismaModel> | $Enums.headerAlignN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderAlignNFilter<$PrismaModel>
+}
+
+export type NestedEnumheaderSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSizeN | Prisma.EnumheaderSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSizeN[] | Prisma.ListEnumheaderSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSizeNWithAggregatesFilter<$PrismaModel> | $Enums.headerSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+}
+
+export type NestedEnumcategoryVariantNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
+  in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategoryVariantNWithAggregatesFilter<$PrismaModel> | $Enums.categoryVariantN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumcategoryVariantNFilter<$PrismaModel>
+}
+
+export type NestedEnumcategorySizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.categorySizeN | Prisma.EnumcategorySizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.categorySizeN[] | Prisma.ListEnumcategorySizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumcategorySizeNWithAggregatesFilter<$PrismaModel> | $Enums.categorySizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumcategorySizeNFilter<$PrismaModel>
+}
+
+export type NestedEnumitemSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemSizeN | Prisma.EnumitemSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemSizeN[] | Prisma.ListEnumitemSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemSizeNWithAggregatesFilter<$PrismaModel> | $Enums.itemSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemSizeNFilter<$PrismaModel>
+}
+
+export type NestedEnumitemImagePositionNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImagePositionN | Prisma.EnumitemImagePositionNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImagePositionN[] | Prisma.ListEnumitemImagePositionNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImagePositionNWithAggregatesFilter<$PrismaModel> | $Enums.itemImagePositionN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemImagePositionNFilter<$PrismaModel>
+}
+
+export type NestedEnumitemImageShapeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.itemImageShapeN | Prisma.EnumitemImageShapeNFieldRefInput<$PrismaModel>
+  in?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.itemImageShapeN[] | Prisma.ListEnumitemImageShapeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumitemImageShapeNWithAggregatesFilter<$PrismaModel> | $Enums.itemImageShapeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
 }
 
 export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -362,22 +752,6 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
-}
-
-export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  in?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  notIn?: number[] | Prisma.ListFloatFieldRefInput<$PrismaModel>
-  lt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  lte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedFloatWithAggregatesFilter<$PrismaModel> | number
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
-  _sum?: Prisma.NestedFloatFilter<$PrismaModel>
-  _min?: Prisma.NestedFloatFilter<$PrismaModel>
-  _max?: Prisma.NestedFloatFilter<$PrismaModel>
 }
 
 

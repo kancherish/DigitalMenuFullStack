@@ -28,7 +28,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 
   const rawPara = req.body?.para;
   const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
-  const { name, description, price, category_id, variants, badges } = para || {};
+  const { name, description, price, category_id, variants, badges , available } = para || {};
 
   if (!name || !category_id) {
     res.status(400).json(new ErrorResponse(400, "Missing required fields: name, category_id"));
@@ -94,7 +94,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  const data: any = { name, description: description || null, category_id: categoryIdStr, badges: badgesToAdd || [], imageURL: "" };
+  const data: any = { name, description: description || null, category_id: categoryIdStr, badges: badgesToAdd || [], imageURL: "", available};
   if (hasPrice) data.price = priceNum;
   if (hasVariants) data.variants = { create: validatedVariants };
 
@@ -122,7 +122,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   
   const rawPara = req.body?.para;
   const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
-  const { item_id, name, description, price, category_id, variants, badges, removeImage } = para|| {};
+  const { item_id, name, description, price, category_id, variants, badges, removeImage , available} = para|| {};
 
   if (!item_id) {
     res.status(400).json(new ErrorResponse(400, "Missing 'item_id' in request body.para"));
@@ -161,6 +161,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const updateData: any = {};
+  updateData.available = available;
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description;
   if (badgesToadd !== false) updateData.badges = badgesToadd;

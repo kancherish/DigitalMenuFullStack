@@ -1,5 +1,5 @@
 // src/controllers/auth.ts
-import { Request, Response,NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { prisma } from '../lib/prisma.js';
@@ -55,7 +55,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const adminPublicId = crypto.randomUUID();
   const restaurantPublicId = crypto.randomUUID();
-
+ 
   // Use transaction to create both admin and restaurant
   const result = await prisma.$transaction(async (tx) => {
     // 1. Create admin
@@ -68,7 +68,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     });
 
     // 2. Create restaurant linked to the admin
-    const restaurant = await tx.restaurant.create({
+    const restaurant1 = await tx.restaurant.create({
       data: {
         publicId: restaurantPublicId,
         name: restaurantName,
@@ -80,10 +80,16 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
         adminId: admin.publicId,
         showSearch,
         showItemCount,
-        stickyNav,
-        domain
+        stickyNav
       },
     });
+    
+    const restaurant = await tx.restaurant.update({
+      where: { publicId: restaurant1.publicId },
+      data: { domain: `${MAIN_DOMAIN}/${restaurant1.publicId}/` },
+    });
+
+
 
 
     return { admin, restaurant };
@@ -269,8 +275,8 @@ export const updateRestaurant = async (
     if (restaurant?.showSearch !== undefined) restaurantData.showSearch = restaurant.showSearch;
     if (restaurant?.showItemCount !== undefined) restaurantData.showItemCount = restaurant.showItemCount;
     if (restaurant?.stickyNav !== undefined) restaurantData.stickyNav = restaurant.stickyNav;
-    if (restaurant?.domain !== undefined) restaurantData.domain = restaurant.domain;
-    
+    // if (restaurant?.domain !== undefined) restaurantData.domain = restaurant.domain;
+
 
     const [updatedRestaurant, updatedAdmin] = await prisma.$transaction([
       prisma.restaurant.update({

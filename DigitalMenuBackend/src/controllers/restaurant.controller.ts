@@ -3,10 +3,10 @@ import { prisma } from "../lib/prisma.js";
 import { asyncHandler } from "../utils/asyncHandeler.js";
 import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
-import { NavStyle } from '../generated/prisma/enums';
+import { categorySizeN, categoryVariantN, headerAlignN, headerLayoutN, headerSizeN, headingFontN, itemImagePositionN, itemImageShapeN, itemSizeN, logoShapeN, NavStyle, overlayStyleN } from '../generated/prisma/enums';
 
 export const addResturant = asyncHandler(async (req: Request, res: Response) => {
-       //NO NEED AS OF NOW RESTAURANT WILL BE CREATED WITH ADMIN
+  //NO NEED AS OF NOW RESTAURANT WILL BE CREATED WITH ADMIN
 });
 
 export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
@@ -34,8 +34,12 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 });
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
-  const { restaurant_id, name, tagline, primaryColor, accentColor,tabStyle,logoUrl,backgroundUrl,roundness,showSearch 
-    ,showItemCount,stickyNav,domain,showDivider,headerText,defaultImageUrl,showItemImage} = req.body?.para || {};
+
+  const { restaurant_id, name, tagline, primaryColor, accentColor, tabStyle, logoUrl, backgroundUrl, roundness, showSearch,
+    showItemCount, stickyNav, domain, showDivider, headerText, defaultImageUrl, showItemImage, headerLayout,
+    logoShape, overlayStyle, overlayIntensity, headingFont, headerAlign, headerSize, categoryVariant,
+    categorySize, itemSize, itemImagePosition, itemImageShape, currencySymbol, surfaceColor ,  boardEnabled,
+  boardText} = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -55,26 +59,48 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     return;
   }
 
-  const updateData: { name?: string; tagline?: string; primaryColor?: string; accentColor?: string;logoUrl? : string ;backgroundUrl? : string 
-    ;tabStyle?: NavStyle;roundness?:string;showDivider?:boolean;headerText?:string;
-    showSearch?:boolean ,showItemCount?:boolean ,stickyNav?:boolean,domain?:string,showItemImage?: boolean
-  defaultImageUrl?: string} = {};
+  const updateData: {
+    name?: string; tagline?: string; primaryColor?: string; accentColor?: string; logoUrl?: string; backgroundUrl?: string
+    ; tabStyle?: NavStyle; roundness?: string; showDivider?: boolean; headerText?: string;
+    showSearch?: boolean, showItemCount?: boolean, stickyNav?: boolean, domain?: string, showItemImage?: boolean
+    defaultImageUrl?: string, headerLayout?: headerLayoutN, logoShape?: logoShapeN, overlayStyle?: overlayStyleN, overlayIntensity?: number,
+    headingFont?: headingFontN, headerAlign?: headerAlignN, headerSize?: headerSizeN, categoryVariant?: categoryVariantN,
+    categorySize?: categorySizeN, itemSize?: itemSizeN, itemImagePosition?: itemImagePositionN, itemImageShape?: itemImageShapeN,
+    currencySymbol?: string, surfaceColor?: string; boardEnabled?: boolean;
+    boardText?: string;} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
   if (accentColor !== undefined) updateData.accentColor = accentColor;
-  if (tabStyle  !== undefined) updateData.tabStyle = tabStyle;
-  if (roundness  !== undefined) updateData.roundness = roundness;
-  if (showSearch  !== undefined) updateData.showSearch = showSearch;
-  if (showItemCount  !== undefined) updateData.showItemCount = showItemCount;
-  if (stickyNav  !== undefined) updateData.stickyNav = stickyNav;
-  if (domain  !== undefined) updateData.domain = domain;
-  if (logoUrl  !== undefined) updateData.logoUrl = logoUrl;
-  if (backgroundUrl  !== undefined) updateData.backgroundUrl = backgroundUrl;
-  if (showDivider  !== undefined) updateData.showDivider = showDivider;
-  if (headerText  !== undefined) updateData.headerText = headerText;
-  if (showItemImage  !== undefined) updateData.showItemImage = showItemImage;
-  if (defaultImageUrl  !== undefined) updateData.defaultImageUrl = defaultImageUrl;
+  if (tabStyle !== undefined) updateData.tabStyle = tabStyle;
+  if (roundness !== undefined) updateData.roundness = roundness;
+  if (showSearch !== undefined) updateData.showSearch = showSearch;
+  if (showItemCount !== undefined) updateData.showItemCount = showItemCount;
+  if (stickyNav !== undefined) updateData.stickyNav = stickyNav;
+  // if (domain  !== undefined) updateData.domain = domain;
+  if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
+  if (backgroundUrl !== undefined) updateData.backgroundUrl = backgroundUrl;
+  if (showDivider !== undefined) updateData.showDivider = showDivider;
+  if (headerText !== undefined) updateData.headerText = headerText;
+  if (showItemImage !== undefined) updateData.showItemImage = showItemImage;
+  if (defaultImageUrl !== undefined) updateData.defaultImageUrl = defaultImageUrl;
+  if (headerLayout !== undefined) updateData.headerLayout = headerLayout;
+  if (logoShape !== undefined) updateData.logoShape = logoShape;
+  if (overlayStyle !== undefined) updateData.overlayStyle = overlayStyle;
+  if (overlayIntensity !== undefined) updateData.overlayIntensity = overlayIntensity;
+  if (headingFont !== undefined) updateData.headingFont = headingFont;
+  if (headingFont !== undefined) updateData.headingFont = headingFont;
+  if (headerAlign !== undefined) updateData.headerAlign = headerAlign;
+  if (headerSize !== undefined) updateData.headerSize = headerSize;
+  if (categorySize !== undefined) updateData.categorySize = categorySize;
+  if (categoryVariant !== undefined) updateData.categoryVariant = categoryVariant;
+  if (itemSize !== undefined) updateData.itemSize = itemSize;
+  if (itemImagePosition !== undefined) updateData.itemImagePosition = itemImagePosition;
+  if (itemImageShape !== undefined) updateData.itemImageShape = itemImageShape;
+  if (currencySymbol !== undefined) updateData.currencySymbol = currencySymbol;
+  if (surfaceColor !== undefined) updateData.surfaceColor = surfaceColor;
+  if (boardEnabled !== undefined) updateData.boardEnabled = boardEnabled;
+  if (boardText !== undefined && boardText !== null) updateData.boardText = boardText;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

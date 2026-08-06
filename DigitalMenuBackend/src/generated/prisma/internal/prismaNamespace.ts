@@ -847,7 +847,23 @@ export const RestaurantScalarFieldEnum = {
   stickyNav: 'stickyNav',
   domain: 'domain',
   defaultImageUrl: 'defaultImageUrl',
-  showItemImage: 'showItemImage'
+  showItemImage: 'showItemImage',
+  headerLayout: 'headerLayout',
+  logoShape: 'logoShape',
+  overlayStyle: 'overlayStyle',
+  overlayIntensity: 'overlayIntensity',
+  headingFont: 'headingFont',
+  headerAlign: 'headerAlign',
+  headerSize: 'headerSize',
+  categoryVariant: 'categoryVariant',
+  categorySize: 'categorySize',
+  itemSize: 'itemSize',
+  itemImagePosition: 'itemImagePosition',
+  itemImageShape: 'itemImageShape',
+  currencySymbol: 'currencySymbol',
+  surfaceColor: 'surfaceColor',
+  boardEnabled: 'boardEnabled',
+  boardText: 'boardText'
 } as const
 
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
@@ -872,7 +888,8 @@ export const ItemScalarFieldEnum = {
   price: 'price',
   category_id: 'category_id',
   badges: 'badges',
-  imageURL: 'imageURL'
+  imageURL: 'imageURL',
+  available: 'available'
 } as const
 
 export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
@@ -969,6 +986,48 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'headerLayoutN'
+ */
+export type EnumheaderLayoutNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerLayoutN'>
+    
+
+
+/**
+ * Reference to a field of type 'headerLayoutN[]'
+ */
+export type ListEnumheaderLayoutNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerLayoutN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'logoShapeN'
+ */
+export type EnumlogoShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'logoShapeN'>
+    
+
+
+/**
+ * Reference to a field of type 'logoShapeN[]'
+ */
+export type ListEnumlogoShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'logoShapeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'overlayStyleN'
+ */
+export type EnumoverlayStyleNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'overlayStyleN'>
+    
+
+
+/**
+ * Reference to a field of type 'overlayStyleN[]'
+ */
+export type ListEnumoverlayStyleNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'overlayStyleN[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -979,6 +1038,118 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'headingFontN'
+ */
+export type EnumheadingFontNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headingFontN'>
+    
+
+
+/**
+ * Reference to a field of type 'headingFontN[]'
+ */
+export type ListEnumheadingFontNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headingFontN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'headerAlignN'
+ */
+export type EnumheaderAlignNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerAlignN'>
+    
+
+
+/**
+ * Reference to a field of type 'headerAlignN[]'
+ */
+export type ListEnumheaderAlignNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerAlignN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'headerSizeN'
+ */
+export type EnumheaderSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerSizeN'>
+    
+
+
+/**
+ * Reference to a field of type 'headerSizeN[]'
+ */
+export type ListEnumheaderSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerSizeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'categoryVariantN'
+ */
+export type EnumcategoryVariantNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'categoryVariantN'>
+    
+
+
+/**
+ * Reference to a field of type 'categoryVariantN[]'
+ */
+export type ListEnumcategoryVariantNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'categoryVariantN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'categorySizeN'
+ */
+export type EnumcategorySizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'categorySizeN'>
+    
+
+
+/**
+ * Reference to a field of type 'categorySizeN[]'
+ */
+export type ListEnumcategorySizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'categorySizeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'itemSizeN'
+ */
+export type EnumitemSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemSizeN'>
+    
+
+
+/**
+ * Reference to a field of type 'itemSizeN[]'
+ */
+export type ListEnumitemSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemSizeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'itemImagePositionN'
+ */
+export type EnumitemImagePositionNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemImagePositionN'>
+    
+
+
+/**
+ * Reference to a field of type 'itemImagePositionN[]'
+ */
+export type ListEnumitemImagePositionNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemImagePositionN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'itemImageShapeN'
+ */
+export type EnumitemImageShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemImageShapeN'>
+    
+
+
+/**
+ * Reference to a field of type 'itemImageShapeN[]'
+ */
+export type ListEnumitemImageShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemImageShapeN[]'>
     
 
 /**

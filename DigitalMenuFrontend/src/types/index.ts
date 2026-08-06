@@ -12,13 +12,29 @@ export interface RestaurantConfig {
   accentColor: string;
   tabStyle: string;
   cardRadius: string;
-  showSearch: boolean;                       
-  showItemCount: boolean;             
-  stickyNav: boolean;     
-  showDivider: boolean;  
+  showSearch: boolean;
+  showItemCount: boolean;
+  stickyNav: boolean;
+  showDivider: boolean;
   defaultImageUrl?: string;
   showItemImage: boolean;
   headerText: string;
+  headerLayout?: 'banner' | 'minimal' | 'split';
+  logoShape?: 'circle' | 'rounded' | 'square';
+  overlayStyle?: 'gradient' | 'solid' | 'none';
+  overlayIntensity?: number; // 0–1
+  headingFont?: 'serif' | 'sans' | 'display';
+  headerAlign?: 'center' | 'left';
+  headerSize?: 'compact' | 'default' | 'large';
+  categoryVariant?: 'pill' | 'underline'; // CategoryTabs only
+  categorySize?: 'sm' | 'md' | 'lg';
+  itemSize?: 'sm' | 'md' | 'lg';
+  itemImagePosition?: 'left' | 'right';
+  itemImageShape?: 'rounded' | 'square' | 'circle';
+  currencySymbol?: string;
+  surfaceColor?: string;
+  boardEnabled?: boolean;
+  boardText?: string | null;
 }
 
 export interface Category {
@@ -33,11 +49,12 @@ export interface Item {
   publicId: string;
   name: string;
   description: string | null;
-  imageURL? : string;
+  imageURL?: string;
   price: number | null;
   badges: string[];
   category_id: string;
   variants: Variant[];
+  available: boolean;
 }
 
 export interface Variant {

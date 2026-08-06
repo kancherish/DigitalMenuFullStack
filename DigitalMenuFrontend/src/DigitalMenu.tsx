@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
-import { Search, X } from 'lucide-react';
+import { Megaphone, Search, X } from 'lucide-react';
 import { Header } from './component/Header';
 import LoadingScreen from './component/Loader';
 import Footer from './component/Footer';
@@ -21,14 +21,14 @@ export default function DigitalMenu() {
 
   const activeCategoryData = activeCategory !== null ? categoriesAndItems[activeCategory] : null;
 
-  const {RestaurantId} = useParams();
+  const { RestaurantId } = useParams();
 
   useEffect(() => {
     const controller = new AbortController();
 
     const fetchRestaurantConfig = async () => {
       try {
-        const res = await getRestaurantInfo(RestaurantId || "",controller.signal);
+        const res = await getRestaurantInfo(RestaurantId || "", controller.signal);
         if (!res) {
           setConfigError(true);
           return;
@@ -43,7 +43,7 @@ export default function DigitalMenu() {
 
     const fetchCategories = async () => {
       try {
-        const res = await getCategoriesAndItems(RestaurantId || "",controller.signal);
+        const res = await getCategoriesAndItems(RestaurantId || "", controller.signal);
         if (!res) {
           setConfigError(true);
           return;
@@ -66,7 +66,7 @@ export default function DigitalMenu() {
       clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [categoryConfigRetryCount,RestaurantId]);
+  }, [categoryConfigRetryCount, RestaurantId]);
 
   // Global search across all categories
   const globalSearchResults = useMemo<SearchResultItem[]>(() => {
@@ -90,7 +90,8 @@ export default function DigitalMenu() {
   const themeVars = useThemeVars(
     restaurantConfig?.primaryColor ?? '#1e293b',
     restaurantConfig?.accentColor ?? '#0ea5e9',
-    restaurantConfig?.cardRadius ?? '1rem'
+    restaurantConfig?.cardRadius ?? '1rem',
+    restaurantConfig?.surfaceColor ?? '#ffffff'
   );
 
   // LOADING SCREEN
@@ -119,10 +120,12 @@ export default function DigitalMenu() {
   }
 
   return (
-    <div
-      className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 font-sans"
-      style={themeVars}
-    >
+    <div className="min-h-screen font-sans" style={themeVars}>
+      <div
+        className="fixed inset-0 -z-10"
+        style={{ backgroundColor: 'var(--surface, #f8fafc)' }}
+      />
+
       <Header
         color={restaurantConfig!.primaryColor}
         accent={restaurantConfig!.accentColor}
@@ -132,6 +135,14 @@ export default function DigitalMenu() {
         tagline={restaurantConfig!.tagline || ''}
         textColor={restaurantConfig!.headerText ?? 'white'}
         showDivider={restaurantConfig!.showDivider}
+        headingFont={restaurantConfig!.headingFont || "sans"}
+        logoShape={restaurantConfig!.logoShape || "circle"}
+        overlayStyle={restaurantConfig!.overlayStyle || "gradient"}
+        overlayIntensity={restaurantConfig!.overlayIntensity ?? 1}
+        radius={restaurantConfig!.cardRadius}
+        align={restaurantConfig!.headerAlign || "center"}
+        size={restaurantConfig!.headerSize || "compact"}
+        layout={restaurantConfig!.headerLayout || "banner"}
       />
 
       {categoriesAndItems.length === 0 ? (
@@ -140,6 +151,24 @@ export default function DigitalMenu() {
         </div>
       ) : (
         <>
+
+          {restaurantConfig!.boardEnabled && restaurantConfig!.boardText && !isSearching && (
+            <div className="max-w-4xl mx-auto px-6 pt-8">
+              <div
+                className="flex items-start gap-3 rounded-2xl p-4 sm:p-5 shadow-sm border"
+                style={{
+                  backgroundColor: 'var(--accent-soft, #f1f5f9)',
+                  borderColor: 'var(--accent)',
+                  borderRadius: 'var(--radius, 1.25rem)',
+                }}
+              >
+                <Megaphone size={18} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
+                <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--primary)' }}>
+                  {restaurantConfig!.boardText}
+                </p>
+              </div>
+            </div>
+          )}
           {/* Sticky nav bar with search */}
           <div
             className={`${restaurantConfig!.stickyNav ? 'sticky top-0 z-20' : ''} shadow-md`}
@@ -187,6 +216,8 @@ export default function DigitalMenu() {
                     categories={categoriesAndItems}
                     showItemCount={restaurantConfig!.showItemCount}
                     activeIndex={activeCategory ?? 0}
+                    size={restaurantConfig!.categorySize || "md"}
+                    variant={restaurantConfig!.categoryVariant || "pill"}
                     onSelect={(idx: number) => {
                       setActiveCategory(idx);
                       setSearchQuery('');
@@ -198,6 +229,7 @@ export default function DigitalMenu() {
                     categories={categoriesAndItems}
                     activeIndex={activeCategory ?? 0}
                     itemCounts={itemCounts}
+                    size={restaurantConfig!.categorySize || "md"}
                     showItemCount={restaurantConfig!.showItemCount}
                     onSelect={(idx: number) => {
                       setActiveCategory(idx);
@@ -218,11 +250,11 @@ export default function DigitalMenu() {
                   className="font-serif text-3xl font-semibold mb-6"
                   style={{ color: 'var(--primary)' }}
                 >
-                  Search results for “{searchQuery}”
+                  Search results for "{searchQuery}"
                 </h2>
                 {globalSearchResults.length === 0 ? (
                   <p className="text-slate-500 text-center py-20">
-                    No items match “{searchQuery}”.
+                    No items match "{searchQuery}".
                   </p>
                 ) : (
                   <div
@@ -249,6 +281,10 @@ export default function DigitalMenu() {
                             accentColor={restaurantConfig!.accentColor}
                             showImage={restaurantConfig!.showItemImage}
                             defaultImage={restaurantConfig!.defaultImageUrl}
+                            size={restaurantConfig!.itemSize || "sm"}
+                            imagePosition={restaurantConfig!.itemImagePosition || "left"}
+                            imageShape={restaurantConfig!.itemImageShape || "square"}
+                            currencySymbol={restaurantConfig!.currencySymbol || "₹"}
                           />
                         </React.Fragment>
                       );
@@ -283,11 +319,15 @@ export default function DigitalMenu() {
                       <ItemCard
                         key={item.publicId}
                         itemStructure={item}
-                          showImage={restaurantConfig!.showItemImage}
+                        showImage={restaurantConfig!.showItemImage}
                         index={idx}
                         primaryColor={restaurantConfig!.primaryColor}
                         accentColor={restaurantConfig!.accentColor}
                         defaultImage={restaurantConfig!.defaultImageUrl}
+                        size={restaurantConfig!.itemSize || "sm"}
+                        imagePosition={restaurantConfig!.itemImagePosition || "left"}
+                        imageShape={restaurantConfig!.itemImageShape || "square"}
+                        currencySymbol={restaurantConfig!.currencySymbol || "₹"}
                       />
                     ))
                   )}

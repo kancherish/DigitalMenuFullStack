@@ -23,6 +23,7 @@ export interface Item {
   category_id: string;
   badges: string[];
   variants: Variant[];
+  available: boolean;
 }
 
 export interface Category {
@@ -50,7 +51,25 @@ export interface Restaurant {
   showDivider: boolean;
   headerText: string;
   defaultImageUrl: string | null;
-   showItemImage: boolean;
+  showItemImage: boolean;
+  headerLayout?: 'banner' | 'minimal' | 'split';
+  logoShape?: 'circle' | 'rounded' | 'square';
+  overlayStyle?: 'gradient' | 'solid' | 'none';
+  overlayIntensity?: number; // 0–1
+  headingFont?: 'serif' | 'sans' | 'display';
+  headerAlign?: 'center' | 'left';
+  headerSize?: 'compact' | 'default' | 'large';
+  categoryVariant?: 'pill' | 'underline'; // CategoryTabs only
+  categorySize?: 'sm' | 'md' | 'lg';
+  itemSize?: 'sm' | 'md' | 'lg';
+  itemImagePosition?: 'left' | 'right';
+  itemImageShape?: 'rounded' | 'square' | 'circle';
+  currencySymbol?: string;
+  pageBackground?: 'gradient' | 'solid' | 'image';
+  itemOfTheDayId?: string | null;
+  surfaceColor?: string | null;
+  boardEnabled?: boolean;
+  boardText?: string | null;
 }
 
 export interface AdminInfo {
@@ -73,6 +92,7 @@ export interface ItemPayload {
   variants?: Pick<Variant, 'name' | 'price'>[];
   badges?: string[];
   removeImage?: boolean;
+  available?: boolean;
 }
 
 export type DietBadge = 'veg' | 'non-veg';
@@ -89,6 +109,7 @@ export interface ItemFormValues {
   removeImage?: boolean;
   imageUrl?: string;
   imageFile: File | null;
+  available: boolean;
 }
 
 

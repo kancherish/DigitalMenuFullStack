@@ -44,6 +44,7 @@ export type ItemMinAggregateOutputType = {
   price: number | null
   category_id: string | null
   imageURL: string | null
+  available: boolean | null
 }
 
 export type ItemMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type ItemMaxAggregateOutputType = {
   price: number | null
   category_id: string | null
   imageURL: string | null
+  available: boolean | null
 }
 
 export type ItemCountAggregateOutputType = {
@@ -65,6 +67,7 @@ export type ItemCountAggregateOutputType = {
   category_id: number
   badges: number
   imageURL: number
+  available: number
   _all: number
 }
 
@@ -87,6 +90,7 @@ export type ItemMinAggregateInputType = {
   price?: true
   category_id?: true
   imageURL?: true
+  available?: true
 }
 
 export type ItemMaxAggregateInputType = {
@@ -97,6 +101,7 @@ export type ItemMaxAggregateInputType = {
   price?: true
   category_id?: true
   imageURL?: true
+  available?: true
 }
 
 export type ItemCountAggregateInputType = {
@@ -108,6 +113,7 @@ export type ItemCountAggregateInputType = {
   category_id?: true
   badges?: true
   imageURL?: true
+  available?: true
   _all?: true
 }
 
@@ -206,6 +212,7 @@ export type ItemGroupByOutputType = {
   category_id: string
   badges: string[]
   imageURL: string | null
+  available: boolean
   _count: ItemCountAggregateOutputType | null
   _avg: ItemAvgAggregateOutputType | null
   _sum: ItemSumAggregateOutputType | null
@@ -240,6 +247,7 @@ export type ItemWhereInput = {
   category_id?: Prisma.StringFilter<"Item"> | string
   badges?: Prisma.StringNullableListFilter<"Item">
   imageURL?: Prisma.StringNullableFilter<"Item"> | string | null
+  available?: Prisma.BoolFilter<"Item"> | boolean
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.VariantListRelationFilter
 }
@@ -253,6 +261,7 @@ export type ItemOrderByWithRelationInput = {
   category_id?: Prisma.SortOrder
   badges?: Prisma.SortOrder
   imageURL?: Prisma.SortOrderInput | Prisma.SortOrder
+  available?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
   variants?: Prisma.VariantOrderByRelationAggregateInput
 }
@@ -269,6 +278,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   category_id?: Prisma.StringFilter<"Item"> | string
   badges?: Prisma.StringNullableListFilter<"Item">
   imageURL?: Prisma.StringNullableFilter<"Item"> | string | null
+  available?: Prisma.BoolFilter<"Item"> | boolean
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.VariantListRelationFilter
 }, "id" | "publicId" | "name">
@@ -282,6 +292,7 @@ export type ItemOrderByWithAggregationInput = {
   category_id?: Prisma.SortOrder
   badges?: Prisma.SortOrder
   imageURL?: Prisma.SortOrderInput | Prisma.SortOrder
+  available?: Prisma.SortOrder
   _count?: Prisma.ItemCountOrderByAggregateInput
   _avg?: Prisma.ItemAvgOrderByAggregateInput
   _max?: Prisma.ItemMaxOrderByAggregateInput
@@ -301,6 +312,7 @@ export type ItemScalarWhereWithAggregatesInput = {
   category_id?: Prisma.StringWithAggregatesFilter<"Item"> | string
   badges?: Prisma.StringNullableListFilter<"Item">
   imageURL?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
+  available?: Prisma.BoolWithAggregatesFilter<"Item"> | boolean
 }
 
 export type ItemCreateInput = {
@@ -310,6 +322,7 @@ export type ItemCreateInput = {
   price?: number | null
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
   category: Prisma.CategoryCreateNestedOneWithoutItemsInput
   variants?: Prisma.VariantCreateNestedManyWithoutItemInput
 }
@@ -323,6 +336,7 @@ export type ItemUncheckedCreateInput = {
   category_id: string
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
   variants?: Prisma.VariantUncheckedCreateNestedManyWithoutItemInput
 }
 
@@ -333,6 +347,7 @@ export type ItemUpdateInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.CategoryUpdateOneRequiredWithoutItemsNestedInput
   variants?: Prisma.VariantUpdateManyWithoutItemNestedInput
 }
@@ -346,6 +361,7 @@ export type ItemUncheckedUpdateInput = {
   category_id?: Prisma.StringFieldUpdateOperationsInput | string
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
   variants?: Prisma.VariantUncheckedUpdateManyWithoutItemNestedInput
 }
 
@@ -358,6 +374,7 @@ export type ItemCreateManyInput = {
   category_id: string
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
 }
 
 export type ItemUpdateManyMutationInput = {
@@ -367,6 +384,7 @@ export type ItemUpdateManyMutationInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ItemUncheckedUpdateManyInput = {
@@ -378,6 +396,7 @@ export type ItemUncheckedUpdateManyInput = {
   category_id?: Prisma.StringFieldUpdateOperationsInput | string
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ItemListRelationFilter = {
@@ -407,6 +426,7 @@ export type ItemCountOrderByAggregateInput = {
   category_id?: Prisma.SortOrder
   badges?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  available?: Prisma.SortOrder
 }
 
 export type ItemAvgOrderByAggregateInput = {
@@ -422,6 +442,7 @@ export type ItemMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   category_id?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  available?: Prisma.SortOrder
 }
 
 export type ItemMinOrderByAggregateInput = {
@@ -432,6 +453,7 @@ export type ItemMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   category_id?: Prisma.SortOrder
   imageURL?: Prisma.SortOrder
+  available?: Prisma.SortOrder
 }
 
 export type ItemSumOrderByAggregateInput = {
@@ -524,6 +546,7 @@ export type ItemCreateWithoutCategoryInput = {
   price?: number | null
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
   variants?: Prisma.VariantCreateNestedManyWithoutItemInput
 }
 
@@ -535,6 +558,7 @@ export type ItemUncheckedCreateWithoutCategoryInput = {
   price?: number | null
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
   variants?: Prisma.VariantUncheckedCreateNestedManyWithoutItemInput
 }
 
@@ -576,6 +600,7 @@ export type ItemScalarWhereInput = {
   category_id?: Prisma.StringFilter<"Item"> | string
   badges?: Prisma.StringNullableListFilter<"Item">
   imageURL?: Prisma.StringNullableFilter<"Item"> | string | null
+  available?: Prisma.BoolFilter<"Item"> | boolean
 }
 
 export type ItemCreateWithoutVariantsInput = {
@@ -585,6 +610,7 @@ export type ItemCreateWithoutVariantsInput = {
   price?: number | null
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
   category: Prisma.CategoryCreateNestedOneWithoutItemsInput
 }
 
@@ -597,6 +623,7 @@ export type ItemUncheckedCreateWithoutVariantsInput = {
   category_id: string
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
 }
 
 export type ItemCreateOrConnectWithoutVariantsInput = {
@@ -622,6 +649,7 @@ export type ItemUpdateWithoutVariantsInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
   category?: Prisma.CategoryUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -634,6 +662,7 @@ export type ItemUncheckedUpdateWithoutVariantsInput = {
   category_id?: Prisma.StringFieldUpdateOperationsInput | string
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type ItemCreateManyCategoryInput = {
@@ -644,6 +673,7 @@ export type ItemCreateManyCategoryInput = {
   price?: number | null
   badges?: Prisma.ItemCreatebadgesInput | string[]
   imageURL?: string | null
+  available?: boolean
 }
 
 export type ItemUpdateWithoutCategoryInput = {
@@ -653,6 +683,7 @@ export type ItemUpdateWithoutCategoryInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
   variants?: Prisma.VariantUpdateManyWithoutItemNestedInput
 }
 
@@ -664,6 +695,7 @@ export type ItemUncheckedUpdateWithoutCategoryInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
   variants?: Prisma.VariantUncheckedUpdateManyWithoutItemNestedInput
 }
 
@@ -675,6 +707,7 @@ export type ItemUncheckedUpdateManyWithoutCategoryInput = {
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   badges?: Prisma.ItemUpdatebadgesInput | string[]
   imageURL?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  available?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -717,6 +750,7 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   category_id?: boolean
   badges?: boolean
   imageURL?: boolean
+  available?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Item$variantsArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -731,6 +765,7 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   category_id?: boolean
   badges?: boolean
   imageURL?: boolean
+  available?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -743,6 +778,7 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   category_id?: boolean
   badges?: boolean
   imageURL?: boolean
+  available?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -755,9 +791,10 @@ export type ItemSelectScalar = {
   category_id?: boolean
   badges?: boolean
   imageURL?: boolean
+  available?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "description" | "price" | "category_id" | "badges" | "imageURL", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "description" | "price" | "category_id" | "badges" | "imageURL" | "available", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Item$variantsArgs<ExtArgs>
@@ -785,6 +822,7 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     category_id: string
     badges: string[]
     imageURL: string | null
+    available: boolean
   }, ExtArgs["result"]["item"]>
   composites: {}
 }
@@ -1218,6 +1256,7 @@ export interface ItemFieldRefs {
   readonly category_id: Prisma.FieldRef<"Item", 'String'>
   readonly badges: Prisma.FieldRef<"Item", 'String[]'>
   readonly imageURL: Prisma.FieldRef<"Item", 'String'>
+  readonly available: Prisma.FieldRef<"Item", 'Boolean'>
 }
     
 

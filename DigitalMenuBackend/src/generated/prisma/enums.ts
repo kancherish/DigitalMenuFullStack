@@ -15,3 +15,99 @@ export const NavStyle = {
 } as const
 
 export type NavStyle = (typeof NavStyle)[keyof typeof NavStyle]
+
+
+export const headerLayoutN = {
+  banner: 'banner',
+  minimal: 'minimal',
+  split: 'split'
+} as const
+
+export type headerLayoutN = (typeof headerLayoutN)[keyof typeof headerLayoutN]
+
+
+export const logoShapeN = {
+  circle: 'circle',
+  rounded: 'rounded',
+  square: 'square'
+} as const
+
+export type logoShapeN = (typeof logoShapeN)[keyof typeof logoShapeN]
+
+
+export const overlayStyleN = {
+  gradient: 'gradient',
+  solid: 'solid',
+  none: 'none'
+} as const
+
+export type overlayStyleN = (typeof overlayStyleN)[keyof typeof overlayStyleN]
+
+
+export const headingFontN = {
+  serif: 'serif',
+  sans: 'sans',
+  display: 'display'
+} as const
+
+export type headingFontN = (typeof headingFontN)[keyof typeof headingFontN]
+
+
+export const headerAlignN = {
+  center: 'center',
+  left: 'left'
+} as const
+
+export type headerAlignN = (typeof headerAlignN)[keyof typeof headerAlignN]
+
+
+export const headerSizeN = {
+  compact: 'compact',
+  default: 'default',
+  large: 'large'
+} as const
+
+export type headerSizeN = (typeof headerSizeN)[keyof typeof headerSizeN]
+
+
+export const categoryVariantN = {
+  pill: 'pill',
+  underline: 'underline'
+} as const
+
+export type categoryVariantN = (typeof categoryVariantN)[keyof typeof categoryVariantN]
+
+
+export const categorySizeN = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg'
+} as const
+
+export type categorySizeN = (typeof categorySizeN)[keyof typeof categorySizeN]
+
+
+export const itemSizeN = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg'
+} as const
+
+export type itemSizeN = (typeof itemSizeN)[keyof typeof itemSizeN]
+
+
+export const itemImagePositionN = {
+  left: 'left',
+  right: 'right'
+} as const
+
+export type itemImagePositionN = (typeof itemImagePositionN)[keyof typeof itemImagePositionN]
+
+
+export const itemImageShapeN = {
+  rounded: 'rounded',
+  square: 'square',
+  circle: 'circle'
+} as const
+
+export type itemImageShapeN = (typeof itemImageShapeN)[keyof typeof itemImageShapeN]

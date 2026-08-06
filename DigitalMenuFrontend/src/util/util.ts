@@ -21,7 +21,7 @@ export const DEFAULT_ICON = Utensils;
 export const DEFAULT_ICON_string  = "Utensils";
 
 export function getCategoryIcon(name: string): LucideIcon {
-  return ICONS[name?.toLowerCase()] || DEFAULT_ICON;
+  return ICONS[name] || DEFAULT_ICON;
 }
 
 // ============================================================
@@ -33,13 +33,14 @@ export const LAYOUT = {
   stickyNav: true,                          // keep category nav pinned while scrolling
 };
 
-export function useThemeVars(primary: string, accent: string, radius: string) {
+export function useThemeVars(primary: string, accent: string, radius: string,surface: string) {
   return {
     '--primary': primary,
     '--accent': accent,
     '--accent-soft': `${accent}1A`, // ~10% opacity wash, used for active states
     '--accent-soft-strong': `${accent}33`,
     '--radius': radius,
+    '--surface':surface
   } as React.CSSProperties;
 }
 
