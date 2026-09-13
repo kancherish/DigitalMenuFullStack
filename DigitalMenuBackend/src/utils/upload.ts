@@ -1,4 +1,4 @@
-import { storage } from "./storage";
+import { storage } from "./storage/index.js";
 import sharp from "sharp";
 
 export const uploadImage = async (file: Buffer, filelocation: string): Promise<boolean | string> => {

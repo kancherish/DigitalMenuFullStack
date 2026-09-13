@@ -10,34 +10,37 @@ import itemRouter from "./routes/items.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import { prisma } from "./lib/prisma.js";
+// import { prisma } from "./lib/prisma.js";
 
 const app = express()
 
 const STATIC_ORIGINS = new Set([
-   "http://localhost:3000",
-   "http://192.168.1.12:3000",
-    "http://localhost:5173",
+  "http://localhost:3000",
+  "http://192.168.1.12:3000",
+  "http://localhost:5173",
 ])
 
-let allowedOrigins: Set<string|null> = new Set([""]);
+// let allowedOrigins: Set<string|null> = new Set([""]);
 
-export async function refreshOrigins() {
-  const restaurants = await prisma.restaurant.findMany({
-    select: { domain: true },
-    where: { domain: { not: "" } },
-  });
+// export async function refreshOrigins() {
+//   const restaurants = await prisma.restaurant.findMany({
+//     select: { domain: true },
+//     where: { domain: { not: "" } },
+//   });
 
-  allowedOrigins = new Set((restaurants ?? []).map(r => r.domain));
-  console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
-}
+//   allowedOrigins = new Set((restaurants ?? []).map(r => r.domain));
+//   console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
+// }
 
 app.use(cors({
   origin(origin, callback) {
     // Allow requests with no origin (Postman, curl, mobile apps)
-    if (!origin) return callback(null, true);
+    // if (!origin) return callback(null, true);
 
-    if (allowedOrigins.has(origin) || STATIC_ORIGINS.has(origin)) {
+    // if (allowedOrigins.has(origin) || STATIC_ORIGINS.has(origin)) {
+    //   return callback(null, true);
+    // }
+    if (STATIC_ORIGINS.has(origin || "")) {
       return callback(null, true);
     }
 

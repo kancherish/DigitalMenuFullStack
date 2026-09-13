@@ -177,7 +177,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
       },
     })
 
-    if (existingItem.length !== 0) {
+    if (existingItem.length !== 0 && existingItem[0]?.publicId !== itemIdStr) {
       res.status(409).json(
         new ErrorResponse(409, "Existing name Already Exist")
       );

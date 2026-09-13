@@ -9,7 +9,6 @@ import { ErrorResponse } from '../utils/Error-Response.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.js';
 import { NavStyle } from '../generated/prisma/enums.js';
 import { MAIN_DOMAIN } from '../env.js';
-import { refreshOrigins } from '../app.js';
 
 
 interface UpdateRestaurantBody {
@@ -113,7 +112,6 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     data: { refreshToken: hashedRefresh },
   });
 
-  await refreshOrigins();
 
   // Return tokens in response body
   res.status(201).json(new ApiResponse(201, {
@@ -291,10 +289,6 @@ export const updateRestaurant = async (
 
     const { password: _pw, refreshToken: _rt, ...safeAdmin } = updatedAdmin;
 
-    if (restaurant?.domain) {
-      await refreshOrigins();
-    }
-
     return res.json(
       new ApiResponse(
         200,
@@ -342,9 +336,6 @@ export const deleteAdmin = asyncHandler(async (req: Request, res: Response) => {
       where: { publicId },
     });
   });
-
-  await refreshOrigins(); // if domain changes need refreshing
-
   res.status(200).json(
     new ApiResponse(200, null, true, 'Admin deleted successfully')
   );
