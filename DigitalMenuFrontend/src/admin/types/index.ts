@@ -39,10 +39,12 @@ export interface Restaurant {
   name: string;
   tagline: string | null;
   primaryColor: string | null;
+  bodyTextColor?: string | null;
   accentColor: string | null;
   tabStyle: 'tabs' | 'dropdown' | null;
   logoUrl?: string | null;
   backgroundUrl?: string | null;
+  BodyTextColor?: string | null;
   roundness: string | null;
   showSearch: boolean;
   showItemCount: boolean;
@@ -59,6 +61,20 @@ export interface Restaurant {
   headingFont?: 'serif' | 'sans' | 'display';
   headerAlign?: 'center' | 'left';
   headerSize?: 'compact' | 'default' | 'large';
+  headerAccentPanel?: boolean;
+  headerPanelIntensity?: number;
+  headerNameGradient?: boolean;
+  headerUppercaseTagline?: boolean;
+  headerShimmer?: boolean;
+  headerNameColor?: string | null;
+  headerTaglineColor?: string | null;
+  showLogo?: boolean;
+  logoSize?: 'auto' | 'sm' | 'md' | 'lg';
+  headerBackgroundPosition?: 'top' | 'center' | 'bottom' | 'left' | 'right';
+  headerBackgroundZoom?: number;
+  headerDividerStyle?: 'line' | 'dots' | 'diamond' | 'none';
+  headerSpacing?: 'tight' | 'default' | 'loose';
+  headerMaxWidth?: 'sm' | 'md' | 'lg' | 'full';
   categoryVariant?: 'pill' | 'underline'; // CategoryTabs only
   categorySize?: 'sm' | 'md' | 'lg';
   itemSize?: 'sm' | 'md' | 'lg';

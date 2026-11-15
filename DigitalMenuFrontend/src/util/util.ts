@@ -33,9 +33,10 @@ export const LAYOUT = {
   stickyNav: true,                          // keep category nav pinned while scrolling
 };
 
-export function useThemeVars(primary: string, accent: string, radius: string,surface: string) {
+export function useThemeVars(primary: string, accent: string, radius: string,surface: string, bodyText?: string) {
   return {
     '--primary': primary,
+    '--body-text': bodyText || primary, // falls back to primary until the backend sends bodyTextColor
     '--accent': accent,
     '--accent-soft': `${accent}1A`, // ~10% opacity wash, used for active states
     '--accent-soft-strong': `${accent}33`,

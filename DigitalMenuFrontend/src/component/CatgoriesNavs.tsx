@@ -63,7 +63,7 @@ export function CategoryTabs({
               backgroundColor:
                 variant === "pill" ? (active ? "var(--accent)" : "var(--accent-soft)") : "transparent",
               borderColor: variant === "underline" ? (active ? "var(--accent)" : "transparent") : undefined,
-              color: variant === "pill" ? (active ? "#fff" : "var(--primary)") : "var(--primary)",
+              color: variant === "pill" ? (active ? "#fff" : "var(--body-text)") : "var(--body-text)",
               opacity: variant === "underline" && !active ? 0.6 : 1,
               "--tw-ring-color": "var(--accent)",
             } as React.CSSProperties}
@@ -78,7 +78,7 @@ export function CategoryTabs({
                     variant === "pill" && active
                       ? "rgba(255,255,255,0.25)"
                       : "var(--accent-soft-strong)",
-                  color: variant === "pill" && active ? "#fff" : "var(--primary)",
+                  color: variant === "pill" && active ? "#fff" : "var(--body-text)",
                 }}
               >
                 {itemCounts[idx] ?? 0}
@@ -143,7 +143,7 @@ export function CategoryDropdown({
         style={{
           backgroundColor: "var(--surface, #fff)",
           borderColor: "var(--accent)",
-          color: "var(--primary)",
+          color: "var(--body-text)",
           borderRadius: "var(--radius)",
           "--tw-ring-color": "var(--accent)",
         } as React.CSSProperties}
@@ -196,7 +196,7 @@ export function CategoryDropdown({
                 }`}
                 style={{
                   backgroundColor: isActive ? "var(--accent-soft)" : "transparent",
-                  color: "var(--primary)",
+                  color: "var(--body-text)",
                 }}
               >
                 <span className="flex items-center gap-3">

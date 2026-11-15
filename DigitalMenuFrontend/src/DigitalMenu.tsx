@@ -91,7 +91,8 @@ export default function DigitalMenu() {
     restaurantConfig?.primaryColor ?? '#1e293b',
     restaurantConfig?.accentColor ?? '#0ea5e9',
     restaurantConfig?.cardRadius ?? '1rem',
-    restaurantConfig?.surfaceColor ?? '#ffffff'
+    restaurantConfig?.surfaceColor ?? '#ffffff',
+    restaurantConfig?.BodyTextColor
   );
 
   // LOADING SCREEN
@@ -143,6 +144,20 @@ export default function DigitalMenu() {
         align={restaurantConfig!.headerAlign || "center"}
         size={restaurantConfig!.headerSize || "compact"}
         layout={restaurantConfig!.headerLayout || "banner"}
+        accentPanel={restaurantConfig!.headerAccentPanel}
+        panelIntensity={restaurantConfig!.headerPanelIntensity}
+        nameGradient={restaurantConfig!.headerNameGradient}
+        uppercaseTagline={restaurantConfig!.headerUppercaseTagline}
+        shimmer={restaurantConfig!.headerShimmer}
+        nameColor={restaurantConfig!.headerNameColor || undefined}
+        taglineColor={restaurantConfig!.headerTaglineColor || undefined}
+        showLogo={restaurantConfig!.showLogo ?? true}
+        logoSize={restaurantConfig!.logoSize || "auto"}
+        backgroundPosition={restaurantConfig!.headerBackgroundPosition || "center"}
+        backgroundZoom={restaurantConfig!.headerBackgroundZoom ?? 1}
+        dividerStyle={restaurantConfig!.headerDividerStyle || "line"}
+        spacing={restaurantConfig!.headerSpacing || "default"}
+        maxWidth={restaurantConfig!.headerMaxWidth || "full"}
       />
 
       {categoriesAndItems.length === 0 ? (
@@ -277,7 +292,6 @@ export default function DigitalMenu() {
                           <ItemCard
                             itemStructure={result}
                             index={idx}
-                            primaryColor={restaurantConfig!.primaryColor}
                             accentColor={restaurantConfig!.accentColor}
                             showImage={restaurantConfig!.showItemImage}
                             defaultImage={restaurantConfig!.defaultImageUrl}
@@ -297,7 +311,7 @@ export default function DigitalMenu() {
               <>
                 <h2
                   className="font-serif text-3xl font-semibold mb-6"
-                  style={{ color: 'var(--primary)' }}
+                  style={{ color: 'var(--body-text)' }}
                 >
                   {activeCategoryData?.name}
                 </h2>
@@ -321,7 +335,6 @@ export default function DigitalMenu() {
                         itemStructure={item}
                         showImage={restaurantConfig!.showItemImage}
                         index={idx}
-                        primaryColor={restaurantConfig!.primaryColor}
                         accentColor={restaurantConfig!.accentColor}
                         defaultImage={restaurantConfig!.defaultImageUrl}
                         size={restaurantConfig!.itemSize || "sm"}

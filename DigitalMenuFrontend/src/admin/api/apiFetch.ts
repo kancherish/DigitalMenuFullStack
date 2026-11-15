@@ -39,7 +39,6 @@ export async function apiFetch(path: string, options: ApiFetchOptions = {}): Pro
 
   // Only set JSON content-type for string bodies (not FormData, not Blob, etc.)
   const isJsonBody = typeof options.body === 'string' || typeof options.body === 'undefined';
-  console.log(isJsonBody)
   if (isJsonBody && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }

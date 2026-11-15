@@ -22,8 +22,6 @@ export const authService = {
 
     const data = await res.json();
 
-    console.log(data)
-
     if (!res.ok || !data.success) {
       throw new Error(data.message || 'Login failed');
     }

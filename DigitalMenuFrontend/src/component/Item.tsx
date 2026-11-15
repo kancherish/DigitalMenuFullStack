@@ -84,7 +84,6 @@ function BadgeRow({ badges }: { badges: string[] }) {
 type ItemProps = {
   itemStructure: Item;
   index: number;
-  primaryColor: string;
   accentColor: string;
   defaultImage?: string;
   showImage: boolean;
@@ -96,7 +95,6 @@ type ItemProps = {
 
 const ItemCard = ({
   itemStructure,
-  primaryColor,
   accentColor,
   defaultImage,
   showImage,
@@ -148,7 +146,7 @@ const ItemCard = ({
       style={{
         backgroundColor: "var(--surface, #fff)",
         borderRadius: "var(--radius, 1rem)",
-        borderColor: `${accentColor}26`, // ~15% opacity — visible enough to separate card from page, subtle enough not to compete with badges/price
+        borderColor: accentColor,
       }}
     >
       {thumbnail}
@@ -162,12 +160,12 @@ const ItemCard = ({
         )}
 
         <div className="flex justify-between items-start gap-2 sm:gap-3">
-          <h3 className={`font-semibold leading-snug tracking-tight ${title}`} style={{ color: primaryColor }}>
+          <h3 className={`font-semibold leading-snug tracking-tight ${title}`} style={{ color: "var(--body-text, var(--primary))" }}>
             {itemStructure.name}
           </h3>
 
           {itemStructure.price && !hasVariants && (
-            <span className={`font-bold whitespace-nowrap tabular-nums ${price}`} style={{ color: accentColor }}>
+            <span className={`font-bold whitespace-nowrap tabular-nums ${price}`} style={{ color: 'var(--body-text)' }}>
               {currencySymbol}
               {itemStructure.price}
             </span>
@@ -188,10 +186,10 @@ const ItemCard = ({
                 className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full border text-xs sm:text-sm leading-none transition-colors"
                 style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}0d` }}
               >
-                <span className="font-medium" style={{ color: primaryColor }}>
+                <span className="font-medium" style={{ color: "var(--body-text, var(--primary))" }}>
                   {variant.name}
                 </span>
-                <span className="font-bold tabular-nums" style={{ color: accentColor }}>
+                <span className="font-bold tabular-nums" style={{ color: 'var(--body-text)' }}>
                   {currencySymbol}
                   {variant.price}
                 </span>
