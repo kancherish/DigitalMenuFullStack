@@ -111,3 +111,42 @@ export const itemImageShapeN = {
 } as const
 
 export type itemImageShapeN = (typeof itemImageShapeN)[keyof typeof itemImageShapeN]
+
+
+export const logoSizeN = {
+  auto: 'auto',
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg'
+} as const
+
+export type logoSizeN = (typeof logoSizeN)[keyof typeof logoSizeN]
+
+
+export const dividerStyleN = {
+  line: 'line',
+  dots: 'dots',
+  diamond: 'diamond',
+  none: 'none'
+} as const
+
+export type dividerStyleN = (typeof dividerStyleN)[keyof typeof dividerStyleN]
+
+
+export const headerSpacingN = {
+  tight: 'tight',
+  default: 'default',
+  loose: 'loose'
+} as const
+
+export type headerSpacingN = (typeof headerSpacingN)[keyof typeof headerSpacingN]
+
+
+export const headerMaxWidthN = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+  full: 'full'
+} as const
+
+export type headerMaxWidthN = (typeof headerMaxWidthN)[keyof typeof headerMaxWidthN]

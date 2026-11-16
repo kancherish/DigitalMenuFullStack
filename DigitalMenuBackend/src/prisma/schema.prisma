@@ -75,6 +75,33 @@
     circle
   }
 
+  enum logoSizeN {
+    auto
+    sm
+    md
+    lg
+  }
+
+  enum dividerStyleN {
+    line
+    dots
+    diamond
+    none
+  }
+
+  enum headerSpacingN {
+    tight
+    default
+    loose
+  }
+
+  enum headerMaxWidthN {
+    sm
+    md
+    lg
+    full
+  }
+
   model RestaurantAdmin {
     id Int @id @default(autoincrement())
     publicId String  @unique @default(uuid())
@@ -109,11 +136,30 @@
     showItemImage Boolean @default(false)
     headerLayout headerLayoutN @default(banner)
     logoShape    logoShapeN @default(circle)
+    BodyTextColor String @default("#ffffff")
     overlayStyle overlayStyleN @default(solid)
     overlayIntensity Float  @default(1)
     headingFont headingFontN @default(sans)
     headerAlign headerAlignN @default(center)
     headerSize  headerSizeN @default(compact)
+    headerAccentPanel Boolean @default(true)
+    headerPanelIntensity Float @default(1)
+    headerNameGradient Boolean @default(true)
+    headerUppercaseTagline Boolean @default(true)
+    headerShimmer Boolean @default(true)
+    headerNameColor String?
+    headerTaglineColor String?
+    headerNameGradientFrom String?
+    headerNameGradientTo String?
+    headerNameGradientAngle Int @default(120)
+    showLogo Boolean @default(true)
+    logoSize logoSizeN @default(auto)
+    headerBackgroundPositionX Float @default(50)
+    headerBackgroundPositionY Float @default(50)
+    headerBackgroundZoom Float @default(1)
+    headerDividerStyle dividerStyleN @default(line)
+    headerSpacing headerSpacingN @default(default)
+    headerMaxWidth headerMaxWidthN @default(full)
     categoryVariant categoryVariantN @default(pill) 
     categorySize categorySizeN @default(sm)
     itemSize itemSizeN @default(sm)

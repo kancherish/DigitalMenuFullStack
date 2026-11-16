@@ -177,6 +177,34 @@ export type EnumheaderSizeNFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel> | $Enums.headerSizeN
 }
 
+export type EnumlogoSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoSizeN | Prisma.EnumlogoSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel> | $Enums.logoSizeN
+}
+
+export type EnumdividerStyleNFilter<$PrismaModel = never> = {
+  equals?: $Enums.dividerStyleN | Prisma.EnumdividerStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel> | $Enums.dividerStyleN
+}
+
+export type EnumheaderSpacingNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSpacingN | Prisma.EnumheaderSpacingNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel> | $Enums.headerSpacingN
+}
+
+export type EnumheaderMaxWidthNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerMaxWidthN | Prisma.EnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel> | $Enums.headerMaxWidthN
+}
+
 export type EnumcategoryVariantNFilter<$PrismaModel = never> = {
   equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
   in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
@@ -304,6 +332,46 @@ export type EnumheaderSizeNWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
   _max?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+}
+
+export type EnumlogoSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoSizeN | Prisma.EnumlogoSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoSizeNWithAggregatesFilter<$PrismaModel> | $Enums.logoSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel>
+}
+
+export type EnumdividerStyleNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.dividerStyleN | Prisma.EnumdividerStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumdividerStyleNWithAggregatesFilter<$PrismaModel> | $Enums.dividerStyleN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel>
+}
+
+export type EnumheaderSpacingNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSpacingN | Prisma.EnumheaderSpacingNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSpacingNWithAggregatesFilter<$PrismaModel> | $Enums.headerSpacingN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel>
+}
+
+export type EnumheaderMaxWidthNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerMaxWidthN | Prisma.EnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderMaxWidthNWithAggregatesFilter<$PrismaModel> | $Enums.headerMaxWidthN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel>
 }
 
 export type EnumcategoryVariantNWithAggregatesFilter<$PrismaModel = never> = {
@@ -548,6 +616,34 @@ export type NestedEnumheaderSizeNFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel> | $Enums.headerSizeN
 }
 
+export type NestedEnumlogoSizeNFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoSizeN | Prisma.EnumlogoSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel> | $Enums.logoSizeN
+}
+
+export type NestedEnumdividerStyleNFilter<$PrismaModel = never> = {
+  equals?: $Enums.dividerStyleN | Prisma.EnumdividerStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel> | $Enums.dividerStyleN
+}
+
+export type NestedEnumheaderSpacingNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSpacingN | Prisma.EnumheaderSpacingNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel> | $Enums.headerSpacingN
+}
+
+export type NestedEnumheaderMaxWidthNFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerMaxWidthN | Prisma.EnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel> | $Enums.headerMaxWidthN
+}
+
 export type NestedEnumcategoryVariantNFilter<$PrismaModel = never> = {
   equals?: $Enums.categoryVariantN | Prisma.EnumcategoryVariantNFieldRefInput<$PrismaModel>
   in?: $Enums.categoryVariantN[] | Prisma.ListEnumcategoryVariantNFieldRefInput<$PrismaModel>
@@ -675,6 +771,46 @@ export type NestedEnumheaderSizeNWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
   _max?: Prisma.NestedEnumheaderSizeNFilter<$PrismaModel>
+}
+
+export type NestedEnumlogoSizeNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.logoSizeN | Prisma.EnumlogoSizeNFieldRefInput<$PrismaModel>
+  in?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.logoSizeN[] | Prisma.ListEnumlogoSizeNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumlogoSizeNWithAggregatesFilter<$PrismaModel> | $Enums.logoSizeN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumlogoSizeNFilter<$PrismaModel>
+}
+
+export type NestedEnumdividerStyleNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.dividerStyleN | Prisma.EnumdividerStyleNFieldRefInput<$PrismaModel>
+  in?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.dividerStyleN[] | Prisma.ListEnumdividerStyleNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumdividerStyleNWithAggregatesFilter<$PrismaModel> | $Enums.dividerStyleN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumdividerStyleNFilter<$PrismaModel>
+}
+
+export type NestedEnumheaderSpacingNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerSpacingN | Prisma.EnumheaderSpacingNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerSpacingN[] | Prisma.ListEnumheaderSpacingNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderSpacingNWithAggregatesFilter<$PrismaModel> | $Enums.headerSpacingN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderSpacingNFilter<$PrismaModel>
+}
+
+export type NestedEnumheaderMaxWidthNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.headerMaxWidthN | Prisma.EnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  in?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.headerMaxWidthN[] | Prisma.ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumheaderMaxWidthNWithAggregatesFilter<$PrismaModel> | $Enums.headerMaxWidthN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumheaderMaxWidthNFilter<$PrismaModel>
 }
 
 export type NestedEnumcategoryVariantNWithAggregatesFilter<$PrismaModel = never> = {

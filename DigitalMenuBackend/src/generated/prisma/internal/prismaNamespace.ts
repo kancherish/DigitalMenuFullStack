@@ -850,11 +850,30 @@ export const RestaurantScalarFieldEnum = {
   showItemImage: 'showItemImage',
   headerLayout: 'headerLayout',
   logoShape: 'logoShape',
+  BodyTextColor: 'BodyTextColor',
   overlayStyle: 'overlayStyle',
   overlayIntensity: 'overlayIntensity',
   headingFont: 'headingFont',
   headerAlign: 'headerAlign',
   headerSize: 'headerSize',
+  headerAccentPanel: 'headerAccentPanel',
+  headerPanelIntensity: 'headerPanelIntensity',
+  headerNameGradient: 'headerNameGradient',
+  headerUppercaseTagline: 'headerUppercaseTagline',
+  headerShimmer: 'headerShimmer',
+  headerNameColor: 'headerNameColor',
+  headerTaglineColor: 'headerTaglineColor',
+  headerNameGradientFrom: 'headerNameGradientFrom',
+  headerNameGradientTo: 'headerNameGradientTo',
+  headerNameGradientAngle: 'headerNameGradientAngle',
+  showLogo: 'showLogo',
+  logoSize: 'logoSize',
+  headerBackgroundPositionX: 'headerBackgroundPositionX',
+  headerBackgroundPositionY: 'headerBackgroundPositionY',
+  headerBackgroundZoom: 'headerBackgroundZoom',
+  headerDividerStyle: 'headerDividerStyle',
+  headerSpacing: 'headerSpacing',
+  headerMaxWidth: 'headerMaxWidth',
   categoryVariant: 'categoryVariant',
   categorySize: 'categorySize',
   itemSize: 'itemSize',
@@ -1080,6 +1099,62 @@ export type EnumheaderSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'headerSizeN[]'
  */
 export type ListEnumheaderSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerSizeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'logoSizeN'
+ */
+export type EnumlogoSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'logoSizeN'>
+    
+
+
+/**
+ * Reference to a field of type 'logoSizeN[]'
+ */
+export type ListEnumlogoSizeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'logoSizeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'dividerStyleN'
+ */
+export type EnumdividerStyleNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'dividerStyleN'>
+    
+
+
+/**
+ * Reference to a field of type 'dividerStyleN[]'
+ */
+export type ListEnumdividerStyleNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'dividerStyleN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'headerSpacingN'
+ */
+export type EnumheaderSpacingNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerSpacingN'>
+    
+
+
+/**
+ * Reference to a field of type 'headerSpacingN[]'
+ */
+export type ListEnumheaderSpacingNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerSpacingN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'headerMaxWidthN'
+ */
+export type EnumheaderMaxWidthNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerMaxWidthN'>
+    
+
+
+/**
+ * Reference to a field of type 'headerMaxWidthN[]'
+ */
+export type ListEnumheaderMaxWidthNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'headerMaxWidthN[]'>
     
 
 

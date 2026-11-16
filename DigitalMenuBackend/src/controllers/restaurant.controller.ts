@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { asyncHandler } from "../utils/asyncHandeler.js";
 import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
-import { categorySizeN, categoryVariantN, headerAlignN, headerLayoutN, headerSizeN, headingFontN, itemImagePositionN, itemImageShapeN, itemSizeN, logoShapeN, NavStyle, overlayStyleN } from '../generated/prisma/enums';
+import { categorySizeN, categoryVariantN, dividerStyleN, headerAlignN, headerLayoutN, headerMaxWidthN, headerSizeN, headerSpacingN, headingFontN, itemImagePositionN, itemImageShapeN, itemSizeN, logoShapeN, logoSizeN, NavStyle, overlayStyleN } from '../generated/prisma/enums';
 
 export const addResturant = asyncHandler(async (req: Request, res: Response) => {
   //NO NEED AS OF NOW RESTAURANT WILL BE CREATED WITH ADMIN
@@ -39,7 +39,11 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     showItemCount, stickyNav, domain, showDivider, headerText, defaultImageUrl, showItemImage, headerLayout,
     logoShape, overlayStyle, overlayIntensity, headingFont, headerAlign, headerSize, categoryVariant,
     categorySize, itemSize, itemImagePosition, itemImageShape, currencySymbol, surfaceColor ,  boardEnabled,
-  boardText} = req.body?.para || {};
+  boardText, BodyTextColor, headerAccentPanel, headerPanelIntensity, headerNameGradient,
+  headerUppercaseTagline, headerShimmer, headerNameColor, headerTaglineColor,
+  headerNameGradientFrom, headerNameGradientTo, headerNameGradientAngle,
+  showLogo, logoSize, headerBackgroundPositionX, headerBackgroundPositionY,
+  headerBackgroundZoom, headerDividerStyle, headerSpacing, headerMaxWidth} = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -67,7 +71,14 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     headingFont?: headingFontN, headerAlign?: headerAlignN, headerSize?: headerSizeN, categoryVariant?: categoryVariantN,
     categorySize?: categorySizeN, itemSize?: itemSizeN, itemImagePosition?: itemImagePositionN, itemImageShape?: itemImageShapeN,
     currencySymbol?: string, surfaceColor?: string; boardEnabled?: boolean;
-    boardText?: string;} = {};
+    boardText?: string;BodyTextColor?:string;
+    headerAccentPanel?: boolean; headerPanelIntensity?: number; headerNameGradient?: boolean;
+    headerUppercaseTagline?: boolean; headerShimmer?: boolean; headerNameColor?: string | null;
+    headerTaglineColor?: string | null;
+    headerNameGradientFrom?: string | null; headerNameGradientTo?: string | null;
+    headerNameGradientAngle?: number; showLogo?: boolean; logoSize?: logoSizeN;
+    headerBackgroundPositionX?: number; headerBackgroundPositionY?: number; headerBackgroundZoom?: number;
+    headerDividerStyle?: dividerStyleN; headerSpacing?: headerSpacingN; headerMaxWidth?: headerMaxWidthN;} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
@@ -89,7 +100,6 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (overlayStyle !== undefined) updateData.overlayStyle = overlayStyle;
   if (overlayIntensity !== undefined) updateData.overlayIntensity = overlayIntensity;
   if (headingFont !== undefined) updateData.headingFont = headingFont;
-  if (headingFont !== undefined) updateData.headingFont = headingFont;
   if (headerAlign !== undefined) updateData.headerAlign = headerAlign;
   if (headerSize !== undefined) updateData.headerSize = headerSize;
   if (categorySize !== undefined) updateData.categorySize = categorySize;
@@ -100,7 +110,26 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (currencySymbol !== undefined) updateData.currencySymbol = currencySymbol;
   if (surfaceColor !== undefined) updateData.surfaceColor = surfaceColor;
   if (boardEnabled !== undefined) updateData.boardEnabled = boardEnabled;
+  if (BodyTextColor !== undefined) updateData.BodyTextColor = BodyTextColor;
   if (boardText !== undefined && boardText !== null) updateData.boardText = boardText;
+  if (headerAccentPanel !== undefined) updateData.headerAccentPanel = headerAccentPanel;
+  if (headerPanelIntensity !== undefined) updateData.headerPanelIntensity = headerPanelIntensity;
+  if (headerNameGradient !== undefined) updateData.headerNameGradient = headerNameGradient;
+  if (headerUppercaseTagline !== undefined) updateData.headerUppercaseTagline = headerUppercaseTagline;
+  if (headerShimmer !== undefined) updateData.headerShimmer = headerShimmer;
+  if (headerNameColor !== undefined) updateData.headerNameColor = headerNameColor;
+  if (headerTaglineColor !== undefined) updateData.headerTaglineColor = headerTaglineColor;
+  if (headerNameGradientFrom !== undefined) updateData.headerNameGradientFrom = headerNameGradientFrom;
+  if (headerNameGradientTo !== undefined) updateData.headerNameGradientTo = headerNameGradientTo;
+  if (headerNameGradientAngle !== undefined) updateData.headerNameGradientAngle = headerNameGradientAngle;
+  if (showLogo !== undefined) updateData.showLogo = showLogo;
+  if (logoSize !== undefined) updateData.logoSize = logoSize;
+  if (headerBackgroundPositionX !== undefined) updateData.headerBackgroundPositionX = headerBackgroundPositionX;
+  if (headerBackgroundPositionY !== undefined) updateData.headerBackgroundPositionY = headerBackgroundPositionY;
+  if (headerBackgroundZoom !== undefined) updateData.headerBackgroundZoom = headerBackgroundZoom;
+  if (headerDividerStyle !== undefined) updateData.headerDividerStyle = headerDividerStyle;
+  if (headerSpacing !== undefined) updateData.headerSpacing = headerSpacing;
+  if (headerMaxWidth !== undefined) updateData.headerMaxWidth = headerMaxWidth;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(
