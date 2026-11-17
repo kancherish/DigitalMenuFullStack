@@ -91,7 +91,7 @@ export default function DigitalMenu() {
   const themeVars = useThemeVars(
     restaurantConfig?.primaryColor ?? '#1e293b',
     restaurantConfig?.accentColor ?? '#0ea5e9',
-    restaurantConfig?.cardRadius ?? '1rem',
+    restaurantConfig?.roundness ?? '1rem',
     restaurantConfig?.surfaceColor ?? '#ffffff',
     restaurantConfig?.BodyTextColor
   );
@@ -141,7 +141,7 @@ export default function DigitalMenu() {
         logoShape={restaurantConfig!.logoShape || "circle"}
         overlayStyle={restaurantConfig!.overlayStyle || "gradient"}
         overlayIntensity={restaurantConfig!.overlayIntensity ?? 1}
-        radius={restaurantConfig!.cardRadius}
+        radius={restaurantConfig!.roundness}
         align={restaurantConfig!.headerAlign || "center"}
         size={restaurantConfig!.headerSize || "compact"}
         layout={restaurantConfig!.headerLayout || "banner"}

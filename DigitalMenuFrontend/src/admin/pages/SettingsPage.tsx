@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import { restaurantService } from '../services/restaurantService';
 import { diffChanged } from '../../util/util';
 import type { Restaurant, NavStyle } from '../types';
+import { THEME_PRESETS, getPresetSwatch, type ThemePreset } from '../themePresets';
 import { CopyIcon, LockIcon, Check, AlertCircle, QrCode, Download } from 'lucide-react';
 
 // text-base on mobile prevents iOS Safari from zooming into focused inputs
@@ -61,6 +62,11 @@ export function SettingsPage() {
 
   function update<K extends keyof Restaurant>(key: K, value: Restaurant[K]) {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setSaved(false);
+  }
+
+  function applyPreset(preset: ThemePreset) {
+    setForm((prev) => (prev ? { ...prev, ...preset.values } : prev));
     setSaved(false);
   }
 
@@ -238,6 +244,43 @@ export function SettingsPage() {
           </Field>
         </Section>
 
+        {/* Theme Presets */}
+        <Section title="Theme Presets" description="Start from a ready-made look, then fine-tune anything below.">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {THEME_PRESETS.map((preset) => {
+              const active = isPresetActive(preset, form);
+              const [primary, accent, surface] = getPresetSwatch(preset);
+              return (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => applyPreset(preset)}
+                  aria-pressed={active}
+                  className={`flex w-full flex-col gap-2 rounded-xl border p-3 text-left transition-colors ${
+                    active
+                      ? 'border-indigo-500 bg-indigo-50/60 ring-1 ring-indigo-500/30'
+                      : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex items-center gap-1.5">
+                      <span className="h-6 w-6 rounded-full border border-black/10" style={{ backgroundColor: primary }} />
+                      <span className="h-6 w-6 rounded-full border border-black/10" style={{ backgroundColor: accent }} />
+                      <span className="h-6 w-6 rounded-full border border-black/10" style={{ backgroundColor: surface }} />
+                    </span>
+                    {active && <Check className="h-4 w-4 text-indigo-600" />}
+                  </div>
+                  <span className="text-sm font-semibold text-slate-900">{preset.name}</span>
+                  <span className="text-xs text-slate-500">{preset.description}</span>
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-xs text-slate-400">
+            Applying a preset fills the style fields below. Review and press “Save changes” to keep it.
+          </p>
+        </Section>
+
         {/*
           One layout for every screen size: a single column on mobile,
           two independent (masonry-style) columns on desktop. Sections never split across columns.
@@ -268,7 +311,7 @@ export function SettingsPage() {
             <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
               <ColorField label="Primary" value={form.primaryColor || '#ffffff'} onChange={(v) => update('primaryColor', v)} />
               <ColorField label="Accent" value={form.accentColor || '#ffffff'} onChange={(v) => update('accentColor', v)} />
-              <ColorField label="Body Text" value={form.bodyTextColor || form.primaryColor || '#ffffff'} onChange={(v) => update('bodyTextColor', v)} />
+              <ColorField label="Body Text" value={form.BodyTextColor || form.primaryColor || '#ffffff'} onChange={(v) => update('BodyTextColor', v)} />
               <ColorField label="Header Text" value={form.headerText || '#ffffff'} onChange={(v) => update('headerText', v)} />
               <ColorField label="Background" value={form.surfaceColor || '#ffffff'} onChange={(v) => update('surfaceColor', v)} />
             </div>
@@ -496,6 +539,12 @@ export function SettingsPage() {
         </div>
       </form>
     </div>
+  );
+}
+
+function isPresetActive(preset: ThemePreset, form: Restaurant): boolean {
+  return Object.entries(preset.values).every(
+    ([key, value]) => (form as unknown as Record<string, unknown>)[key] === value,
   );
 }
 

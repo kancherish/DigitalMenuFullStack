@@ -575,7 +575,7 @@ Vercel.
 - Theme vars built with:
   - primary `primaryColor` (fallback `#1e293b`)
   - accent `accentColor` (fallback `#0ea5e9`)
-  - radius `cardRadius` (fallback `1rem`) ← **backend actually sends `roundness`**
+  - radius `roundness` (fallback `1rem`)
   - surface `surfaceColor` (fallback `#ffffff`)
   - body text `BodyTextColor`
 - Header receives nearly every Restaurant customization field (see §8).
@@ -685,11 +685,12 @@ key; not currently imported anywhere.
 
 `src/types/index.ts`: public `RestaurantConfig`, `Category`, `Item`, `Variant`,
 `ApiResponse`, `RequestOptions`, `SearchResultItem`.
-`RestaurantConfig` includes `cardRadius` (not `roundness`), `BodyTextColor`, header/layout
+`RestaurantConfig` includes `roundness`, `BodyTextColor`, header/layout
 options, item/card/nav options, currency, surface, board, PDF fields.
 
 `src/admin/types/index.ts`: admin `Restaurant` includes both `bodyTextColor?` and
-`BodyTextColor?`, plus `roundness`, and legacy/unused `pageBackground` / `itemOfTheDayId`.
+`BodyTextColor?` (the Settings form now writes `BodyTextColor`), plus `roundness`, and
+legacy/unused `pageBackground` / `itemOfTheDayId`.
 `AdminInfo` is `{ publicId, username, restaurant }`.
 
 ---
@@ -754,27 +755,32 @@ Sections:
    `https://api.qrserver.com/v1/create-qr-code/`), download 512×512 PNG. Menu URL uses
    `form.domain` (prefixes `https://` unless it already starts with http/https), otherwise
    `window.location.origin/<restaurantId>`.
-2. **Branding**: name, tagline, logo URL, background URL, default item image URL, enable
+2. **Theme Presets** (full width): grid of ready-made themes from
+   `src/admin/themePresets.ts` (`THEME_PRESETS`: Classic, Midnight, Ocean, Sunset, Forest,
+   Rose, Mono). Each card shows a 3-colour swatch and description; clicking merges the
+   preset's `values` (a `Partial<Restaurant>`) into the form so the admin can fine-tune and
+   save. A preset is marked active when every one of its values matches the current form.
+   Frontend-only; no backend/schema changes.
+3. **Branding**: name, tagline, logo URL, background URL, default item image URL, enable
    item image.
-3. **Appearance**: Primary, Accent, Body Text, Header Text, Background color; Nav Style
+4. **Appearance**: Primary, Accent, Body Text, Header Text, Background color; Nav Style
    (tabs/dropdown); Nav Size; Tab Style (pill/underline, only tabs); Roundness; Header
    Alignment; Header Size; Header Layout; Logo Shape; Heading Font; Photo Overlay +
    intensity.
-4. **Header Style**: vertical spacing, max width, name/tagline color, logo size, divider
+5. **Header Style**: vertical spacing, max width, name/tagline color, logo size, divider
    style, photo focus X/Y, photo zoom, toggles (show logo, accent panel, name gradient,
    uppercase tagline, shimmer), gradient start/end/angle, accent panel intensity.
-5. **Item Cards**: card size, image position, image shape, currency symbol.
-6. **Display Options**: search, divider, item count, sticky nav, PDF button visibility +
+6. **Item Cards**: card size, image position, image shape, currency symbol.
+7. **Display Options**: search, divider, item count, sticky nav, PDF button visibility +
    placement.
-7. **Announcement Board**: enable + 200-character text.
+8. **Announcement Board**: enable + 200-character text.
 
 Save bar is sticky at the bottom with “Saved / Unsaved changes / No changes” status.
 Desktop layout uses a single form with `lg:columns-2` masonry-style columns; there is no
 separate mobile/desktop form implementation anymore.
 
-**Body Text bug:** the control updates `form.bodyTextColor`, but
-`restaurant/update` only reads `BodyTextColor`; thus this field is not persisted.
-**Roundness bug:** admin edits `roundness`, but the public menu reads `cardRadius`.
+Body Text now edits `BodyTextColor` (the field the backend persists) and the public menu
+reads `roundness` (the field the backend sends), so both previously-broken controls apply.
 
 ### 7.4 Categories page
 
@@ -937,60 +943,54 @@ Super admin:
    `DigitalMenuBackend/.env` unless the path is fixed or env vars are exported externally.
 2. **Prisma commands must run from `DigitalMenuBackend/src`.** From the package root,
    Prisma cannot find the schema/config.
-3. **Body text color is not persisted from Settings.** Backend schema/controller/public
-   type use `BodyTextColor`; the admin form edits `bodyTextColor`, which the controller
-   ignores.
-4. **Roundness setting does not affect the public menu.** Backend/admin use `roundness`;
-   `RestaurantConfig` and `DigitalMenu` use `cardRadius`, which is never sent, so the menu
-   falls back to `1rem`.
-5. **Login default redirect is broken.** `LoginPage` falls back to
+3. **Login default redirect is broken.** `LoginPage` falls back to
    `/admin/dashboard`, which has no route. Direct logins can land on a blank page; use
    `/admin` or remove the fallback.
-6. **Logout uses the wrong HTTP method.** Frontend `authService.logout` POSTs to
+4. **Logout uses the wrong HTTP method.** Frontend `authService.logout` POSTs to
    `/auth/logout`; backend defines DELETE. Local state clears, but the stored refresh token
    is not cleared server-side.
-7. **Category service query string is malformed.**
+5. **Category service query string is malformed.**
    `categoryService.getByRestaurant` builds `/category/get/:id/<params>` instead of
    `/category/get/:id?<params>`. `includeItems=true` would not be understood.
-8. **Super-admin `getAllAdmins` leaks secrets.** It returns `password` and hashed
+6. **Super-admin `getAllAdmins` leaks secrets.** It returns `password` and hashed
    `refreshToken` for every admin. Sanitize before returning.
-9. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
+7. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
    `res.json` without `res.status(404)`.
-10. **No-origin requests are rejected by CORS.** The no-origin escape hatch is commented
-    out; Postman/curl/server-to-server requests without an `Origin` header fail unless
-    changed.
-11. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
-    change” by `items.controller.ts`.
-12. **A price of `0` is not displayed** because `Item.tsx` checks
+8. **No-origin requests are rejected by CORS.** The no-origin escape hatch is commented
+   out; Postman/curl/server-to-server requests without an `Origin` header fail unless
+   changed.
+9. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
+   change” by `items.controller.ts`.
+10. **A price of `0` is not displayed** because `Item.tsx` checks
     `itemStructure.price && !hasVariants` instead of `price != null`.
-13. **Custom domain is effectively immutable.** Register ignores its `domain` input and
+11. **Custom domain is effectively immutable.** Register ignores its `domain` input and
     overwrites it with `${MAIN_DOMAIN}/${publicId}/`; both restaurant update endpoints
     have domain updates commented out.
-14. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
+12. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
     `/v1`; set `VITE_SERVER_ADDRESS`.
-15. **QR download depends on `api.qrserver.com`.** Network/CORS failures surface as
+13. **QR download depends on `api.qrserver.com`.** Network/CORS failures surface as
     “Failed to download QR code”; the QR preview is an external image.
-16. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
+14. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
     a public URL even if the object was not stored.
-17. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
+15. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
     clears the access token and cached admin info.
-18. **`assetUrl` is unused and backend stores full image URLs.** Image fields
+16. **`assetUrl` is unused and backend stores full image URLs.** Image fields
     (`imageURL`, `logoUrl`, etc.) are rendered directly; `VITE_ASSET_BASE_URL` only affects
     `assetUrl`.
-19. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
+17. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
     `20261022152811_init` only adds `BodyTextColor`. Keep this in mind when resetting a DB
     or squashing history.
-20. **The Postman collection is stale.** Do not use it as the API source of truth.
-21. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
+18. **The Postman collection is stale.** Do not use it as the API source of truth.
+19. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
     `VITE_RESTAURANT_ID` are present but unused; code uses `VITE_SERVER_ADDRESS` (and
     `VITE_ASSET_BASE_URL` only in unused `assets.ts`).
-22. **Admin item prices are hard-coded to `₹`.** The `currencySymbol` setting only affects
+20. **Admin item prices are hard-coded to `₹`.** The `currencySymbol` setting only affects
     the public menu/PDF, not `ItemPage.tsx`.
-23. **Header `display` font uses `font-display`**, but the app only explicitly loads
+21. **Header `display` font uses `font-display`**, but the app only explicitly loads
     Fraunces and overrides `.font-serif`; verify that the `display` option renders as
     intended in the target Tailwind build.
-24. **`admin/login` after successful direct login** can navigate to a non-existent route
-    (see #5); also `AuthProvider` requires cached `adminInfo` after refresh, so clearing
+22. **`admin/login` after successful direct login** can navigate to a non-existent route
+    (see #3); also `AuthProvider` requires cached `adminInfo` after refresh, so clearing
     that key while keeping a valid refresh token leaves the admin unauthenticated until
     login.
 
@@ -1007,14 +1007,30 @@ Super admin:
 - Never commit `.env` files or secrets.
 - Only commit when explicitly asked.
 - Update this file whenever behavior, routes, schema, env vars, or known issues change.
-- Preferred canonical spelling for future work: use `bodyTextColor` and either rename the
-  DB field or map it explicitly; use `roundness`/`cardRadius` consistently.
+- Preferred canonical spelling: the persisted field is `BodyTextColor` (PascalCase in
+  DB/API) and the radius field is `roundness`; the admin form and public menu now both use
+  these. `bodyTextColor`/`cardRadius` are legacy aliases kept only on the admin type.
 
 ---
 
 ## Change Log
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
+
+### 2026-11-17 — Theme presets + fix body text / roundness controls
+- **Frontend admin**
+  - `src/admin/themePresets.ts` (new): `THEME_PRESETS` — seven ready-made themes (Classic,
+    Midnight, Ocean, Sunset, Forest, Rose, Mono), each a `Partial<Restaurant>` plus a
+    `getPresetSwatch` helper. Frontend-only.
+  - `src/admin/pages/SettingsPage.tsx`: new full-width “Theme Presets” section renders a
+    card per preset; clicking merges the preset's values into the form (then the admin
+    saves). A preset is highlighted when the form exactly matches it. Body Text now writes
+    `BodyTextColor` (was the ignored `bodyTextColor`).
+- **Frontend public**
+  - `src/types/index.ts`: `RestaurantConfig.cardRadius` → `roundness`.
+  - `src/DigitalMenu.tsx`: reads `roundness` for the theme radius and `Header` `radius`.
+- **Why:** let admins pick a complete look in one click instead of configuring every
+  setting, and make the Body Text and Roundness controls actually apply on the public menu.
 
 ### 2026-11-17 — Scope category/item name uniqueness to tenant
 - **Backend**

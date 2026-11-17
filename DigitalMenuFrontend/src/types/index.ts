@@ -11,7 +11,7 @@ export interface RestaurantConfig {
   backgroundUrl?: string;
   accentColor: string;
   tabStyle: string;
-  cardRadius: string;
+  roundness: string;
   showSearch: boolean;
   showItemCount: boolean;
   stickyNav: boolean;
