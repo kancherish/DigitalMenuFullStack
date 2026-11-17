@@ -269,10 +269,11 @@ export type ItemOrderByWithRelationInput = {
 export type ItemWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   publicId?: string
-  name?: string
+  category_id_name?: Prisma.ItemCategory_idNameCompoundUniqueInput
   AND?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
   OR?: Prisma.ItemWhereInput[]
   NOT?: Prisma.ItemWhereInput | Prisma.ItemWhereInput[]
+  name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringNullableFilter<"Item"> | string | null
   price?: Prisma.FloatNullableFilter<"Item"> | number | null
   category_id?: Prisma.StringFilter<"Item"> | string
@@ -281,7 +282,7 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   available?: Prisma.BoolFilter<"Item"> | boolean
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.VariantListRelationFilter
-}, "id" | "publicId" | "name">
+}, "id" | "publicId" | "category_id_name">
 
 export type ItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -415,6 +416,11 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type ItemCategory_idNameCompoundUniqueInput = {
+  category_id: string
+  name: string
 }
 
 export type ItemCountOrderByAggregateInput = {

@@ -150,3 +150,13 @@ export const headerMaxWidthN = {
 } as const
 
 export type headerMaxWidthN = (typeof headerMaxWidthN)[keyof typeof headerMaxWidthN]
+
+
+export const pdfDownloadPlacementN = {
+  bottom_right: 'bottom_right',
+  bottom_left: 'bottom_left',
+  top_right: 'top_right',
+  top_left: 'top_left'
+} as const
+
+export type pdfDownloadPlacementN = (typeof pdfDownloadPlacementN)[keyof typeof pdfDownloadPlacementN]

@@ -3,7 +3,7 @@ import { prisma } from "../lib/prisma.js";
 import { asyncHandler } from "../utils/asyncHandeler.js";
 import { ErrorResponse } from "../utils/Error-Response.js";
 import ApiResponse from "../utils/API-Response.js";
-import { categorySizeN, categoryVariantN, dividerStyleN, headerAlignN, headerLayoutN, headerMaxWidthN, headerSizeN, headerSpacingN, headingFontN, itemImagePositionN, itemImageShapeN, itemSizeN, logoShapeN, logoSizeN, NavStyle, overlayStyleN } from '../generated/prisma/enums';
+import { categorySizeN, categoryVariantN, dividerStyleN, headerAlignN, headerLayoutN, headerMaxWidthN, headerSizeN, headerSpacingN, headingFontN, itemImagePositionN, itemImageShapeN, itemSizeN, logoShapeN, logoSizeN, NavStyle, overlayStyleN, pdfDownloadPlacementN } from '../generated/prisma/enums';
 
 export const addResturant = asyncHandler(async (req: Request, res: Response) => {
   //NO NEED AS OF NOW RESTAURANT WILL BE CREATED WITH ADMIN
@@ -43,7 +43,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   headerUppercaseTagline, headerShimmer, headerNameColor, headerTaglineColor,
   headerNameGradientFrom, headerNameGradientTo, headerNameGradientAngle,
   showLogo, logoSize, headerBackgroundPositionX, headerBackgroundPositionY,
-  headerBackgroundZoom, headerDividerStyle, headerSpacing, headerMaxWidth} = req.body?.para || {};
+  headerBackgroundZoom, headerDividerStyle, headerSpacing, headerMaxWidth,
+  showPdfDownload, pdfDownloadPlacement } = req.body?.para || {};
 
   if (!restaurant_id) {
     res.status(400).json(
@@ -78,7 +79,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     headerNameGradientFrom?: string | null; headerNameGradientTo?: string | null;
     headerNameGradientAngle?: number; showLogo?: boolean; logoSize?: logoSizeN;
     headerBackgroundPositionX?: number; headerBackgroundPositionY?: number; headerBackgroundZoom?: number;
-    headerDividerStyle?: dividerStyleN; headerSpacing?: headerSpacingN; headerMaxWidth?: headerMaxWidthN;} = {};
+    headerDividerStyle?: dividerStyleN; headerSpacing?: headerSpacingN; headerMaxWidth?: headerMaxWidthN;
+    showPdfDownload?: boolean; pdfDownloadPlacement?: pdfDownloadPlacementN;} = {};
   if (name !== undefined) updateData.name = name;
   if (tagline !== undefined) updateData.tagline = tagline;
   if (primaryColor !== undefined) updateData.primaryColor = primaryColor;
@@ -130,6 +132,8 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (headerDividerStyle !== undefined) updateData.headerDividerStyle = headerDividerStyle;
   if (headerSpacing !== undefined) updateData.headerSpacing = headerSpacing;
   if (headerMaxWidth !== undefined) updateData.headerMaxWidth = headerMaxWidth;
+  if (showPdfDownload !== undefined) updateData.showPdfDownload = showPdfDownload;
+  if (pdfDownloadPlacement !== undefined) updateData.pdfDownloadPlacement = pdfDownloadPlacement;
 
   if (Object.keys(updateData).length === 0) {
     res.status(400).json(

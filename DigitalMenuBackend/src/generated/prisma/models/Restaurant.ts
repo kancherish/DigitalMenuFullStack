@@ -101,6 +101,8 @@ export type RestaurantMinAggregateOutputType = {
   surfaceColor: string | null
   boardEnabled: boolean | null
   boardText: string | null
+  showPdfDownload: boolean | null
+  pdfDownloadPlacement: $Enums.pdfDownloadPlacementN | null
 }
 
 export type RestaurantMaxAggregateOutputType = {
@@ -158,6 +160,8 @@ export type RestaurantMaxAggregateOutputType = {
   surfaceColor: string | null
   boardEnabled: boolean | null
   boardText: string | null
+  showPdfDownload: boolean | null
+  pdfDownloadPlacement: $Enums.pdfDownloadPlacementN | null
 }
 
 export type RestaurantCountAggregateOutputType = {
@@ -215,6 +219,8 @@ export type RestaurantCountAggregateOutputType = {
   surfaceColor: number
   boardEnabled: number
   boardText: number
+  showPdfDownload: number
+  pdfDownloadPlacement: number
   _all: number
 }
 
@@ -294,6 +300,8 @@ export type RestaurantMinAggregateInputType = {
   surfaceColor?: true
   boardEnabled?: true
   boardText?: true
+  showPdfDownload?: true
+  pdfDownloadPlacement?: true
 }
 
 export type RestaurantMaxAggregateInputType = {
@@ -351,6 +359,8 @@ export type RestaurantMaxAggregateInputType = {
   surfaceColor?: true
   boardEnabled?: true
   boardText?: true
+  showPdfDownload?: true
+  pdfDownloadPlacement?: true
 }
 
 export type RestaurantCountAggregateInputType = {
@@ -408,6 +418,8 @@ export type RestaurantCountAggregateInputType = {
   surfaceColor?: true
   boardEnabled?: true
   boardText?: true
+  showPdfDownload?: true
+  pdfDownloadPlacement?: true
   _all?: true
 }
 
@@ -552,6 +564,8 @@ export type RestaurantGroupByOutputType = {
   surfaceColor: string
   boardEnabled: boolean
   boardText: string
+  showPdfDownload: boolean
+  pdfDownloadPlacement: $Enums.pdfDownloadPlacementN
   _count: RestaurantCountAggregateOutputType | null
   _avg: RestaurantAvgAggregateOutputType | null
   _sum: RestaurantSumAggregateOutputType | null
@@ -632,6 +646,8 @@ export type RestaurantWhereInput = {
   surfaceColor?: Prisma.StringFilter<"Restaurant"> | string
   boardEnabled?: Prisma.BoolFilter<"Restaurant"> | boolean
   boardText?: Prisma.StringFilter<"Restaurant"> | string
+  showPdfDownload?: Prisma.BoolFilter<"Restaurant"> | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFilter<"Restaurant"> | $Enums.pdfDownloadPlacementN
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }
@@ -691,6 +707,8 @@ export type RestaurantOrderByWithRelationInput = {
   surfaceColor?: Prisma.SortOrder
   boardEnabled?: Prisma.SortOrder
   boardText?: Prisma.SortOrder
+  showPdfDownload?: Prisma.SortOrder
+  pdfDownloadPlacement?: Prisma.SortOrder
   admin?: Prisma.RestaurantAdminOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
@@ -753,6 +771,8 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   surfaceColor?: Prisma.StringFilter<"Restaurant"> | string
   boardEnabled?: Prisma.BoolFilter<"Restaurant"> | boolean
   boardText?: Prisma.StringFilter<"Restaurant"> | string
+  showPdfDownload?: Prisma.BoolFilter<"Restaurant"> | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFilter<"Restaurant"> | $Enums.pdfDownloadPlacementN
   admin?: Prisma.XOR<Prisma.RestaurantAdminScalarRelationFilter, Prisma.RestaurantAdminWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "publicId" | "adminId">
@@ -812,6 +832,8 @@ export type RestaurantOrderByWithAggregationInput = {
   surfaceColor?: Prisma.SortOrder
   boardEnabled?: Prisma.SortOrder
   boardText?: Prisma.SortOrder
+  showPdfDownload?: Prisma.SortOrder
+  pdfDownloadPlacement?: Prisma.SortOrder
   _count?: Prisma.RestaurantCountOrderByAggregateInput
   _avg?: Prisma.RestaurantAvgOrderByAggregateInput
   _max?: Prisma.RestaurantMaxOrderByAggregateInput
@@ -877,6 +899,8 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   surfaceColor?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   boardEnabled?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   boardText?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
+  showPdfDownload?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNWithAggregatesFilter<"Restaurant"> | $Enums.pdfDownloadPlacementN
 }
 
 export type RestaurantCreateInput = {
@@ -932,6 +956,8 @@ export type RestaurantCreateInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
@@ -991,6 +1017,8 @@ export type RestaurantUncheckedCreateInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -1047,6 +1075,8 @@ export type RestaurantUpdateInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
@@ -1106,6 +1136,8 @@ export type RestaurantUncheckedUpdateInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -1164,6 +1196,8 @@ export type RestaurantCreateManyInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
 }
 
 export type RestaurantUpdateManyMutationInput = {
@@ -1219,6 +1253,8 @@ export type RestaurantUpdateManyMutationInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
 }
 
 export type RestaurantUncheckedUpdateManyInput = {
@@ -1276,6 +1312,8 @@ export type RestaurantUncheckedUpdateManyInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
 }
 
 export type RestaurantNullableScalarRelationFilter = {
@@ -1338,6 +1376,8 @@ export type RestaurantCountOrderByAggregateInput = {
   surfaceColor?: Prisma.SortOrder
   boardEnabled?: Prisma.SortOrder
   boardText?: Prisma.SortOrder
+  showPdfDownload?: Prisma.SortOrder
+  pdfDownloadPlacement?: Prisma.SortOrder
 }
 
 export type RestaurantAvgOrderByAggregateInput = {
@@ -1405,6 +1445,8 @@ export type RestaurantMaxOrderByAggregateInput = {
   surfaceColor?: Prisma.SortOrder
   boardEnabled?: Prisma.SortOrder
   boardText?: Prisma.SortOrder
+  showPdfDownload?: Prisma.SortOrder
+  pdfDownloadPlacement?: Prisma.SortOrder
 }
 
 export type RestaurantMinOrderByAggregateInput = {
@@ -1462,6 +1504,8 @@ export type RestaurantMinOrderByAggregateInput = {
   surfaceColor?: Prisma.SortOrder
   boardEnabled?: Prisma.SortOrder
   boardText?: Prisma.SortOrder
+  showPdfDownload?: Prisma.SortOrder
+  pdfDownloadPlacement?: Prisma.SortOrder
 }
 
 export type RestaurantSumOrderByAggregateInput = {
@@ -1587,6 +1631,10 @@ export type EnumitemImageShapeNFieldUpdateOperationsInput = {
   set?: $Enums.itemImageShapeN
 }
 
+export type EnumpdfDownloadPlacementNFieldUpdateOperationsInput = {
+  set?: $Enums.pdfDownloadPlacementN
+}
+
 export type RestaurantCreateNestedOneWithoutCategoriesInput = {
   create?: Prisma.XOR<Prisma.RestaurantCreateWithoutCategoriesInput, Prisma.RestaurantUncheckedCreateWithoutCategoriesInput>
   connectOrCreate?: Prisma.RestaurantCreateOrConnectWithoutCategoriesInput
@@ -1654,6 +1702,8 @@ export type RestaurantCreateWithoutAdminInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryCreateNestedManyWithoutRestaurantInput
 }
 
@@ -1711,6 +1761,8 @@ export type RestaurantUncheckedCreateWithoutAdminInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutRestaurantInput
 }
 
@@ -1783,6 +1835,8 @@ export type RestaurantUpdateWithoutAdminInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -1840,6 +1894,8 @@ export type RestaurantUncheckedUpdateWithoutAdminInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutRestaurantNestedInput
 }
 
@@ -1896,6 +1952,8 @@ export type RestaurantCreateWithoutCategoriesInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
   admin: Prisma.RestaurantAdminCreateNestedOneWithoutRestaurantInput
 }
 
@@ -1954,6 +2012,8 @@ export type RestaurantUncheckedCreateWithoutCategoriesInput = {
   surfaceColor?: string
   boardEnabled?: boolean
   boardText?: string
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: $Enums.pdfDownloadPlacementN
 }
 
 export type RestaurantCreateOrConnectWithoutCategoriesInput = {
@@ -2025,6 +2085,8 @@ export type RestaurantUpdateWithoutCategoriesInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
   admin?: Prisma.RestaurantAdminUpdateOneRequiredWithoutRestaurantNestedInput
 }
 
@@ -2083,6 +2145,8 @@ export type RestaurantUncheckedUpdateWithoutCategoriesInput = {
   surfaceColor?: Prisma.StringFieldUpdateOperationsInput | string
   boardEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   boardText?: Prisma.StringFieldUpdateOperationsInput | string
+  showPdfDownload?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pdfDownloadPlacement?: Prisma.EnumpdfDownloadPlacementNFieldUpdateOperationsInput | $Enums.pdfDownloadPlacementN
 }
 
 
@@ -2171,6 +2235,8 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   surfaceColor?: boolean
   boardEnabled?: boolean
   boardText?: boolean
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.RestaurantCountOutputTypeDefaultArgs<ExtArgs>
@@ -2231,6 +2297,8 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   surfaceColor?: boolean
   boardEnabled?: boolean
   boardText?: boolean
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -2289,6 +2357,8 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   surfaceColor?: boolean
   boardEnabled?: boolean
   boardText?: boolean
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: boolean
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["restaurant"]>
 
@@ -2347,9 +2417,11 @@ export type RestaurantSelectScalar = {
   surfaceColor?: boolean
   boardEnabled?: boolean
   boardText?: boolean
+  showPdfDownload?: boolean
+  pdfDownloadPlacement?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage" | "headerLayout" | "logoShape" | "BodyTextColor" | "overlayStyle" | "overlayIntensity" | "headingFont" | "headerAlign" | "headerSize" | "headerAccentPanel" | "headerPanelIntensity" | "headerNameGradient" | "headerUppercaseTagline" | "headerShimmer" | "headerNameColor" | "headerTaglineColor" | "headerNameGradientFrom" | "headerNameGradientTo" | "headerNameGradientAngle" | "showLogo" | "logoSize" | "headerBackgroundPositionX" | "headerBackgroundPositionY" | "headerBackgroundZoom" | "headerDividerStyle" | "headerSpacing" | "headerMaxWidth" | "categoryVariant" | "categorySize" | "itemSize" | "itemImagePosition" | "itemImageShape" | "currencySymbol" | "surfaceColor" | "boardEnabled" | "boardText", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage" | "headerLayout" | "logoShape" | "BodyTextColor" | "overlayStyle" | "overlayIntensity" | "headingFont" | "headerAlign" | "headerSize" | "headerAccentPanel" | "headerPanelIntensity" | "headerNameGradient" | "headerUppercaseTagline" | "headerShimmer" | "headerNameColor" | "headerTaglineColor" | "headerNameGradientFrom" | "headerNameGradientTo" | "headerNameGradientAngle" | "showLogo" | "logoSize" | "headerBackgroundPositionX" | "headerBackgroundPositionY" | "headerBackgroundZoom" | "headerDividerStyle" | "headerSpacing" | "headerMaxWidth" | "categoryVariant" | "categorySize" | "itemSize" | "itemImagePosition" | "itemImageShape" | "currencySymbol" | "surfaceColor" | "boardEnabled" | "boardText" | "showPdfDownload" | "pdfDownloadPlacement", ExtArgs["result"]["restaurant"]>
 export type RestaurantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
@@ -2423,6 +2495,8 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     surfaceColor: string
     boardEnabled: boolean
     boardText: string
+    showPdfDownload: boolean
+    pdfDownloadPlacement: $Enums.pdfDownloadPlacementN
   }, ExtArgs["result"]["restaurant"]>
   composites: {}
 }
@@ -2902,6 +2976,8 @@ export interface RestaurantFieldRefs {
   readonly surfaceColor: Prisma.FieldRef<"Restaurant", 'String'>
   readonly boardEnabled: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly boardText: Prisma.FieldRef<"Restaurant", 'String'>
+  readonly showPdfDownload: Prisma.FieldRef<"Restaurant", 'Boolean'>
+  readonly pdfDownloadPlacement: Prisma.FieldRef<"Restaurant", 'pdfDownloadPlacementN'>
 }
     
 

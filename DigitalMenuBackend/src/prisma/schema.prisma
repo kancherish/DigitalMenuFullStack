@@ -102,6 +102,13 @@
     full
   }
 
+  enum pdfDownloadPlacementN {
+    bottom_right
+    bottom_left
+    top_right
+    top_left
+  }
+
   model RestaurantAdmin {
     id Int @id @default(autoincrement())
     publicId String  @unique @default(uuid())
@@ -169,22 +176,26 @@
     surfaceColor String @default("#ffffff")
     boardEnabled Boolean @default(false)
     boardText String @default("")
+    showPdfDownload Boolean @default(true)
+    pdfDownloadPlacement pdfDownloadPlacementN @default(bottom_right)
   }
 
   model Category {
     id            Int        @id @default(autoincrement())
     publicId      String     @unique @default(uuid())
-    name          String     @unique
+    name          String
     restaurant_id String
     restaurant    Restaurant @relation(fields: [restaurant_id], references: [publicId], onDelete: Cascade)
     icon          String    @default ("Utensils")
     items         Item[]
+
+    @@unique([restaurant_id, name])
   }
 
   model Item {
     id          Int       @id @default(autoincrement())
     publicId  String @unique @default(uuid())
-    name        String   @unique
+    name        String
     description String?
     price       Float?    // null if item uses variants for pricing
     category    Category  @relation(fields: [category_id], references: [publicId], onDelete: Cascade)
@@ -193,6 +204,8 @@
     variants    Variant[]
     imageURL    String?
     available Boolean @default(true)
+
+    @@unique([category_id, name])
   }
 
   model Variant {

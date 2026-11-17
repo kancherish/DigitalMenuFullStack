@@ -139,7 +139,9 @@ export const RestaurantScalarFieldEnum = {
   currencySymbol: 'currencySymbol',
   surfaceColor: 'surfaceColor',
   boardEnabled: 'boardEnabled',
-  boardText: 'boardText'
+  boardText: 'boardText',
+  showPdfDownload: 'showPdfDownload',
+  pdfDownloadPlacement: 'pdfDownloadPlacement'
 } as const
 
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]

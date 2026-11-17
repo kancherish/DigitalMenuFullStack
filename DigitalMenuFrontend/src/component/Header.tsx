@@ -37,9 +37,13 @@ interface HeaderProps {
 
   nameColor?: string;
   taglineColor?: string;
+  nameGradientFrom?: string;
+  nameGradientTo?: string;
+  nameGradientAngle?: number; // degrees
   showLogo?: boolean;
   logoSize?: "auto" | "sm" | "md" | "lg";
-  backgroundPosition?: "top" | "center" | "bottom" | "left" | "right";
+  backgroundPositionX?: number; // 0–100
+  backgroundPositionY?: number; // 0–100
   backgroundZoom?: number; // 1–2
   dividerStyle?: "line" | "dots" | "diamond" | "none";
   spacing?: "tight" | "default" | "loose";
@@ -158,9 +162,13 @@ export function Header({
   shimmer = true,
   nameColor,
   taglineColor,
+  nameGradientFrom,
+  nameGradientTo,
+  nameGradientAngle = 120,
   showLogo = true,
   logoSize = "auto",
-  backgroundPosition = "center",
+  backgroundPositionX = 50,
+  backgroundPositionY = 50,
   backgroundZoom = 1,
   dividerStyle = "line",
   spacing = "default",
@@ -199,13 +207,16 @@ export function Header({
     ...(radius ? { borderRadius: radius } : {}),
   } as React.CSSProperties;
 
+  const gradientFrom = nameGradientFrom || nameColor || textColor;
+  const gradientTo = nameGradientTo || accent;
+
   const nameStyle: React.CSSProperties = nameGradient
     ? {
         backgroundImage: `linear-gradient(
-          120deg,
-          ${nameColor || textColor} 0%,
-          ${nameColor || textColor} 45%,
-          ${accent} 100%
+          ${nameGradientAngle}deg,
+          ${gradientFrom} 0%,
+          ${gradientFrom} 45%,
+          ${gradientTo} 100%
         )`,
         WebkitBackgroundClip: "text",
         backgroundClip: "text",
@@ -275,7 +286,9 @@ export function Header({
     showDivider && dividerStyle !== "none" ? (
       dividerStyle === "dots" ? (
         <div
-          className={`flex items-center justify-center ${dividerGap} ${dividerMargin}`}
+          className={`flex items-center ${
+            isLeft ? "justify-start" : "justify-center"
+          } ${dividerGap} ${dividerMargin}`}
           aria-hidden="true"
         >
           {[0, 1, 2].map((dot) => (
@@ -288,7 +301,9 @@ export function Header({
         </div>
       ) : dividerStyle === "diamond" ? (
         <div
-          className={`flex items-center justify-center ${dividerMargin}`}
+          className={`flex items-center ${
+            isLeft ? "justify-start" : "justify-center"
+          } ${dividerMargin}`}
           aria-hidden="true"
         >
           <span className="relative flex h-3.5 w-3.5 items-center justify-center">
@@ -312,6 +327,7 @@ export function Header({
           className={`
             flex
             items-center
+            ${isLeft ? "justify-start" : "justify-center"}
             ${dividerGap}
             ${dividerMargin}
           `}
@@ -446,10 +462,11 @@ export function Header({
       {showImage && (
         <>
           <div
-            className="absolute inset-0 bg-cover"
+            className="absolute inset-0 bg-cover bg-no-repeat"
             style={{
               backgroundImage: `url(${backgroundImage})`,
-              backgroundPosition,
+              backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
+              transformOrigin: `${backgroundPositionX}% ${backgroundPositionY}%`,
               transform:
                 backgroundZoom !== 1 ? `scale(${backgroundZoom})` : undefined,
             }}
@@ -549,13 +566,22 @@ export function Header({
             ${maxWidthStyles[maxWidth]}
             flex
             flex-col
-            items-center
           `}
         >
-          <div className={`flex items-center ${splitColGap}`}>
+          <div
+            className={`flex items-center ${splitColGap} ${
+              isLeft ? "justify-start" : "justify-center"
+            }`}
+          >
             {logoEl}
 
-            <div className="flex flex-col items-center text-center">
+            <div
+              className={`flex flex-col ${
+                isLeft
+                  ? "items-start text-left"
+                  : "items-center text-center"
+              }`}
+            >
               {titleEl}
               {dividerEl}
               {taglineEl}

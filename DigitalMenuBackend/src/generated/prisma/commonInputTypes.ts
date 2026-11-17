@@ -240,6 +240,13 @@ export type EnumitemImageShapeNFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel> | $Enums.itemImageShapeN
 }
 
+export type EnumpdfDownloadPlacementNFilter<$PrismaModel = never> = {
+  equals?: $Enums.pdfDownloadPlacementN | Prisma.EnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  in?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel> | $Enums.pdfDownloadPlacementN
+}
+
 export type EnumNavStyleWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.NavStyle | Prisma.EnumNavStyleFieldRefInput<$PrismaModel>
   in?: $Enums.NavStyle[] | Prisma.ListEnumNavStyleFieldRefInput<$PrismaModel>
@@ -422,6 +429,16 @@ export type EnumitemImageShapeNWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
   _max?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
+}
+
+export type EnumpdfDownloadPlacementNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.pdfDownloadPlacementN | Prisma.EnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  in?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumpdfDownloadPlacementNWithAggregatesFilter<$PrismaModel> | $Enums.pdfDownloadPlacementN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel>
 }
 
 export type FloatNullableFilter<$PrismaModel = never> = {
@@ -679,6 +696,13 @@ export type NestedEnumitemImageShapeNFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel> | $Enums.itemImageShapeN
 }
 
+export type NestedEnumpdfDownloadPlacementNFilter<$PrismaModel = never> = {
+  equals?: $Enums.pdfDownloadPlacementN | Prisma.EnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  in?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel> | $Enums.pdfDownloadPlacementN
+}
+
 export type NestedEnumNavStyleWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.NavStyle | Prisma.EnumNavStyleFieldRefInput<$PrismaModel>
   in?: $Enums.NavStyle[] | Prisma.ListEnumNavStyleFieldRefInput<$PrismaModel>
@@ -861,6 +885,16 @@ export type NestedEnumitemImageShapeNWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
   _max?: Prisma.NestedEnumitemImageShapeNFilter<$PrismaModel>
+}
+
+export type NestedEnumpdfDownloadPlacementNWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.pdfDownloadPlacementN | Prisma.EnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  in?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  notIn?: $Enums.pdfDownloadPlacementN[] | Prisma.ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumpdfDownloadPlacementNWithAggregatesFilter<$PrismaModel> | $Enums.pdfDownloadPlacementN
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumpdfDownloadPlacementNFilter<$PrismaModel>
 }
 
 export type NestedFloatNullableFilter<$PrismaModel = never> = {

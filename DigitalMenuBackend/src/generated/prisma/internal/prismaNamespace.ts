@@ -882,7 +882,9 @@ export const RestaurantScalarFieldEnum = {
   currencySymbol: 'currencySymbol',
   surfaceColor: 'surfaceColor',
   boardEnabled: 'boardEnabled',
-  boardText: 'boardText'
+  boardText: 'boardText',
+  showPdfDownload: 'showPdfDownload',
+  pdfDownloadPlacement: 'pdfDownloadPlacement'
 } as const
 
 export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
@@ -1225,6 +1227,20 @@ export type EnumitemImageShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'itemImageShapeN[]'
  */
 export type ListEnumitemImageShapeNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'itemImageShapeN[]'>
+    
+
+
+/**
+ * Reference to a field of type 'pdfDownloadPlacementN'
+ */
+export type EnumpdfDownloadPlacementNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'pdfDownloadPlacementN'>
+    
+
+
+/**
+ * Reference to a field of type 'pdfDownloadPlacementN[]'
+ */
+export type ListEnumpdfDownloadPlacementNFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'pdfDownloadPlacementN[]'>
     
 
 /**

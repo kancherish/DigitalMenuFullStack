@@ -68,9 +68,13 @@ export interface Restaurant {
   headerShimmer?: boolean;
   headerNameColor?: string | null;
   headerTaglineColor?: string | null;
+  headerNameGradientFrom?: string | null;
+  headerNameGradientTo?: string | null;
+  headerNameGradientAngle?: number;
   showLogo?: boolean;
   logoSize?: 'auto' | 'sm' | 'md' | 'lg';
-  headerBackgroundPosition?: 'top' | 'center' | 'bottom' | 'left' | 'right';
+  headerBackgroundPositionX?: number;
+  headerBackgroundPositionY?: number;
   headerBackgroundZoom?: number;
   headerDividerStyle?: 'line' | 'dots' | 'diamond' | 'none';
   headerSpacing?: 'tight' | 'default' | 'loose';
@@ -86,6 +90,8 @@ export interface Restaurant {
   surfaceColor?: string | null;
   boardEnabled?: boolean;
   boardText?: string | null;
+  showPdfDownload?: boolean;
+  pdfDownloadPlacement?: 'bottom_right' | 'bottom_left' | 'top_right' | 'top_left';
 }
 
 export interface AdminInfo {

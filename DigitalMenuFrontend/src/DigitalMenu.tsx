@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
-import { Megaphone, Search, X } from 'lucide-react';
+import { Download, Megaphone, Search, X } from 'lucide-react';
 import { Header } from './component/Header';
 import LoadingScreen from './component/Loader';
 import Footer from './component/Footer';
@@ -9,6 +9,7 @@ import { getCategoriesAndItems, getRestaurantInfo } from './db/db';
 import ItemCard from './component/Item';
 import { CategoryTabs, CategoryDropdown } from './component/CatgoriesNavs';
 import { useThemeVars } from './util/util';
+import { downloadMenuPdf } from './util/menuPdf';
 import { useParams } from 'react-router-dom';
 
 export default function DigitalMenu() {
@@ -121,7 +122,7 @@ export default function DigitalMenu() {
   }
 
   return (
-    <div className="min-h-screen font-sans" style={themeVars}>
+    <div className="min-h-screen min-h-dvh font-sans flex flex-col" style={themeVars}>
       <div
         className="fixed inset-0 -z-10"
         style={{ backgroundColor: 'var(--surface, #f8fafc)' }}
@@ -151,9 +152,13 @@ export default function DigitalMenu() {
         shimmer={restaurantConfig!.headerShimmer}
         nameColor={restaurantConfig!.headerNameColor || undefined}
         taglineColor={restaurantConfig!.headerTaglineColor || undefined}
+        nameGradientFrom={restaurantConfig!.headerNameGradientFrom || undefined}
+        nameGradientTo={restaurantConfig!.headerNameGradientTo || undefined}
+        nameGradientAngle={restaurantConfig!.headerNameGradientAngle ?? 120}
         showLogo={restaurantConfig!.showLogo ?? true}
         logoSize={restaurantConfig!.logoSize || "auto"}
-        backgroundPosition={restaurantConfig!.headerBackgroundPosition || "center"}
+        backgroundPositionX={restaurantConfig!.headerBackgroundPositionX ?? 50}
+        backgroundPositionY={restaurantConfig!.headerBackgroundPositionY ?? 50}
         backgroundZoom={restaurantConfig!.headerBackgroundZoom ?? 1}
         dividerStyle={restaurantConfig!.headerDividerStyle || "line"}
         spacing={restaurantConfig!.headerSpacing || "default"}
@@ -161,14 +166,17 @@ export default function DigitalMenu() {
       />
 
       {categoriesAndItems.length === 0 ? (
-        <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-          <p className="text-slate-500">No Categories Added By Restaurant Yet</p>
-        </div>
+        <>
+          <div className="flex-1 flex flex-col items-center justify-center gap-4">
+            <p className="text-slate-500">No Categories Added By Restaurant Yet</p>
+          </div>
+          <Footer />
+        </>
       ) : (
         <>
-
-          {restaurantConfig!.boardEnabled && restaurantConfig!.boardText && !isSearching && (
-            <div className="max-w-4xl mx-auto px-6 pt-8">
+          <div className="flex-1">
+            {restaurantConfig!.boardEnabled && restaurantConfig!.boardText && !isSearching && (
+              <div className="max-w-4xl mx-auto px-6 pt-8">
               <div
                 className="flex items-start gap-3 rounded-2xl p-4 sm:p-5 shadow-sm border"
                 style={{
@@ -184,28 +192,36 @@ export default function DigitalMenu() {
               </div>
             </div>
           )}
-          {/* Sticky nav bar with search */}
-          <div
-            className={`${restaurantConfig!.stickyNav ? 'sticky top-0 z-20' : ''} shadow-md`}
-            style={{ backgroundColor: 'var(--surface, #fff)' }}
-          >
-            <div className="max-w-4xl mx-auto px-4 py-3 space-y-3">
-              {/* Show category nav ONLY when NOT searching */}
+            {/* Sticky nav bar with search */}
+            <div
+              className={`${restaurantConfig!.stickyNav ? 'sticky top-0 z-20' : ''} shadow-md no-print`}
+              style={{ backgroundColor: 'var(--surface, #fff)' }}
+            >
+              <div className="max-w-4xl mx-auto px-4 py-3 space-y-3">
+                {/* Show category nav ONLY when NOT searching */}
 
               {restaurantConfig!.showSearch && (
                 <div className="relative">
                   <Search
                     size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                    className="absolute left-3 top-1/2 -translate-y-1/2"
+                    style={{
+                      color:
+                        'color-mix(in srgb, var(--body-text, #334155) 55%, transparent)',
+                    }}
                   />
                   <input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={"Search Across All Categories "}
-                    className="w-full pl-9 pr-9 py-2 text-sm border border-slate-200 focus:outline-none transition-shadow"
+                    className="w-full pl-9 pr-9 py-2 text-sm border focus:outline-none transition-shadow placeholder:opacity-100"
                     style={{
                       borderRadius: 'var(--radius)',
                       boxShadow: 'none',
+                      color: 'var(--body-text, #334155)',
+                      backgroundColor: 'var(--surface, #fff)',
+                      borderColor:
+                        'color-mix(in srgb, var(--body-text, #334155) 20%, transparent)',
                     }}
                     onFocus={(e) => {
                       e.currentTarget.style.boxShadow = `0 0 0 2px var(--accent-soft-strong, var(--accent))`;
@@ -217,13 +233,19 @@ export default function DigitalMenu() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      style={{
+                        color:
+                          'color-mix(in srgb, var(--body-text, #334155) 55%, transparent)',
+                      }}
                     >
-                      <X size={16} />
+                      <X size={14} />
                     </button>
                   )}
                 </div>
               )}
+                {/* </div>
+              )} */}
 
               {!isSearching && (
                 navStyle === 'tabs' ? (
@@ -256,8 +278,8 @@ export default function DigitalMenu() {
             </div>
           </div>
 
-          {/* Main content */}
-          <div className="max-w-4xl mx-auto px-6 py-8">
+            {/* Main content */}
+            <div className="max-w-4xl mx-auto px-6 py-8">
             {isSearching ? (
               // SEARCH RESULTS VIEW
               <>
@@ -347,7 +369,33 @@ export default function DigitalMenu() {
                 </div>
               </>
             )}
+            </div>
           </div>
+
+          {(restaurantConfig!.showPdfDownload ?? true) && (
+            <button
+              type="button"
+              onClick={() => downloadMenuPdf(restaurantConfig!, categoriesAndItems)}
+              className={`no-print fixed z-30 inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium shadow-lg transition-transform hover:scale-105 active:scale-95 ${
+                {
+                  bottom_right: 'bottom-5 right-5',
+                  bottom_left: 'bottom-5 left-5',
+                  top_right: 'top-5 right-5',
+                  top_left: 'top-5 left-5',
+                }[restaurantConfig!.pdfDownloadPlacement || 'bottom_right']
+              }`}
+              style={{
+                color: 'var(--body-text, #334155)',
+                borderColor:
+                  'color-mix(in srgb, var(--body-text, #334155) 20%, transparent)',
+                backgroundColor: 'var(--surface, #fff)',
+              }}
+              title="Download menu as PDF"
+            >
+              <Download size={16} />
+              Download PDF
+            </button>
+          )}
 
           <Footer />
         </>

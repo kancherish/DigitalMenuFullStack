@@ -5,7 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import { restaurantService } from '../services/restaurantService';
 import { diffChanged } from '../../util/util';
 import type { Restaurant, NavStyle } from '../types';
-import { CopyIcon, LockIcon, Check, AlertCircle } from 'lucide-react';
+import { CopyIcon, LockIcon, Check, AlertCircle, QrCode, Download } from 'lucide-react';
 
 // text-base on mobile prevents iOS Safari from zooming into focused inputs
 const inputStyles =
@@ -22,6 +22,7 @@ export function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showQr, setShowQr] = useState(false);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -110,6 +111,27 @@ export function SettingsPage() {
     }
   }
 
+  async function handleDownloadQr() {
+    if (!menuUrl) return;
+    try {
+      const res = await fetch(
+        `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(menuUrl)}`,
+      );
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${(form?.name || 'menu').replace(/[^a-z0-9_-]+/gi, '-').toLowerCase()}-qr.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError('Failed to download QR code');
+      console.error('Failed to download QR code: ', err);
+    }
+  }
+
   if (loading) {
     return (
       <div className="mx-auto w-full max-w-6xl">
@@ -127,6 +149,13 @@ export function SettingsPage() {
   }
 
   const showPhoto = form.headerLayout !== 'minimal';
+  const menuUrl = form.domain
+    ? /^https?:\/\//.test(form.domain)
+      ? form.domain
+      : `https://${form.domain}`
+    : restaurantId
+      ? `${window.location.origin}/${restaurantId}`
+      : '';
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -163,16 +192,49 @@ export function SettingsPage() {
               </div>
               <button
                 type="button"
-                onClick={() => handleCopy(form.domain ?? '')}
-                disabled={!form.domain}
-                title="Copy domain"
-                aria-label="Copy domain"
+                onClick={() => handleCopy(menuUrl || form.domain || '')}
+                disabled={!menuUrl}
+                title="Copy menu link"
+                aria-label="Copy menu link"
                 className="flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white"
               >
                 {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <CopyIcon className="h-4 w-4" />}
                 <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
+            {menuUrl && (
+              <div className="mt-3 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setShowQr((v) => !v)}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                >
+                  <QrCode className="h-4 w-4" />
+                  {showQr ? 'Hide QR code' : 'Show QR code'}
+                </button>
+                {showQr && (
+                  <div className="inline-flex flex-col items-start gap-3">
+                    <div className="inline-block rounded-lg border border-gray-200 bg-white p-3">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(menuUrl)}`}
+                        alt="Menu QR code"
+                        width={180}
+                        height={180}
+                        className="h-[180px] w-[180px]"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleDownloadQr}
+                      className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download QR
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </Field>
         </Section>
 
@@ -307,19 +369,16 @@ export function SettingsPage() {
               </select>
             </Field>
             <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
-              <Field label="Photo Position">
-                <select value={form.headerBackgroundPosition || 'center'} onChange={(e) => update('headerBackgroundPosition', e.target.value as Restaurant['headerBackgroundPosition'])} className={inputStyles} disabled={!showPhoto}>
-                  <option value="center">Center</option>
-                  <option value="top">Top</option>
-                  <option value="bottom">Bottom</option>
-                  <option value="left">Left</option>
-                  <option value="right">Right</option>
-                </select>
+              <Field label={`Photo Focus X — ${Math.round(form.headerBackgroundPositionX ?? 50)}%`}>
+                <RangeInput min={0} max={100} step={1} value={form.headerBackgroundPositionX ?? 50} onChange={(v) => update('headerBackgroundPositionX', v)} disabled={!showPhoto} />
               </Field>
-              <Field label={`Photo Zoom — ${Math.round((form.headerBackgroundZoom ?? 1) * 100)}%`}>
-                <RangeInput min={1} max={2} step={0.05} value={form.headerBackgroundZoom ?? 1} onChange={(v) => update('headerBackgroundZoom', v)} disabled={!showPhoto} />
+              <Field label={`Photo Focus Y — ${Math.round(form.headerBackgroundPositionY ?? 50)}%`}>
+                <RangeInput min={0} max={100} step={1} value={form.headerBackgroundPositionY ?? 50} onChange={(v) => update('headerBackgroundPositionY', v)} disabled={!showPhoto} />
               </Field>
             </div>
+            <Field label={`Photo Zoom — ${Math.round((form.headerBackgroundZoom ?? 1) * 100)}%`}>
+              <RangeInput min={1} max={2} step={0.05} value={form.headerBackgroundZoom ?? 1} onChange={(v) => update('headerBackgroundZoom', v)} disabled={!showPhoto} />
+            </Field>
 
             <Divider />
 
@@ -330,6 +389,17 @@ export function SettingsPage() {
               <ToggleRow label="Uppercase tagline" checked={form.headerUppercaseTagline ?? true} onChange={(v) => update('headerUppercaseTagline', v)} />
               <ToggleRow label="Shimmer animation" checked={form.headerShimmer ?? true} onChange={(v) => update('headerShimmer', v)} />
             </div>
+            {form.headerNameGradient !== false && (
+              <div className="space-y-4 rounded-lg border border-dashed border-gray-200 p-3">
+                <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
+                  <ColorField label="Gradient Start" value={form.headerNameGradientFrom || form.headerNameColor || form.headerText || '#ffffff'} onChange={(v) => update('headerNameGradientFrom', v)} />
+                  <ColorField label="Gradient End" value={form.headerNameGradientTo || form.accentColor || '#0ea5e9'} onChange={(v) => update('headerNameGradientTo', v)} />
+                </div>
+                <Field label={`Gradient Angle — ${form.headerNameGradientAngle ?? 120}°`}>
+                  <RangeInput min={0} max={360} step={5} value={form.headerNameGradientAngle ?? 120} onChange={(v) => update('headerNameGradientAngle', v)} />
+                </Field>
+              </div>
+            )}
             {form.headerAccentPanel !== false && (
               <Field label={`Accent Panel Intensity — ${Math.round((form.headerPanelIntensity ?? 1) * 100)}%`}>
                 <RangeInput min={0} max={1} step={0.05} value={form.headerPanelIntensity ?? 1} onChange={(v) => update('headerPanelIntensity', v)} />
@@ -360,7 +430,24 @@ export function SettingsPage() {
               <ToggleRow label="Show divider" checked={form.showDivider} onChange={(v) => update('showDivider', v)} />
               <ToggleRow label="Show item count per category" checked={form.showItemCount} onChange={(v) => update('showItemCount', v)} />
               <ToggleRow label="Sticky navigation" checked={form.stickyNav} onChange={(v) => update('stickyNav', v)} />
+              <ToggleRow label="Show PDF download button" checked={form.showPdfDownload ?? true} onChange={(v) => update('showPdfDownload', v)} />
             </div>
+            {form.showPdfDownload !== false && (
+              <div className="mt-3">
+                <Field label="PDF Button Placement">
+                  <select
+                    value={form.pdfDownloadPlacement || 'bottom_right'}
+                    onChange={(e) => update('pdfDownloadPlacement', e.target.value as Restaurant['pdfDownloadPlacement'])}
+                    className={inputStyles}
+                  >
+                    <option value="bottom_right">Bottom right</option>
+                    <option value="bottom_left">Bottom left</option>
+                    <option value="top_right">Top right</option>
+                    <option value="top_left">Top left</option>
+                  </select>
+                </Field>
+              </div>
+            )}
           </Section>
 
           {/* Announcement Board */}
