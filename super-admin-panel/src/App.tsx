@@ -4,7 +4,7 @@ import { setTempSecret, getAllAdmins, registerAdmin, deleteAdmin, updateAdmin } 
 // ---------- Types ----------
 
 // Adjust these two values to match your actual Prisma NavStyle enum
-type NavStyle = 'dropdown' | 'tabs';
+type NavStyle = 'dropdown' | 'tabs' | 'continuous';
 
 interface Restaurant {
   publicId: string;
@@ -394,6 +394,7 @@ function App() {
                               >
                                 <option value="dropdown">dropdown</option>
                                 <option value="tabs">tabs</option>
+                                <option value="continuous">continuous</option>
                               </select>
                             </Field>
                             <Field label="Roundness">
@@ -590,6 +591,7 @@ function AdminRegistrationForm({ onRegister }: { onRegister: (data: Registration
           >
             <option value="dropdown">dropdown</option>
             <option value="tabs">tabs</option>
+            <option value="continuous">continuous</option>
           </select>
         </Field>
         <Field label="Roundness">

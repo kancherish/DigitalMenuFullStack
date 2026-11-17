@@ -7,6 +7,8 @@ export const emptyItemForm: ItemFormValues = {
   price: '',
   variants: [{ name: '', price: '' }],
   badges: [],
+  imageMode: 'upload',
+  imageUrl: '',
   imageFile: null,
   available: true,
 };

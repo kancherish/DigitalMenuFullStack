@@ -350,9 +350,9 @@ can be set to `null` if provided.
 
 | Method | Path | Auth | Body / notes |
 |---|---|---|---|
-| POST | `/item/add` | access token + category ownership + optional multipart | `para` may be object or JSON string. Fields: `name`, `description?`, `price?`, `category_id`, `variants?`, `badges?`, `available?`; optional file field `image`. Requires name + category_id. Name is checked case-insensitively **within the category**. Must have either numeric `price` **or** non-empty `variants`, never both. Variants require string name + numeric price. If image processing fails, still creates item and returns status **207** “Item Added But Failed To Add Image”. |
+| POST | `/item/add` | access token + category ownership + optional multipart | `para` may be object or JSON string. Fields: `name`, `description?`, `price?`, `category_id`, `variants?`, `badges?`, `available?`, `imageURL?`; optional file field `image`. `imageURL` accepts an http(s) or `/`-relative URL (invalid values → 400); an uploaded file takes precedence over it. Requires name + category_id. Name is checked case-insensitively **within the category**. Must have either numeric `price` **or** non-empty `variants`, never both. Variants require string name + numeric price. If image processing fails, still creates item and returns status **207** “Item Added But Failed To Add Image”. |
 | GET | `/item/get/:cid` | none | Public. Returns items for category `publicId`, ordered by `name` ascending, including variants. |
-| PATCH | `/item/update` | access token + item ownership + optional multipart | `{ para: { item_id, name?, description?, price?, category_id?, variants?, badges?, removeImage?, available? } }`. `item_id` from `para`. Cannot send both price and variants. If `variants` is provided it must be non-empty. Price mode deletes all variants and sets price. Variant mode sets price `null`, deletes existing variants, recreates them. Optional image replaces/removes old image. Returns updated item with variants. |
+| PATCH | `/item/update` | access token + item ownership + optional multipart | `{ para: { item_id, name?, description?, price?, category_id?, variants?, badges?, imageURL?, removeImage?, available? } }`. `item_id` from `para`. Cannot send both price and variants. If `variants` is provided it must be non-empty. Price mode deletes all variants and sets price. Variant mode sets price `null`, deletes existing variants, recreates them. Image URL sets/clears `imageURL`; an uploaded file takes precedence. Old image files are deleted from storage only when their URL is managed by `UPLOAD_PUBLIC_BASE`/`S3_PUBLIC_URL_BASE`. Returns updated item with variants. |
 | DELETE | `/item/delete/:item_id` | access token + item ownership | Deletes item (variants cascade), then best-effort deletes stored image. |
 
 **Known item-update quirk:** sending `badges: []` does not clear badges. The controller
@@ -476,7 +476,7 @@ No `createdAt`/`updatedAt` timestamps on any model.
 - `item_id` String → `Item.publicId`, `onDelete: Cascade`.
 
 Enums:
-- `NavStyle`: `tabs`, `dropdown`
+- `NavStyle`: `tabs`, `dropdown`, `continuous`
 - `headerLayoutN`: `banner`, `minimal`, `split`
 - `logoShapeN`: `circle`, `rounded`, `square`
 - `overlayStyleN`: `gradient`, `solid`, `none`
@@ -514,8 +514,10 @@ Untracked at time of writing:
    `Category_name_key` / `Item_name_key` and adds composite unique indexes
    `Category_restaurant_id_name_key` (`restaurant_id`, `name`) and
    `Item_category_id_name_key` (`category_id`, `name`).
+7. `20261117130000_continuous_nav_style` — adds the `continuous` value to the `NavStyle`
+   enum.
 
-All 6 migrations are applied to the local database. Apply/generate from
+All 7 migrations are applied to the local database. Apply/generate from
 `DigitalMenuBackend/src`, e.g. `npx prisma migrate dev` / `npx prisma migrate deploy` /
 `npx prisma generate`.
 
@@ -569,6 +571,10 @@ Vercel.
 - Item counts per category computed from `items.length`.
 - Nav style from `restaurantConfig.tabStyle` (`tabs` default): `CategoryTabs` or
   `CategoryDropdown`; `categorySize`, `categoryVariant`, `showItemCount` passed through.
+  `continuous` renders no nav: every category (icon + name + optional count) followed by
+  its items in one vertical scroll; the sticky bar contains only the search input (and is
+  omitted entirely when search is disabled). Search results use the same grouped view in
+  all three modes.
 - Announcement board: shown when `boardEnabled && boardText && !isSearching`; uses
   `--accent-soft` background, `--accent` border/icon, `--primary` text, `--radius`.
 - Sticky nav wrapper when `stickyNav`; search input and nav are inside a `no-print` bar.
@@ -764,7 +770,7 @@ Sections:
 3. **Branding**: name, tagline, logo URL, background URL, default item image URL, enable
    item image.
 4. **Appearance**: Primary, Accent, Body Text, Header Text, Background color; Nav Style
-   (tabs/dropdown); Nav Size; Tab Style (pill/underline, only tabs); Roundness; Header
+   (tabs/dropdown/continuous); Nav Size; Tab Style (pill/underline, only tabs); Roundness; Header
    Alignment; Header Size; Header Layout; Logo Shape; Heading Font; Photo Overlay +
    intensity.
 5. **Header Style**: vertical spacing, max width, name/tagline color, logo size, divider
@@ -806,16 +812,21 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
 
 ### 7.6 Item form
 
-- Fields: availability toggle, name, description, image (upload/remove/preview),
-  pricing mode (single price or variants), badge selector.
-- Image validation: ≤ 5 MB, MIME starts with `image`; client sets `imageFile` and clears
-  `removeImage`.
-- “Remove image” sets `imageFile = null`, `removeImage = true`.
+- Fields: availability toggle, name, description, image (Upload/URL toggle, upload or URL
+  input, remove/preview), pricing mode (single price or variants), badge selector.
+- Image `imageMode` is `'upload'` (default) or `'url'`. Switching modes clears `imageFile`
+  and `removeImage` but keeps `imageUrl` so the existing image stays visible.
+- Upload mode: file validation ≤ 5 MB, MIME starts with `image`; client sets `imageFile`
+  and clears `removeImage`. No file chosen on edit ⇒ no image change is sent.
+- URL mode: `imageUrl` accepts an http(s) or `/`-relative URL; live preview from the URL.
+  On add, a non-empty trimmed value is sent as `para.imageURL`; on edit, `buildItemChanges`
+  sends `imageURL` only when it differs from the item's stored `imageURL` (`''` clears it).
+- “Remove image” (X on preview) sets `imageFile = null`, `imageUrl = ''`, `removeImage = true`.
 - Variants: add/remove rows; each has name + price.
 - Submit button is `type="button"` and calls `onSubmit`; parent validates name. HTML
   `required` attributes do not automatically block form submission.
-- `emptyItemForm`: name/description blank, price mode, one blank variant, no badges, no
-  image, `available: true`.
+- `emptyItemForm`: name/description blank, price mode, one blank variant, no badges,
+  `imageMode: 'upload'`, empty `imageUrl`, no image, `available: true`.
 
 ### 7.7 Admin services
 
@@ -851,7 +862,7 @@ Single `App.tsx`, no router. Flow:
 
 Features:
 - Inline **Add Restaurant Admin** form: username, password, restaurant name, tagline,
-  primary/accent color, tab style (`dropdown`/`tabs`), roundness, domain, show search,
+  primary/accent color, tab style (`dropdown`/`tabs`/`continuous`), roundness, domain, show search,
   show item count, sticky nav. Posts `{ para: formData }` to `/auth/register`.
   **Domain is ignored by the backend**, which sets the generated path domain instead.
 - Existing admins list showing username, restaurant name, restaurant `publicId` (copy
@@ -894,7 +905,7 @@ Header customization fields are persisted on `Restaurant` and passed through
 - shimmer animation
 
 Category/items:
-- `tabStyle` → tabs/dropdown
+- `tabStyle` → tabs/dropdown/continuous
 - `categoryVariant` → pill/underline tabs
 - `categorySize` → sm/md/lg
 - `showItemCount`
@@ -1016,6 +1027,50 @@ Super admin:
 ## Change Log
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
+
+### 2026-11-17 — Continuous category navigation style
+- **Backend**
+  - `src/prisma/schema.prisma`: added `continuous` to the `NavStyle` enum; client regenerated.
+  - Migration `src/prisma/migrations/20261117130000_continuous_nav_style` (`ALTER TYPE ... ADD VALUE`),
+    applied locally with `prisma migrate deploy`.
+- **Frontend public**
+  - `src/DigitalMenu.tsx`: `tabStyle === 'continuous'` renders every category heading (icon,
+  name, optional item count) followed by its items in one vertical scroll, with no tabs or
+  dropdown. The sticky bar shows only the search input, and is omitted when search is off.
+  Global search results are unchanged and still grouped by category.
+- **Frontend admin / super admin**
+  - `src/admin/types/index.ts`, `src/admin/pages/SettingsPage.tsx`: added the `continuous`
+  option plus an explanatory note.
+  - `super-admin-panel/src/App.tsx`: added `continuous` to the `NavStyle` type and both
+  tab-style selects.
+- **Why:** offer a single-scrolling menu layout (category → items → next category) for menus
+  that don't need tab/dropdown switching.
+
+### 2026-11-17 — Item image: URL or upload
+- **Backend**
+  - `src/controllers/items.controller.ts`: `addItem`/`updateItem` now accept `para.imageURL`
+    (http(s) or `/`-relative; invalid values → 400). An uploaded `image` file still takes
+    precedence. Storage deletion now only runs for URLs managed by `UPLOAD_PUBLIC_BASE` /
+    `S3_PUBLIC_URL_BASE`, so external URLs are never passed to storage adapters.
+- **Frontend admin**
+  - `src/admin/pages/ItemForm.tsx`: Image section gained an Upload/URL toggle; URL mode has
+    a URL input with live preview, upload mode keeps the file picker. Removing an image
+    also clears `imageUrl`.
+  - `src/admin/types/index.ts`, `src/admin/components/ItemFormValues.ts`: added
+    `imageMode`, `imageUrl`, `Item.imageURL`, `ItemPayload.imageURL`.
+  - `src/admin/pages/ItemPage.tsx`: new items send `para.imageURL` in URL mode; edits send
+    `imageURL` only when it changed (empty string clears it). Editing an item with an image
+    defaults to URL mode.
+- **Why:** let admins reuse externally hosted images (or existing CDN URLs) without having
+  to upload a copy, while keeping the existing upload flow.
+
+### 2026-11-17 — Close item forms on category switch
+- **Frontend admin**
+  - `src/admin/pages/ItemPage.tsx`: category tab clicks now go through `handleCategoryChange`,
+    which closes the Add-item form (resetting it to `emptyItemForm`), cancels any open edit
+    form, and clears the error before switching. Clicking the already-active tab is a no-op.
+- **Why:** previously the add/edit form stayed open while the item list switched to another
+  category, leaving stale form state and risking an item being added to the wrong category.
 
 ### 2026-11-17 — Theme presets + fix body text / roundness controls
 - **Frontend admin**

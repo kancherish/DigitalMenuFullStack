@@ -8,7 +8,7 @@ import type { Category, RestaurantConfig, SearchResultItem } from './types';
 import { getCategoriesAndItems, getRestaurantInfo } from './db/db';
 import ItemCard from './component/Item';
 import { CategoryTabs, CategoryDropdown } from './component/CatgoriesNavs';
-import { useThemeVars } from './util/util';
+import { getCategoryIcon, useThemeVars } from './util/util';
 import { downloadMenuPdf } from './util/menuPdf';
 import { useParams } from 'react-router-dom';
 
@@ -86,6 +86,7 @@ export default function DigitalMenu() {
   );
 
   const navStyle = restaurantConfig?.tabStyle ?? 'tabs';
+  const isContinuous = navStyle === 'continuous';
   const isSearching = searchQuery.trim().length > 0;
 
   const themeVars = useThemeVars(
@@ -193,6 +194,7 @@ export default function DigitalMenu() {
             </div>
           )}
             {/* Sticky nav bar with search */}
+            {(!isContinuous || restaurantConfig!.showSearch) && (
             <div
               className={`${restaurantConfig!.stickyNav ? 'sticky top-0 z-20' : ''} shadow-md no-print`}
               style={{ backgroundColor: 'var(--surface, #fff)' }}
@@ -247,7 +249,7 @@ export default function DigitalMenu() {
                 {/* </div>
               )} */}
 
-              {!isSearching && (
+              {!isSearching && !isContinuous && (
                 navStyle === 'tabs' ? (
                   <CategoryTabs
                     categories={categoriesAndItems}
@@ -277,6 +279,7 @@ export default function DigitalMenu() {
               )}
             </div>
           </div>
+            )}
 
             {/* Main content */}
             <div className="max-w-4xl mx-auto px-6 py-8">
@@ -328,6 +331,65 @@ export default function DigitalMenu() {
                   </div>
                 )}
               </>
+            ) : isContinuous ? (
+              // CONTINUOUS CATEGORY VIEW
+              <div className="space-y-12">
+                <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+                {categoriesAndItems.map((category) => {
+                  const Icon = getCategoryIcon(category.icon);
+                  const categoryItems = category.items ?? [];
+                  return (
+                    <section key={category.publicId} className="animate-[fadein_0.25s_ease]">
+                      <div
+                        className="mb-4 flex items-center gap-2 border-b pb-2"
+                        style={{
+                          borderColor:
+                            'color-mix(in srgb, var(--body-text, #334155) 15%, transparent)',
+                        }}
+                      >
+                        <Icon size={20} style={{ color: 'var(--accent)' }} />
+                        <h2
+                          className="font-serif text-2xl font-semibold"
+                          style={{ color: 'var(--body-text)' }}
+                        >
+                          {category.name}
+                        </h2>
+                        {restaurantConfig!.showItemCount && (
+                          <span
+                            className="rounded-full px-2 py-0.5 text-xs"
+                            style={{
+                              backgroundColor: 'var(--accent-soft)',
+                              color: 'var(--body-text)',
+                            }}
+                          >
+                            {categoryItems.length}
+                          </span>
+                        )}
+                      </div>
+                      {categoryItems.length === 0 ? (
+                        <p className="py-6 text-slate-500">No items in this category yet.</p>
+                      ) : (
+                        <div className="space-y-6">
+                          {categoryItems.map((item, idx) => (
+                            <ItemCard
+                              key={item.publicId}
+                              itemStructure={item}
+                              index={idx}
+                              accentColor={restaurantConfig!.accentColor}
+                              showImage={restaurantConfig!.showItemImage}
+                              defaultImage={restaurantConfig!.defaultImageUrl}
+                              size={restaurantConfig!.itemSize || "sm"}
+                              imagePosition={restaurantConfig!.itemImagePosition || "left"}
+                              imageShape={restaurantConfig!.itemImageShape || "square"}
+                              currencySymbol={restaurantConfig!.currencySymbol || "₹"}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </section>
+                  );
+                })}
+              </div>
             ) : (
               // NORMAL CATEGORY VIEW
               <>

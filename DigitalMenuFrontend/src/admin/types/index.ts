@@ -6,7 +6,7 @@ export interface ApiResponse<T> {
   message: string;
 }
 
-export type NavStyle = 'tabs' | 'dropdown';
+export type NavStyle = 'tabs' | 'dropdown' | 'continuous';
 
 export interface Variant {
   id?: string;
@@ -24,6 +24,7 @@ export interface Item {
   badges: string[];
   variants: Variant[];
   available: boolean;
+  imageURL?: string | null;
 }
 
 export interface Category {
@@ -41,7 +42,7 @@ export interface Restaurant {
   primaryColor: string | null;
   bodyTextColor?: string | null;
   accentColor: string | null;
-  tabStyle: 'tabs' | 'dropdown' | null;
+  tabStyle: 'tabs' | 'dropdown' | 'continuous' | null;
   logoUrl?: string | null;
   backgroundUrl?: string | null;
   BodyTextColor?: string | null;
@@ -113,6 +114,7 @@ export interface ItemPayload {
   category_id?: string;
   variants?: Pick<Variant, 'name' | 'price'>[];
   badges?: string[];
+  imageURL?: string | null;
   removeImage?: boolean;
   available?: boolean;
 }
@@ -129,6 +131,7 @@ export interface ItemFormValues {
   variants: { name: string; price: string }[];
   badges: string[];
   removeImage?: boolean;
+  imageMode: 'upload' | 'url';
   imageUrl?: string;
   imageFile: File | null;
   available: boolean;

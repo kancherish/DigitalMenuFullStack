@@ -11,7 +11,8 @@
 
 export const NavStyle = {
   tabs: 'tabs',
-  dropdown: 'dropdown'
+  dropdown: 'dropdown',
+  continuous: 'continuous'
 } as const
 
 export type NavStyle = (typeof NavStyle)[keyof typeof NavStyle]

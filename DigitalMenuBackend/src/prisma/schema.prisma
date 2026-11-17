@@ -10,6 +10,7 @@
   enum NavStyle {
     tabs
     dropdown
+    continuous
   }
 
   enum headerLayoutN{

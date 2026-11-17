@@ -10,6 +10,7 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 
 function itemToFormValues(item: Item): ItemFormValues {
   const hasVariants = item.variants.length > 0;
+  const existingImageUrl = item.imageURL ?? (item as { imageUrl?: string }).imageUrl ?? '';
   return {
     name: item.name,
     description: item.description ?? '',
@@ -19,8 +20,8 @@ function itemToFormValues(item: Item): ItemFormValues {
       ? item.variants.map((v) => ({ name: v.name, price: String(v.price) }))
       : [{ name: '', price: '' }],
     badges: item.badges,
-    imageUrl: ((item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageUrl ??
-      (item as { imageUrl?: string | undefined; imageURL?: string | undefined }).imageURL) ?? undefined,
+    imageMode: existingImageUrl ? 'url' : 'upload',
+    imageUrl: existingImageUrl,
     imageFile: null,
     available: item.available,
     removeImage: false,
@@ -37,6 +38,14 @@ function buildItemChanges(original: Item, form: ItemFormValues) {
 
   const badgeChanges = diffChanged({ badges: original.badges }, { badges: form.badges }, ['badges']);
   Object.assign(changes, badgeChanges);
+
+  if (form.removeImage) {
+    changes.removeImage = true;
+  } else if (form.imageMode === 'url') {
+    const newImageUrl = (form.imageUrl ?? '').trim();
+    const originalImageUrl = original.imageURL ?? (original as { imageUrl?: string }).imageUrl ?? '';
+    if (newImageUrl !== originalImageUrl) changes.imageURL = newImageUrl;
+  }
 
   const originalHasVariants = original.variants.length > 0;
   const modeChanged = originalHasVariants !== (form.pricingMode === 'variants');
@@ -66,6 +75,7 @@ function buildNewItemPayload(form: ItemFormValues, categoryId: string) {
     category_id: categoryId,
     badges: form.badges,
     available: form.available,
+    imageURL: form.imageMode === 'url' ? form.imageUrl?.trim() || undefined : undefined,
   };
 
   if (form.pricingMode === 'price') {
@@ -135,6 +145,15 @@ export function ItemsPage() {
       cancelled = true;
     };
   }, [activeCategoryId]);
+
+  function handleCategoryChange(categoryId: string) {
+    if (categoryId === activeCategoryId) return;
+    setAdding(false);
+    setAddForm(emptyItemForm);
+    cancelEdit();
+    setError(null);
+    setActiveCategoryId(categoryId);
+  }
 
   async function handleAdd() {
     if (!activeCategoryId || !addForm.name.trim()) return;
@@ -248,7 +267,7 @@ export function ItemsPage() {
         {categories.map((cat) => (
           <button
             key={cat.publicId}
-            onClick={() => setActiveCategoryId(cat.publicId)}
+            onClick={() => handleCategoryChange(cat.publicId)}
             className={`whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
               activeCategoryId === cat.publicId
                 ? 'border-indigo-600 text-indigo-700'

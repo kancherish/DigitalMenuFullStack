@@ -1,7 +1,7 @@
 import { BadgeSelector } from "../components/BadgeSelector";
 import type { ItemFormValues, ItemFormProps } from "../types";
 import { useMemo } from "react";
-import { Upload, ImageOff, X } from "lucide-react";
+import { Upload, ImageOff, X, Link2 } from "lucide-react";
 
 const inputStyles =
   'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500';
@@ -32,7 +32,12 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
   };
 
   const handleRemoveImage = () => {
-    onChange({ ...values, imageFile: null, removeImage: true });
+    onChange({ ...values, imageFile: null, imageUrl: '', removeImage: true });
+  };
+
+  const handleImageModeChange = (mode: 'upload' | 'url') => {
+    if (mode === values.imageMode) return;
+    onChange({ ...values, imageMode: mode, imageFile: null, removeImage: false });
   };
 
   function update<K extends keyof ItemFormValues>(key: K, val: ItemFormValues[K]) {
@@ -82,9 +87,35 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-slate-700">Item Image</label>
+        <div className="flex items-center justify-between gap-3">
+          <label className="block text-sm font-medium text-slate-700">Item Image</label>
+          <div className="inline-flex shrink-0 rounded-lg border border-gray-300 bg-gray-50 p-0.5">
+            <button
+              type="button"
+              onClick={() => handleImageModeChange('upload')}
+              className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                values.imageMode === 'upload'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Upload size={12} /> Upload
+            </button>
+            <button
+              type="button"
+              onClick={() => handleImageModeChange('url')}
+              className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                values.imageMode === 'url'
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Link2 size={12} /> URL
+            </button>
+          </div>
+        </div>
 
-        {previewSrc ? (
+        {previewSrc && (
           <div className="relative inline-block group">
             <img
               src={previewSrc}
@@ -99,6 +130,19 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
             >
               <X size={14} />
             </button>
+          </div>
+        )}
+
+        {values.imageMode === 'url' ? (
+          <div className="relative">
+            <Link2 size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              value={values.imageUrl ?? ''}
+              onChange={(e) => onChange({ ...values, imageUrl: e.target.value, removeImage: false })}
+              className={`${inputStyles} pl-9`}
+            />
           </div>
         ) : (
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-100">

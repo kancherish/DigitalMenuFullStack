@@ -322,6 +322,7 @@ export function SettingsPage() {
               <select value={form.tabStyle || 'tabs'} onChange={(e) => update('tabStyle', e.target.value as NavStyle)} className={inputStyles}>
                 <option value="tabs">Tabs</option>
                 <option value="dropdown">Dropdown</option>
+                <option value="continuous">Continuous (all categories in one scroll)</option>
               </select>
             </Field>
             <Field label="Nav Size">
@@ -337,6 +338,11 @@ export function SettingsPage() {
             {form.tabStyle === 'dropdown' && (
               <div className="rounded-lg border border-dashed border-gray-200 p-3">
                 <p className="text-xs text-slate-500">Dropdown nav uses Nav Size above for spacing. No additional layout options apply.</p>
+              </div>
+            )}
+            {form.tabStyle === 'continuous' && (
+              <div className="rounded-lg border border-dashed border-gray-200 p-3">
+                <p className="text-xs text-slate-500">Continuous mode shows every category with its items in one scrolling list — no tabs or dropdown. Search still appears above the menu when enabled.</p>
               </div>
             )}
 
