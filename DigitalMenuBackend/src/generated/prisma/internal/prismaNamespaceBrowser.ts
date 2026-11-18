@@ -102,6 +102,7 @@ export const RestaurantScalarFieldEnum = {
   showItemCount: 'showItemCount',
   showDivider: 'showDivider',
   stickyNav: 'stickyNav',
+  continuousCollapsible: 'continuousCollapsible',
   domain: 'domain',
   defaultImageUrl: 'defaultImageUrl',
   showItemImage: 'showItemImage',

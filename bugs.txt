@@ -1,0 +1,116 @@
+# Backend bugs and security issues (review only, no code changes made)
+
+## High severity
+
+1. Broken tenant isolation in item moves
+   - Location: src/controllers/items.controller.ts:297-305, src/routes/items.routes.ts:13
+   - PATCH /api/v1/item/update checks ownership of the existing item (verifyItemOwnership) but, when `category_id` is changed, it only verifies the target category exists (`findUnique`), not that it belongs to `req.admin.restaurantId`.
+   - Impact: An authenticated restaurant admin can move one of their items into any other restaurant’s category if they know/guess its publicId, corrupting/cross-linking tenant data.
+   - Fix direction: Enforce target category ownership (same restaurant) before applying the move.
+
+2. S3 deletions target the wrong object key
+   - Location: src/utils/storage/cloud.adapter.ts:35-42, src/utils/storage/local.adapter.ts:13-16, callers in src/controllers/items.controller.ts:340-343,418-423
+   - Stored image values are public URLs and callers pass `existingItem.imageURL` to `storage.delete(...)`. LocalStorageAdapter strips UPLOAD_PUBLIC_BASE, but S3StorageAdapter sends the full URL as DeleteObjectCommand.Key.
+   - Impact: For S3/managed URLs this will not delete the actual object, leaving orphaned files on replace/remove/delete.
+   - Fix direction: Normalize/derive the object key from the public URL (strip S3_PUBLIC_URL_BASE) before deleting.
+
+3. S3 upload failures are reported as success
+   - Location: src/utils/storage/cloud.adapter.ts:21-33, src/utils/upload.ts:5-19
+   - S3StorageAdapter.upload catches/logs PutObject errors and resolves normally; uploadImage then returns getPublicUrl(...).
+   - Impact: Failed uploads can be persisted as “successful” image URLs (broken images, silent data loss).
+   - Fix direction: Propagate upload errors so callers can handle failure and avoid returning/storing a bad URL.
+
+4. Old managed image can be lost on failed replacement
+   - Location: src/controllers/items.controller.ts:340-360
+   - On update, the existing managed image is deleted before a new upload is confirmed. If uploadImage returns false (or replacement fails), the old image is already gone and the item is left with null/fallback and a 207 response.
+   - Impact: Unrecoverable loss of the previous image on failed replacement.
+   - Fix direction: Upload new image first, update record, then delete old image on success (or use a compensating/rollback strategy).
+
+5. Stack traces are returned to clients
+   - Location: src/middleware/error.middleware.ts:83-97
+   - Every handled error response includes `error.stack` in JSON.
+   - Impact: Leaks file paths, internals, and dependency details on 4xx/5xx responses (including unexpected failures).
+   - Fix direction: Omit stack traces from production/client responses (log server-side only).
+
+## Medium severity / bugs
+
+6. Malformed `para` JSON becomes a 500 instead of 400
+   - Location: src/middleware/auth.middleware.ts:42-43,70-72; src/controllers/items.controller.ts:45-46,206-207
+   - `JSON.parse(...)` is called on string `para` without try/catch (multipart routes and ownership middlewares). Invalid JSON throws and surfaces as an internal error.
+   - Impact: Client input errors return 500 instead of a clear 400 validation error.
+   - Fix direction: Wrap parsing in try/catch and return 400 for invalid JSON.
+
+7. Badges cannot be cleared on item update
+   - Location: src/controllers/items.controller.ts:105,233,289
+   - `badgesToadd = Array.isArray(badges) && badges.length > 0 && badges` and update only applies when `badgesToadd !== false`, so `badges: []` is treated as “no change”. (Add correctly defaults to [].)
+   - Impact: Clients cannot remove all badges from an item.
+   - Fix direction: Treat an explicit empty array as a valid update to clear badges.
+
+8. `available` is assigned unconditionally on item update
+   - Location: src/controllers/items.controller.ts:287
+   - `updateData.available = available` runs even when omitted (unlike other fields guarded by `!== undefined`).
+   - Impact: Partial updates are inconsistent/risky and may unintentionally overwrite availability.
+   - Fix direction: Only set `available` when it is explicitly provided.
+
+9. Unknown API routes respond with HTTP 200
+   - Location: src/app.ts:119-124
+   - Fallback uses `res.json(new ErrorResponse(404, "INVALID API"))` without `res.status(404)`.
+   - Impact: Clients/proxies see a success HTTP status with an error body.
+   - Fix direction: Send `res.status(404).json(...)`.
+
+10. Server accepts traffic before DB is ready; DB connect failure is non-fatal
+    - Location: src/index.ts:5-9, src/db/db.ts:4-10
+    - `app.listen` runs before `await connectdb()` completes; `connectdb` logs and swallows connection errors.
+    - Impact: Startup can serve requests against a broken/uninitialized DB state.
+    - Fix direction: Connect/verify DB before listening (or fail fast / gate readiness on successful connection).
+
+11. JWT verification does not pin allowed algorithms
+    - Location: src/utils/jwt.ts:34-46
+    - `jwt.verify(token, secret)` is called without an `algorithms` allow-list (signing uses JWT_ALGO).
+    - Impact: Weaker verification hardening than intended.
+    - Fix direction: Pass an explicit `algorithms: [JWT_ALGO]` option to `verify`.
+
+12. `/auth/logout` route/method contract is fragile
+    - Location: src/routes/auth.routes.ts:18, src/controllers/auth.controller.ts:245-256
+    - Logout is DELETE but reads revocation data from `req.body?.para.refreshToken`.
+    - Impact: Bodies on DELETE are inconsistently supported by clients/proxies; frontend mismatches can leave server-side refresh tokens uncleared.
+    - Fix direction: Accept token via a supported channel consistently (e.g. POST body or Authorization header) and align client/server.
+
+13. CORS blocks requests without an allowed `Origin`
+    - Location: src/app.ts:32-44
+    - Requests with no `Origin` get 403 “Origin header is required”.
+    - Impact: Breaks curl/Postman/server-to-server use and non-browser health checks. Note: `Origin` is spoofable, so this is not an authentication control.
+    - Fix direction: Decide intended policy explicitly (allow missing Origin for non-browser/health paths, or keep strict) and avoid treating it as security.
+
+14. Env loading is path-sensitive
+    - Location: src/env.ts:1-2 (and prisma config/env usage context)
+    - `dotenv.config({path:"../.env"})` only loads `DigitalMenuBackend/.env` when the process cwd is `DigitalMenuBackend/src`.
+    - Impact: Package-root runs (`npm run dev/start`, Prisma from root) can start with missing secrets/DB config.
+    - Fix direction: Resolve env path relative to the module/file or load from a deterministic location.
+
+## Lower severity / hardening notes
+
+15. Super-admin gate depends entirely on one shared secret
+    - Location: src/utils/CornerLock.ts, src/routes/auth.routes.ts
+    - `x-tempdata` validated via bcrypt protects register/admin list/update/delete.
+    - Impact: Compromise or misconfiguration of CORNERAUTHSECRET exposes tenant-admin management.
+    - Note: Consider stronger admin auth, rotation/auditing, and fail-closed behavior on misconfiguration.
+
+16. `deleteAdmin` input guard is logically incorrect
+    - Location: src/controllers/auth.controller.ts:354-357 (`if (!publicId && typeof publicId)`)
+    - Impact: Guard does not behave as intended (practical impact limited because Express params are usually present).
+
+17. Public restaurant payload includes internal linkage
+    - Location: src/controllers/restaurant.controller.ts:24-29
+    - Returns the full record (including internal `id`, `adminId`) without auth.
+    - Impact: Unnecessary exposure of internal identifiers/relations.
+
+18. Upload validation is MIME-header based
+    - Location: src/middleware/upload.middleware.ts:6-10
+    - Trusts `file.mimetype` from the client (sharp later rejects many bad inputs, but boundary validation is weak).
+    - Impact: Weak content-type validation at ingress.
+
+19. No focused rate limiting on login/refresh
+    - Location: src/app.ts:67-76
+    - One global limiter is applied; credential/refresh abuse controls are coarse.
+    - Impact: Limited protection against brute-force/credential-stuffing on auth endpoints.

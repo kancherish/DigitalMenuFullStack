@@ -233,6 +233,10 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
       res.status(404).json(new ErrorResponse(404, `Category with id ${categoryIdStr} not found`));
       return;
     }
+    if (newCategory.restaurant_id !== req.admin?.restaurantId) {
+      res.status(403).json(new ErrorResponse(403, "Category does not belong to your restaurant"));
+      return;
+    }
     updateData.category_id = categoryIdStr;
   }
 

@@ -85,6 +85,7 @@ function App() {
   const handleUnlock = () => {
     if (secret.trim()) {
       setTempSecret(secret.trim());
+      setSecret('');
       setIsAuthenticated(true);
       fetchAdmins();
     }

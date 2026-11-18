@@ -15,6 +15,7 @@ export interface RestaurantConfig {
   showSearch: boolean;
   showItemCount: boolean;
   stickyNav: boolean;
+  continuousCollapsible?: boolean;
   showDivider: boolean;
   defaultImageUrl?: string;
   showItemImage: boolean;

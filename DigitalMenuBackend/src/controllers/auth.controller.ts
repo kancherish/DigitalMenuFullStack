@@ -26,6 +26,7 @@ interface UpdateRestaurantBody {
     showSearch?: boolean;
     showItemCount?: boolean;
     stickyNav?: boolean;
+    continuousCollapsible?: boolean;
     domain?: string;
   };
 }
@@ -273,6 +274,7 @@ export const updateRestaurant = async (
     if (restaurant?.showSearch !== undefined) restaurantData.showSearch = restaurant.showSearch;
     if (restaurant?.showItemCount !== undefined) restaurantData.showItemCount = restaurant.showItemCount;
     if (restaurant?.stickyNav !== undefined) restaurantData.stickyNav = restaurant.stickyNav;
+    if (restaurant?.continuousCollapsible !== undefined) restaurantData.continuousCollapsible = restaurant.continuousCollapsible;
     // if (restaurant?.domain !== undefined) restaurantData.domain = restaurant.domain;
 
 
@@ -310,8 +312,15 @@ export const getAllAdmins = asyncHandler(async (req: Request, res: Response) => 
     },
   });
 
+  const sanitizedAdmins = admins.map((admin) => ({
+    id: admin.id,
+    publicId: admin.publicId,
+    username: admin.username,
+    restaurant: admin.restaurant,
+  }));
+
   res.status(200).json(
-    new ApiResponse(200, admins, true, 'Admins fetched successfully')
+    new ApiResponse(200, sanitizedAdmins, true, 'Admins fetched successfully')
   );
 });
 

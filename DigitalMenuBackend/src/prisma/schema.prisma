@@ -139,6 +139,7 @@
     showItemCount Boolean @default(false)        
     showDivider   Boolean @default(false)         
     stickyNav Boolean @default(false)     
+    continuousCollapsible Boolean @default(false)
     domain String?    
     defaultImageUrl String @default("https://order.pennentertainment.com/assets/img/png/default-menu-image-placeholder.png")
     showItemImage Boolean @default(false)

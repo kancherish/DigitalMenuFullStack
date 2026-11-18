@@ -36,10 +36,10 @@ export const LAYOUT = {
 export function useThemeVars(primary: string, accent: string, radius: string,surface: string, bodyText?: string) {
   return {
     '--primary': primary,
-    '--body-text': bodyText || primary, // falls back to primary until the backend sends bodyTextColor
+    '--body-text': bodyText || primary,
     '--accent': accent,
-    '--accent-soft': `${accent}1A`, // ~10% opacity wash, used for active states
-    '--accent-soft-strong': `${accent}33`,
+    '--accent-soft': `color-mix(in srgb, ${accent} 10%, transparent)`,
+    '--accent-soft-strong': `color-mix(in srgb, ${accent} 20%, transparent)`,
     '--radius': radius,
     '--surface':surface
   } as React.CSSProperties;

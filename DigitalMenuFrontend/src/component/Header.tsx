@@ -224,7 +224,7 @@ export function Header({
         filter: showImage ? `drop-shadow(0 2px 14px ${color}99)` : undefined,
       }
     : {
-        color: nameColor || undefined,
+        color: nameColor || textColor,
         textShadow: showImage ? `0 2px 18px ${color}99` : undefined,
       };
 
@@ -378,7 +378,7 @@ export function Header({
         }
       `}
       style={{
-        color: taglineColor || undefined,
+        color: taglineColor || textColor,
         opacity: taglineColor ? 0.9 : 0.78,
         textShadow: showImage ? `0 1px 10px ${color}66` : undefined,
       }}

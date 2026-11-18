@@ -173,7 +173,10 @@ const ItemCard = ({
         </div>
 
         {itemStructure.description && (
-          <p className="mt-1 text-xs sm:text-sm text-slate-500 leading-relaxed line-clamp-2">
+          <p
+            className="mt-1 text-xs sm:text-sm leading-relaxed line-clamp-2"
+            style={{ color: 'color-mix(in srgb, var(--body-text, #334155) 65%, transparent)' }}
+          >
             {itemStructure.description}
           </p>
         )}

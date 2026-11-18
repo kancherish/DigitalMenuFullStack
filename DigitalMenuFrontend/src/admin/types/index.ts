@@ -50,6 +50,7 @@ export interface Restaurant {
   showSearch: boolean;
   showItemCount: boolean;
   stickyNav: boolean;
+  continuousCollapsible?: boolean;
   domain: string | null;
   showDivider: boolean;
   headerText: string;

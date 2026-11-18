@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
-import { Download, Megaphone, Search, X } from 'lucide-react';
+import { ChevronDown, Download, Megaphone, Search, X } from 'lucide-react';
 import { Header } from './component/Header';
 import LoadingScreen from './component/Loader';
 import Footer from './component/Footer';
@@ -19,6 +19,7 @@ export default function DigitalMenu() {
   const [categoryConfigRetryCount, setCategoryConfigRetryCount] = useState(0);
   const [configError, setConfigError] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
   const activeCategoryData = activeCategory !== null ? categoriesAndItems[activeCategory] : null;
 
@@ -87,7 +88,17 @@ export default function DigitalMenu() {
 
   const navStyle = restaurantConfig?.tabStyle ?? 'tabs';
   const isContinuous = navStyle === 'continuous';
+  const isCollapsibleContinuous = isContinuous && (restaurantConfig?.continuousCollapsible ?? false);
   const isSearching = searchQuery.trim().length > 0;
+
+  const toggleCategory = (publicId: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(publicId)) next.delete(publicId);
+      else next.add(publicId);
+      return next;
+    });
+  };
 
   const themeVars = useThemeVars(
     restaurantConfig?.primaryColor ?? '#1e293b',
@@ -96,6 +107,15 @@ export default function DigitalMenu() {
     restaurantConfig?.surfaceColor ?? '#ffffff',
     restaurantConfig?.BodyTextColor
   );
+
+  useEffect(() => {
+    if (restaurantConfig?.name) {
+      document.title = `${restaurantConfig.name} | Digital Menu`;
+    }
+    return () => {
+      document.title = 'Digital Menu';
+    };
+  }, [restaurantConfig?.name]);
 
   // LOADING SCREEN
   if (!configError && !restaurantConfig) {
@@ -169,7 +189,9 @@ export default function DigitalMenu() {
       {categoriesAndItems.length === 0 ? (
         <>
           <div className="flex-1 flex flex-col items-center justify-center gap-4">
-            <p className="text-slate-500">No Categories Added By Restaurant Yet</p>
+            <p style={{ color: 'color-mix(in srgb, var(--body-text, #334155) 60%, transparent)' }}>
+              No Categories Added By Restaurant Yet
+            </p>
           </div>
           <Footer />
         </>
@@ -187,7 +209,7 @@ export default function DigitalMenu() {
                 }}
               >
                 <Megaphone size={18} className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }} />
-                <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--primary)' }}>
+                <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line" style={{ color: 'var(--body-text)' }}>
                   {restaurantConfig!.boardText}
                 </p>
               </div>
@@ -288,12 +310,15 @@ export default function DigitalMenu() {
               <>
                 <h2
                   className="font-serif text-3xl font-semibold mb-6"
-                  style={{ color: 'var(--primary)' }}
+                  style={{ color: 'var(--body-text)' }}
                 >
                   Search results for "{searchQuery}"
                 </h2>
                 {globalSearchResults.length === 0 ? (
-                  <p className="text-slate-500 text-center py-20">
+                  <p
+                    className="text-center py-20"
+                    style={{ color: 'color-mix(in srgb, var(--body-text, #334155) 60%, transparent)' }}
+                  >
                     No items match "{searchQuery}".
                   </p>
                 ) : (
@@ -308,8 +333,8 @@ export default function DigitalMenu() {
                         <React.Fragment key={result.publicId}>
                           {result.categoryName !== prevCategory && (
                             <h3
-                              className="text-xl font-semibold text-slate-600 mt-8 mb-4 first:mt-0"
-                              style={{ color: 'var(--primary)' }}
+                              className="text-xl font-semibold mt-8 mb-4 first:mt-0"
+                              style={{ color: 'var(--body-text)' }}
                             >
                               {result.categoryName}
                             </h3>
@@ -333,57 +358,108 @@ export default function DigitalMenu() {
               </>
             ) : isContinuous ? (
               // CONTINUOUS CATEGORY VIEW
-              <div className="space-y-12">
+              <div className={isCollapsibleContinuous ? 'space-y-3' : 'space-y-12'}>
                 <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
                 {categoriesAndItems.map((category) => {
                   const Icon = getCategoryIcon(category.icon);
                   const categoryItems = category.items ?? [];
+                  const expanded = !isCollapsibleContinuous || expandedCategories.has(category.publicId);
+                  const itemsId = `category-items-${category.publicId}`;
                   return (
                     <section key={category.publicId} className="animate-[fadein_0.25s_ease]">
-                      <div
-                        className="mb-4 flex items-center gap-2 border-b pb-2"
-                        style={{
-                          borderColor:
-                            'color-mix(in srgb, var(--body-text, #334155) 15%, transparent)',
-                        }}
-                      >
-                        <Icon size={20} style={{ color: 'var(--accent)' }} />
-                        <h2
-                          className="font-serif text-2xl font-semibold"
-                          style={{ color: 'var(--body-text)' }}
+                      {isCollapsibleContinuous ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleCategory(category.publicId)}
+                          aria-expanded={expanded}
+                          aria-controls={itemsId}
+                          className="mb-2 flex w-full items-center justify-between gap-2 border-b pb-3 text-left"
+                          style={{
+                            borderColor:
+                              'color-mix(in srgb, var(--body-text, #334155) 15%, transparent)',
+                          }}
                         >
-                          {category.name}
-                        </h2>
-                        {restaurantConfig!.showItemCount && (
-                          <span
-                            className="rounded-full px-2 py-0.5 text-xs"
-                            style={{
-                              backgroundColor: 'var(--accent-soft)',
-                              color: 'var(--body-text)',
-                            }}
-                          >
-                            {categoryItems.length}
+                          <span className="flex min-w-0 items-center gap-2">
+                            <Icon size={20} style={{ color: 'var(--accent)' }} />
+                            <h2
+                              className="truncate font-serif text-2xl font-semibold"
+                              style={{ color: 'var(--body-text)' }}
+                            >
+                              {category.name}
+                            </h2>
+                            {restaurantConfig!.showItemCount && (
+                              <span
+                                className="shrink-0 rounded-full px-2 py-0.5 text-xs"
+                                style={{
+                                  backgroundColor: 'var(--accent-soft)',
+                                  color: 'var(--body-text)',
+                                }}
+                              >
+                                {categoryItems.length}
+                              </span>
+                            )}
                           </span>
-                        )}
-                      </div>
-                      {categoryItems.length === 0 ? (
-                        <p className="py-6 text-slate-500">No items in this category yet.</p>
+                          <ChevronDown
+                            size={20}
+                            className={`shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`}
+                            style={{ color: 'var(--body-text)' }}
+                          />
+                        </button>
                       ) : (
-                        <div className="space-y-6">
-                          {categoryItems.map((item, idx) => (
-                            <ItemCard
-                              key={item.publicId}
-                              itemStructure={item}
-                              index={idx}
-                              accentColor={restaurantConfig!.accentColor}
-                              showImage={restaurantConfig!.showItemImage}
-                              defaultImage={restaurantConfig!.defaultImageUrl}
-                              size={restaurantConfig!.itemSize || "sm"}
-                              imagePosition={restaurantConfig!.itemImagePosition || "left"}
-                              imageShape={restaurantConfig!.itemImageShape || "square"}
-                              currencySymbol={restaurantConfig!.currencySymbol || "₹"}
-                            />
-                          ))}
+                        <div
+                          className="mb-4 flex items-center gap-2 border-b pb-2"
+                          style={{
+                            borderColor:
+                              'color-mix(in srgb, var(--body-text, #334155) 15%, transparent)',
+                          }}
+                        >
+                          <Icon size={20} style={{ color: 'var(--accent)' }} />
+                          <h2
+                            className="font-serif text-2xl font-semibold"
+                            style={{ color: 'var(--body-text)' }}
+                          >
+                            {category.name}
+                          </h2>
+                          {restaurantConfig!.showItemCount && (
+                            <span
+                              className="rounded-full px-2 py-0.5 text-xs"
+                              style={{
+                                backgroundColor: 'var(--accent-soft)',
+                                color: 'var(--body-text)',
+                              }}
+                            >
+                              {categoryItems.length}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {expanded && (
+                        <div id={itemsId}>
+                          {categoryItems.length === 0 ? (
+                            <p
+                              className="py-6"
+                              style={{ color: 'color-mix(in srgb, var(--body-text, #334155) 60%, transparent)' }}
+                            >
+                              No items in this category yet.
+                            </p>
+                          ) : (
+                            <div className="space-y-6">
+                              {categoryItems.map((item, idx) => (
+                                <ItemCard
+                                  key={item.publicId}
+                                  itemStructure={item}
+                                  index={idx}
+                                  accentColor={restaurantConfig!.accentColor}
+                                  showImage={restaurantConfig!.showItemImage}
+                                  defaultImage={restaurantConfig!.defaultImageUrl}
+                                  size={restaurantConfig!.itemSize || "sm"}
+                                  imagePosition={restaurantConfig!.itemImagePosition || "left"}
+                                  imageShape={restaurantConfig!.itemImageShape || "square"}
+                                  currencySymbol={restaurantConfig!.currencySymbol || "₹"}
+                                />
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </section>
@@ -406,7 +482,7 @@ export default function DigitalMenu() {
                   <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
                   {(activeCategoryData?.items ?? []).length === 0 ? (
                     <div className="flex flex-col items-center justify-center gap-2 py-20 text-center">
-                      <p className="text-slate-500">
+                      <p style={{ color: 'color-mix(in srgb, var(--body-text, #334155) 60%, transparent)' }}>
                         {searchQuery
                           ? `No items match "${searchQuery}".`
                           : 'No items in this category yet.'}

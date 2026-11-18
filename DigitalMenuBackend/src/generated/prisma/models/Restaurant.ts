@@ -63,6 +63,7 @@ export type RestaurantMinAggregateOutputType = {
   showItemCount: boolean | null
   showDivider: boolean | null
   stickyNav: boolean | null
+  continuousCollapsible: boolean | null
   domain: string | null
   defaultImageUrl: string | null
   showItemImage: boolean | null
@@ -122,6 +123,7 @@ export type RestaurantMaxAggregateOutputType = {
   showItemCount: boolean | null
   showDivider: boolean | null
   stickyNav: boolean | null
+  continuousCollapsible: boolean | null
   domain: string | null
   defaultImageUrl: string | null
   showItemImage: boolean | null
@@ -181,6 +183,7 @@ export type RestaurantCountAggregateOutputType = {
   showItemCount: number
   showDivider: number
   stickyNav: number
+  continuousCollapsible: number
   domain: number
   defaultImageUrl: number
   showItemImage: number
@@ -262,6 +265,7 @@ export type RestaurantMinAggregateInputType = {
   showItemCount?: true
   showDivider?: true
   stickyNav?: true
+  continuousCollapsible?: true
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
@@ -321,6 +325,7 @@ export type RestaurantMaxAggregateInputType = {
   showItemCount?: true
   showDivider?: true
   stickyNav?: true
+  continuousCollapsible?: true
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
@@ -380,6 +385,7 @@ export type RestaurantCountAggregateInputType = {
   showItemCount?: true
   showDivider?: true
   stickyNav?: true
+  continuousCollapsible?: true
   domain?: true
   defaultImageUrl?: true
   showItemImage?: true
@@ -526,6 +532,7 @@ export type RestaurantGroupByOutputType = {
   showItemCount: boolean
   showDivider: boolean
   stickyNav: boolean
+  continuousCollapsible: boolean
   domain: string | null
   defaultImageUrl: string
   showItemImage: boolean
@@ -608,6 +615,7 @@ export type RestaurantWhereInput = {
   showItemCount?: Prisma.BoolFilter<"Restaurant"> | boolean
   showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
+  continuousCollapsible?: Prisma.BoolFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
@@ -669,6 +677,7 @@ export type RestaurantOrderByWithRelationInput = {
   showItemCount?: Prisma.SortOrder
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
+  continuousCollapsible?: Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
@@ -733,6 +742,7 @@ export type RestaurantWhereUniqueInput = Prisma.AtLeast<{
   showItemCount?: Prisma.BoolFilter<"Restaurant"> | boolean
   showDivider?: Prisma.BoolFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolFilter<"Restaurant"> | boolean
+  continuousCollapsible?: Prisma.BoolFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolFilter<"Restaurant"> | boolean
@@ -794,6 +804,7 @@ export type RestaurantOrderByWithAggregationInput = {
   showItemCount?: Prisma.SortOrder
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
+  continuousCollapsible?: Prisma.SortOrder
   domain?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
@@ -861,6 +872,7 @@ export type RestaurantScalarWhereWithAggregatesInput = {
   showItemCount?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   showDivider?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   stickyNav?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
+  continuousCollapsible?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
   domain?: Prisma.StringNullableWithAggregatesFilter<"Restaurant"> | string | null
   defaultImageUrl?: Prisma.StringWithAggregatesFilter<"Restaurant"> | string
   showItemImage?: Prisma.BoolWithAggregatesFilter<"Restaurant"> | boolean
@@ -918,6 +930,7 @@ export type RestaurantCreateInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -979,6 +992,7 @@ export type RestaurantUncheckedCreateInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -1037,6 +1051,7 @@ export type RestaurantUpdateInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1098,6 +1113,7 @@ export type RestaurantUncheckedUpdateInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1158,6 +1174,7 @@ export type RestaurantCreateManyInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -1215,6 +1232,7 @@ export type RestaurantUpdateManyMutationInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1274,6 +1292,7 @@ export type RestaurantUncheckedUpdateManyInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1338,6 +1357,7 @@ export type RestaurantCountOrderByAggregateInput = {
   showItemCount?: Prisma.SortOrder
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
+  continuousCollapsible?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
@@ -1407,6 +1427,7 @@ export type RestaurantMaxOrderByAggregateInput = {
   showItemCount?: Prisma.SortOrder
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
+  continuousCollapsible?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
@@ -1466,6 +1487,7 @@ export type RestaurantMinOrderByAggregateInput = {
   showItemCount?: Prisma.SortOrder
   showDivider?: Prisma.SortOrder
   stickyNav?: Prisma.SortOrder
+  continuousCollapsible?: Prisma.SortOrder
   domain?: Prisma.SortOrder
   defaultImageUrl?: Prisma.SortOrder
   showItemImage?: Prisma.SortOrder
@@ -1664,6 +1686,7 @@ export type RestaurantCreateWithoutAdminInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -1723,6 +1746,7 @@ export type RestaurantUncheckedCreateWithoutAdminInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -1797,6 +1821,7 @@ export type RestaurantUpdateWithoutAdminInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1856,6 +1881,7 @@ export type RestaurantUncheckedUpdateWithoutAdminInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1914,6 +1940,7 @@ export type RestaurantCreateWithoutCategoriesInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -1974,6 +2001,7 @@ export type RestaurantUncheckedCreateWithoutCategoriesInput = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: string | null
   defaultImageUrl?: string
   showItemImage?: boolean
@@ -2047,6 +2075,7 @@ export type RestaurantUpdateWithoutCategoriesInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2107,6 +2136,7 @@ export type RestaurantUncheckedUpdateWithoutCategoriesInput = {
   showItemCount?: Prisma.BoolFieldUpdateOperationsInput | boolean
   showDivider?: Prisma.BoolFieldUpdateOperationsInput | boolean
   stickyNav?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  continuousCollapsible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   domain?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultImageUrl?: Prisma.StringFieldUpdateOperationsInput | string
   showItemImage?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2197,6 +2227,7 @@ export type RestaurantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
@@ -2259,6 +2290,7 @@ export type RestaurantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
@@ -2319,6 +2351,7 @@ export type RestaurantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
@@ -2379,6 +2412,7 @@ export type RestaurantSelectScalar = {
   showItemCount?: boolean
   showDivider?: boolean
   stickyNav?: boolean
+  continuousCollapsible?: boolean
   domain?: boolean
   defaultImageUrl?: boolean
   showItemImage?: boolean
@@ -2421,7 +2455,7 @@ export type RestaurantSelectScalar = {
   pdfDownloadPlacement?: boolean
 }
 
-export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "domain" | "defaultImageUrl" | "showItemImage" | "headerLayout" | "logoShape" | "BodyTextColor" | "overlayStyle" | "overlayIntensity" | "headingFont" | "headerAlign" | "headerSize" | "headerAccentPanel" | "headerPanelIntensity" | "headerNameGradient" | "headerUppercaseTagline" | "headerShimmer" | "headerNameColor" | "headerTaglineColor" | "headerNameGradientFrom" | "headerNameGradientTo" | "headerNameGradientAngle" | "showLogo" | "logoSize" | "headerBackgroundPositionX" | "headerBackgroundPositionY" | "headerBackgroundZoom" | "headerDividerStyle" | "headerSpacing" | "headerMaxWidth" | "categoryVariant" | "categorySize" | "itemSize" | "itemImagePosition" | "itemImageShape" | "currencySymbol" | "surfaceColor" | "boardEnabled" | "boardText" | "showPdfDownload" | "pdfDownloadPlacement", ExtArgs["result"]["restaurant"]>
+export type RestaurantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "name" | "adminId" | "tagline" | "backgroundUrl" | "logoUrl" | "primaryColor" | "tabStyle" | "roundness" | "accentColor" | "headerText" | "showSearch" | "showItemCount" | "showDivider" | "stickyNav" | "continuousCollapsible" | "domain" | "defaultImageUrl" | "showItemImage" | "headerLayout" | "logoShape" | "BodyTextColor" | "overlayStyle" | "overlayIntensity" | "headingFont" | "headerAlign" | "headerSize" | "headerAccentPanel" | "headerPanelIntensity" | "headerNameGradient" | "headerUppercaseTagline" | "headerShimmer" | "headerNameColor" | "headerTaglineColor" | "headerNameGradientFrom" | "headerNameGradientTo" | "headerNameGradientAngle" | "showLogo" | "logoSize" | "headerBackgroundPositionX" | "headerBackgroundPositionY" | "headerBackgroundZoom" | "headerDividerStyle" | "headerSpacing" | "headerMaxWidth" | "categoryVariant" | "categorySize" | "itemSize" | "itemImagePosition" | "itemImageShape" | "currencySymbol" | "surfaceColor" | "boardEnabled" | "boardText" | "showPdfDownload" | "pdfDownloadPlacement", ExtArgs["result"]["restaurant"]>
 export type RestaurantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admin?: boolean | Prisma.RestaurantAdminDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Restaurant$categoriesArgs<ExtArgs>
@@ -2457,6 +2491,7 @@ export type $RestaurantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     showItemCount: boolean
     showDivider: boolean
     stickyNav: boolean
+    continuousCollapsible: boolean
     domain: string | null
     defaultImageUrl: string
     showItemImage: boolean
@@ -2938,6 +2973,7 @@ export interface RestaurantFieldRefs {
   readonly showItemCount: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly showDivider: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly stickyNav: Prisma.FieldRef<"Restaurant", 'Boolean'>
+  readonly continuousCollapsible: Prisma.FieldRef<"Restaurant", 'Boolean'>
   readonly domain: Prisma.FieldRef<"Restaurant", 'String'>
   readonly defaultImageUrl: Prisma.FieldRef<"Restaurant", 'String'>
   readonly showItemImage: Prisma.FieldRef<"Restaurant", 'Boolean'>

@@ -36,13 +36,11 @@ async function request<T>(
 ): Promise<T> {
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
-   console.log(tempSecret)
-   
+
   // Attach the secret as a header if available
   if (tempSecret) {
     headers.set('x-tempdata', tempSecret);
   }
-  console.log(`${BASE_URL}${endpoint}`)
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
@@ -53,11 +51,7 @@ async function request<T>(
     throw new Error(errorData.message || `HTTP ${response.status}`);
   }
 
-  const jsonres = await response.json()
-
-  console.log(jsonres)
-
-  return jsonres
+  return await response.json()
 }
 
 export type Admin = Record<string, unknown>;

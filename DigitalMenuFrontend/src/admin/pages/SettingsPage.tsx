@@ -341,8 +341,20 @@ export function SettingsPage() {
               </div>
             )}
             {form.tabStyle === 'continuous' && (
-              <div className="rounded-lg border border-dashed border-gray-200 p-3">
-                <p className="text-xs text-slate-500">Continuous mode shows every category with its items in one scrolling list — no tabs or dropdown. Search still appears above the menu when enabled.</p>
+              <div className="space-y-3 rounded-lg border border-dashed border-gray-200 p-3">
+                <p className="text-xs text-slate-500">
+                  Continuous mode lists every category in one scroll. Choose whether items are always visible or expand on tap.
+                </p>
+                <Field label="Continuous Layout">
+                  <SegmentedControl
+                    value={form.continuousCollapsible ? 'expandable' : 'scroll'}
+                    onChange={(v) => update('continuousCollapsible', v === 'expandable')}
+                    options={[
+                      { value: 'scroll', label: 'Show all' },
+                      { value: 'expandable', label: 'Expandable' },
+                    ]}
+                  />
+                </Field>
               </div>
             )}
 

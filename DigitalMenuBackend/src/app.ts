@@ -32,19 +32,23 @@ const STATIC_ORIGINS = new Set([
 //   console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
 // }
 
+const corsError = (message: string) => {
+  const error = new ErrorResponse(403, message);
+  (error as any).stack = undefined;
+  return error;
+}
+
 app.use(cors({
   origin(origin, callback) {
-    // Allow requests with no origin (Postman, curl, mobile apps)
-    // if (!origin) return callback(null, true);
-
-    // if (allowedOrigins.has(origin) || STATIC_ORIGINS.has(origin)) {
-    //   return callback(null, true);
-    // }
-    if (STATIC_ORIGINS.has(origin || "")) {
-      return callback(null, true);
+    if (!origin) {
+      return callback(corsError("Origin header is required"));
     }
 
-    callback(new Error("Not allowed by CORS"));
+    if (!STATIC_ORIGINS.has(origin)) {
+      return callback(corsError("Origin not allowed"));
+    }
+
+    callback(null, true);
   },
   credentials: true,
 }));

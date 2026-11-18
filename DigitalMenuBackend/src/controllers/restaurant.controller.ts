@@ -36,7 +36,7 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
 
   const { restaurant_id, name, tagline, primaryColor, accentColor, tabStyle, logoUrl, backgroundUrl, roundness, showSearch,
-    showItemCount, stickyNav, domain, showDivider, headerText, defaultImageUrl, showItemImage, headerLayout,
+    showItemCount, stickyNav, continuousCollapsible, domain, showDivider, headerText, defaultImageUrl, showItemImage, headerLayout,
     logoShape, overlayStyle, overlayIntensity, headingFont, headerAlign, headerSize, categoryVariant,
     categorySize, itemSize, itemImagePosition, itemImageShape, currencySymbol, surfaceColor ,  boardEnabled,
   boardText, BodyTextColor, headerAccentPanel, headerPanelIntensity, headerNameGradient,
@@ -67,7 +67,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   const updateData: {
     name?: string; tagline?: string; primaryColor?: string; accentColor?: string; logoUrl?: string; backgroundUrl?: string
     ; tabStyle?: NavStyle; roundness?: string; showDivider?: boolean; headerText?: string;
-    showSearch?: boolean, showItemCount?: boolean, stickyNav?: boolean, domain?: string, showItemImage?: boolean
+    showSearch?: boolean, showItemCount?: boolean, stickyNav?: boolean, continuousCollapsible?: boolean, domain?: string, showItemImage?: boolean
     defaultImageUrl?: string, headerLayout?: headerLayoutN, logoShape?: logoShapeN, overlayStyle?: overlayStyleN, overlayIntensity?: number,
     headingFont?: headingFontN, headerAlign?: headerAlignN, headerSize?: headerSizeN, categoryVariant?: categoryVariantN,
     categorySize?: categorySizeN, itemSize?: itemSizeN, itemImagePosition?: itemImagePositionN, itemImageShape?: itemImageShapeN,
@@ -90,6 +90,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (showSearch !== undefined) updateData.showSearch = showSearch;
   if (showItemCount !== undefined) updateData.showItemCount = showItemCount;
   if (stickyNav !== undefined) updateData.stickyNav = stickyNav;
+  if (continuousCollapsible !== undefined) updateData.continuousCollapsible = continuousCollapsible;
   // if (domain  !== undefined) updateData.domain = domain;
   if (logoUrl !== undefined) updateData.logoUrl = logoUrl;
   if (backgroundUrl !== undefined) updateData.backgroundUrl = backgroundUrl;

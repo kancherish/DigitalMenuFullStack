@@ -22,7 +22,7 @@ A multi-tenant digital restaurant menu platform.
   the customer frontend, and can also be reached through a `domain` value stored on the
   restaurant.
 - Customers see a header, optional announcement board, search, category navigation
-  (tabs/dropdown), item cards, and optional QR/PDF actions.
+  (tabs/dropdown/continuous), item cards, and optional QR/PDF actions.
 - A separate super-admin panel creates/deletes restaurant admins and edits basic restaurant
   settings. It is protected by a shared secret header, not a user account.
 
@@ -211,8 +211,10 @@ CORS allow-list is a static `Set`:
 - `http://192.168.1.12:3000` (LAN frontend)
 - `http://localhost:5173` (super admin / Vite default)
 
-Requests with **no origin** are rejected because the `if (!origin)` escape hatch is
-commented out. Dynamic restaurant-domain CORS is also commented out. Because
+Requests with **no origin** or an origin not in the set are rejected server-side with
+`403` (`Origin header is required` / `Origin not allowed`) and no stack trace. This blocks
+plain curl/Postman/server-to-server calls, but the `Origin` header can be spoofed, so it is
+not authentication. Dynamic restaurant-domain CORS is also commented out. Because
 `credentials: true` is set, any new frontend origin must be added to this list.
 
 `cookie-parser` is installed but its registration is commented out; auth uses the
@@ -289,8 +291,8 @@ It always includes `stack` in the JSON response, which can leak internals.
   `SALT_ROUND` is exported).
 - Refresh tokens are bcrypt-hashed before storage in `RestaurantAdmin.refreshToken`.
 - Login/register rotate and store a hash of the newest refresh token.
-- `getAllAdmins` returns full `RestaurantAdmin` records including `password` and
-  `refreshToken` hash (security issue; the super-admin UI receives them).
+- `getAllAdmins` returns admins with `restaurant` but strips `password` and `refreshToken`
+  before responding.
 
 ### 5.4 API endpoints
 
@@ -311,7 +313,7 @@ Base path: `/api/v1`. All routes return the `ApiResponse`/`ErrorResponse` shapes
 | POST | `/auth/refresh` | refresh token in `Authorization: Bearer` | Verifies JWT and bcrypt-compares against stored hash; rotates **both** access and refresh tokens; returns `{ accessToken, refreshToken }`. |
 | DELETE | `/auth/logout` | none | `{ para: { refreshToken? } }`; if valid, clears the stored refresh token; returns 200 either way. **Frontend currently calls POST instead.** |
 | PUT | `/auth/updateAdmin/:restaurantPublicId` | `CornerLock` | `{ admin?: { username?, password? }, restaurant?: { name?, tagline?, primaryColor?, accentColor?, tabStyle?, roundness?, showSearch?, showItemCount?, stickyNav?, domain? } }`. Password is hashed. `domain` update is commented out/ignored. Updates restaurant + admin in a transaction; returns `{ restaurant, admin }` with password/refreshToken removed. |
-| GET | `/auth/getAllAdmins` | `CornerLock` | Returns all admins with `restaurant` included (including sensitive fields). |
+| GET | `/auth/getAllAdmins` | `CornerLock` | Returns all admins with `restaurant` included, with `password` and `refreshToken` omitted. |
 | DELETE | `/auth/delete/:publicId` | `CornerLock` | Deletes restaurant(s) where `adminId = publicId`, then deletes the admin. |
 
 #### Restaurant
@@ -353,7 +355,11 @@ can be set to `null` if provided.
 | POST | `/item/add` | access token + category ownership + optional multipart | `para` may be object or JSON string. Fields: `name`, `description?`, `price?`, `category_id`, `variants?`, `badges?`, `available?`, `imageURL?`; optional file field `image`. `imageURL` accepts an http(s) or `/`-relative URL (invalid values → 400); an uploaded file takes precedence over it. Requires name + category_id. Name is checked case-insensitively **within the category**. Must have either numeric `price` **or** non-empty `variants`, never both. Variants require string name + numeric price. If image processing fails, still creates item and returns status **207** “Item Added But Failed To Add Image”. |
 | GET | `/item/get/:cid` | none | Public. Returns items for category `publicId`, ordered by `name` ascending, including variants. |
 | PATCH | `/item/update` | access token + item ownership + optional multipart | `{ para: { item_id, name?, description?, price?, category_id?, variants?, badges?, imageURL?, removeImage?, available? } }`. `item_id` from `para`. Cannot send both price and variants. If `variants` is provided it must be non-empty. Price mode deletes all variants and sets price. Variant mode sets price `null`, deletes existing variants, recreates them. Image URL sets/clears `imageURL`; an uploaded file takes precedence. Old image files are deleted from storage only when their URL is managed by `UPLOAD_PUBLIC_BASE`/`S3_PUBLIC_URL_BASE`. Returns updated item with variants. |
-| DELETE | `/item/delete/:item_id` | access token + item ownership | Deletes item (variants cascade), then best-effort deletes stored image. |
+| DELETE | `/item/delete/:item_id` | access token + item ownership | Deletes item (variants cascade), then best-effort deletes stored image only when its URL is managed by `UPLOAD_PUBLIC_BASE`/`S3_PUBLIC_URL_BASE`. |
+
+**Image URL validation is syntactic only:** `imageURL` is accepted when it is an
+`http(s)://…` URL or a `/`-relative path; the backend does not check that it resolves to an
+actual image.
 
 **Known item-update quirk:** sending `badges: []` does not clear badges. The controller
 computes `badgesToadd = Array.isArray(badges) && badges.length > 0 && badges`, then only
@@ -574,10 +580,13 @@ Vercel.
   `continuous` renders no nav: every category (icon + name + optional count) followed by
   its items in one vertical scroll; the sticky bar contains only the search input (and is
   omitted entirely when search is disabled). Search results use the same grouped view in
-  all three modes.
+  all three modes. Tab-only settings (`categoryVariant`, `categorySize`) have no effect in
+  continuous mode.
 - Announcement board: shown when `boardEnabled && boardText && !isSearching`; uses
   `--accent-soft` background, `--accent` border/icon, `--primary` text, `--radius`.
 - Sticky nav wrapper when `stickyNav`; search input and nav are inside a `no-print` bar.
+  In `continuous` mode the bar holds only the search input and is omitted when
+  `showSearch` is off.
 - Theme vars built with:
   - primary `primaryColor` (fallback `#1e293b`)
   - accent `accentColor` (fallback `#0ea5e9`)
@@ -696,7 +705,9 @@ options, item/card/nav options, currency, surface, board, PDF fields.
 
 `src/admin/types/index.ts`: admin `Restaurant` includes both `bodyTextColor?` and
 `BodyTextColor?` (the Settings form now writes `BodyTextColor`), plus `roundness`, and
-legacy/unused `pageBackground` / `itemOfTheDayId`.
+legacy/unused `pageBackground` / `itemOfTheDayId`. `NavStyle` is
+`'tabs' | 'dropdown' | 'continuous'`; `Item` has `imageURL?`; `ItemPayload` has
+`imageURL?`; `ItemFormValues` has `imageMode: 'upload' | 'url'` and `imageUrl?`.
 `AdminInfo` is `{ publicId, username, restaurant }`.
 
 ---
@@ -800,11 +811,13 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
 ### 7.5 Items page
 
 - Loads categories, selects first; loads items for active category.
-- Category tabs switch item list.
+- Category tabs switch item list via `handleCategoryChange`, which first closes and resets
+  the Add form, cancels any open edit form, and clears the error. Clicking the active tab is
+  a no-op.
 - Add item via `ItemForm`; `buildNewItemPayload` sends price mode or variants mode plus
-  badges/available.
+  badges/available and, in URL image mode, `para.imageURL`.
 - Edit item: converts item to form values, diffs name/description/available, badges
-  (deep), price/variants, plus image file/remove flag.
+  (deep), price/variants, plus image file, image URL and remove flag.
 - Quick “Mark sold out / Mark available” sends `{ available: !current }`.
 - Delete with confirm; calls itemService.delete.
 - Uses hard-coded `₹` when displaying prices in the admin list, regardless of
@@ -840,9 +853,10 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
 
 `itemService`:
 - `getByCategory` → `/item/get/:categoryId`.
-- `add` → multipart with `para` JSON string + `image` when a file exists, otherwise JSON.
+- `add` → multipart with `para` JSON string + `image` when a file exists, otherwise JSON
+  (URL image mode sends `imageURL` in the JSON `para`).
 - `update` mutates the payload (adds `item_id`, maybe `removeImage`), uses multipart only
-  when replacing an image and not removing; otherwise JSON.
+  when replacing an image and not removing; otherwise JSON (including `imageURL` changes).
 - `delete` → DELETE URL.
 
 `restaurantService`:
@@ -873,8 +887,10 @@ Features:
   `PUT /auth/updateAdmin/:restaurantPublicId`.
   **Domain changes are ignored by the backend.**
 - Delete sends `DELETE /auth/delete/:adminPublicId` (comment says admin publicId).
-- `getAllAdmins` response includes password and refresh-token hashes; the UI types ignore
-  them but the data crosses the network.
+- The unlock secret is stored only in module memory (`tempSecret`), sent as `x-tempdata`
+  on every request, and never logged or persisted to `localStorage`; the input state is
+  cleared after unlocking.
+- `getAllAdmins` response omits password and refresh-token hashes.
 
 `src/RegistrationFormComponent.tsx` is an unused duplicate registration form. Its tab-style
 options include `buttons`, which is not a valid Prisma `NavStyle`; do not import it without
@@ -963,44 +979,42 @@ Super admin:
 5. **Category service query string is malformed.**
    `categoryService.getByRestaurant` builds `/category/get/:id/<params>` instead of
    `/category/get/:id?<params>`. `includeItems=true` would not be understood.
-6. **Super-admin `getAllAdmins` leaks secrets.** It returns `password` and hashed
-   `refreshToken` for every admin. Sanitize before returning.
-7. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
+6. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
    `res.json` without `res.status(404)`.
-8. **No-origin requests are rejected by CORS.** The no-origin escape hatch is commented
-   out; Postman/curl/server-to-server requests without an `Origin` header fail unless
-   changed.
-9. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
+7. **No-origin requests are rejected by CORS.** curl/Postman/server-to-server calls must
+   send an `Origin` header from the allow-list; the header is spoofable, so this is not
+   authentication.
+8. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
    change” by `items.controller.ts`.
-10. **A price of `0` is not displayed** because `Item.tsx` checks
-    `itemStructure.price && !hasVariants` instead of `price != null`.
-11. **Custom domain is effectively immutable.** Register ignores its `domain` input and
+9. **A price of `0` is not displayed** because `Item.tsx` checks
+   `itemStructure.price && !hasVariants` instead of `price != null`.
+10. **Custom domain is effectively immutable.** Register ignores its `domain` input and
     overwrites it with `${MAIN_DOMAIN}/${publicId}/`; both restaurant update endpoints
     have domain updates commented out.
-12. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
+11. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
     `/v1`; set `VITE_SERVER_ADDRESS`.
-13. **QR download depends on `api.qrserver.com`.** Network/CORS failures surface as
+12. **QR download depends on `api.qrserver.com`.** Network/CORS failures surface as
     “Failed to download QR code”; the QR preview is an external image.
-14. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
+13. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
     a public URL even if the object was not stored.
-15. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
+14. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
     clears the access token and cached admin info.
-16. **`assetUrl` is unused and backend stores full image URLs.** Image fields
+15. **`assetUrl` is unused and backend stores full image URLs.** Image fields
     (`imageURL`, `logoUrl`, etc.) are rendered directly; `VITE_ASSET_BASE_URL` only affects
     `assetUrl`.
-17. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
+16. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
     `20261022152811_init` only adds `BodyTextColor`. Keep this in mind when resetting a DB
     or squashing history.
-18. **The Postman collection is stale.** Do not use it as the API source of truth.
-19. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
+17. **The Postman collection is stale.** Do not use it as the API source of truth.
+18. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
     `VITE_RESTAURANT_ID` are present but unused; code uses `VITE_SERVER_ADDRESS` (and
     `VITE_ASSET_BASE_URL` only in unused `assets.ts`).
-20. **Admin item prices are hard-coded to `₹`.** The `currencySymbol` setting only affects
+19. **Admin item prices are hard-coded to `₹`.** The `currencySymbol` setting only affects
     the public menu/PDF, not `ItemPage.tsx`.
-21. **Header `display` font uses `font-display`**, but the app only explicitly loads
+20. **Header `display` font uses `font-display`**, but the app only explicitly loads
     Fraunces and overrides `.font-serif`; verify that the `display` option renders as
     intended in the target Tailwind build.
-22. **`admin/login` after successful direct login** can navigate to a non-existent route
+21. **`admin/login` after successful direct login** can navigate to a non-existent route
     (see #3); also `AuthProvider` requires cached `adminInfo` after refresh, so clearing
     that key while keeping a valid refresh token leaves the admin unauthenticated until
     login.
@@ -1027,6 +1041,32 @@ Super admin:
 ## Change Log
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
+
+### 2026-11-17 — CORS rejects no-origin and unknown origins explicitly
+- **Backend**
+  - `src/app.ts`: the CORS `origin` callback now returns `403 Origin header is required` for
+    requests without an `Origin` header and `403 Origin not allowed` for origins outside
+    `STATIC_ORIGINS`. The errors omit the stack trace.
+- **Verified:** local requests without an allowed `Origin` get `403`; `http://localhost:3000`
+  still gets `200` with CORS headers. `npm run build` passes.
+- **Why:** make the existing curl/Postman block intentional and clear instead of a generic
+  500 with an internal stack trace. This is still not authentication because `Origin` can be
+  spoofed.
+
+### 2026-11-17 — Super-admin secret handling hardened
+- **Super admin**
+  - `src/api.ts`: removed `console.log(tempSecret)` and `console.log(jsonres)`; the
+    `x-tempdata` secret is no longer printed to the browser console, and API responses
+    (which may contain sensitive fields) are no longer dumped.
+  - `src/App.tsx`: the unlock input state is cleared after `setTempSecret`, so the typed
+    secret does not linger in React state.
+- **Backend**
+  - `src/controllers/auth.controller.ts`: `getAllAdmins` now maps admins to
+    `{ id, publicId, username, restaurant }` instead of using `forEach` (which returned
+    `undefined` and also failed to reliably hide `password`/`refreshToken`).
+- **Why:** keep the shared secret out of frontend logs/state and stop admin password/refresh
+  hashes from reaching the browser. Frontend `.env` files only contain `VITE_*` values and no
+  backend secrets; no `.env` file is tracked by git.
 
 ### 2026-11-17 — Continuous category navigation style
 - **Backend**
