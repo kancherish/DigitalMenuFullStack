@@ -11,6 +11,18 @@ const Footer = () => {
       <p className="text-xs leading-tight">
         Please inform your server of any dietary restrictions or allergies
       </p>
+      <p className="text-xs leading-tight mt-1">
+        Powered by{' '}
+        <a
+          href="https://www.cornertech.in/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+          style={{ color: 'var(--accent, #0ea5e9)' }}
+        >
+          Corner Tech
+        </a>
+      </p>
     </div>
   );
 };

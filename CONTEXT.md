@@ -1080,6 +1080,13 @@ Super admin:
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
 
+### 2026-11-21 — Footer company link
+- **Frontend public**
+  - `src/component/Footer.tsx`: added a "Powered by Corner Tech" link to
+    `https://www.cornertech.in/` below the dietary notice, themed with `--accent`,
+    opening in a new tab.
+- **Why:** show the company attribution on every public menu page.
+
 ### 2026-11-20 — Frontend loading optimizations
 - **Frontend public**
   - `src/component/Item.tsx`: item images are `loading="lazy"` / `decoding="async"`.
