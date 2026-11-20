@@ -7,10 +7,12 @@ import { diffChanged } from '../../util/util';
 import type { Restaurant, NavStyle } from '../types';
 import { THEME_PRESETS, getPresetSwatch, type ThemePreset } from '../themePresets';
 import { CopyIcon, LockIcon, Check, AlertCircle, QrCode, Download } from 'lucide-react';
+import QRCode from 'qrcode';
+import { FONT_OPTIONS } from '../../util/fonts';
 
 // text-base on mobile prevents iOS Safari from zooming into focused inputs
 const inputStyles =
-  'w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500';
+  'w-full rounded-lg border border-gray-300 bg-ui-surface px-3 py-2.5 text-base sm:text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500';
 
 export function SettingsPage() {
   const { admin, updateCachedRestaurant } = useAuth();
@@ -24,6 +26,7 @@ export function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState('');
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -59,6 +62,32 @@ export function SettingsPage() {
     () => (form && original ? Object.keys(diffChanged<Restaurant>(original, form)).length > 0 : false),
     [form, original],
   );
+
+  const menuUrl = form?.domain
+    ? /^https?:\/\//.test(form.domain)
+      ? form.domain
+      : `https://${form.domain}`
+    : restaurantId
+      ? `${window.location.origin}/${restaurantId}`
+      : '';
+
+  useEffect(() => {
+    if (!menuUrl) return;
+    let cancelled = false;
+    QRCode.toDataURL(menuUrl, { width: 512 })
+      .then((url) => {
+        if (!cancelled) setQrDataUrl(url);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError('Failed to generate QR code');
+          console.error('Failed to generate QR code: ', err);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [menuUrl]);
 
   function update<K extends keyof Restaurant>(key: K, value: Restaurant[K]) {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -117,25 +146,14 @@ export function SettingsPage() {
     }
   }
 
-  async function handleDownloadQr() {
-    if (!menuUrl) return;
-    try {
-      const res = await fetch(
-        `https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=${encodeURIComponent(menuUrl)}`,
-      );
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${(form?.name || 'menu').replace(/[^a-z0-9_-]+/gi, '-').toLowerCase()}-qr.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      setError('Failed to download QR code');
-      console.error('Failed to download QR code: ', err);
-    }
+  function handleDownloadQr() {
+    if (!qrDataUrl) return;
+    const a = document.createElement('a');
+    a.href = qrDataUrl;
+    a.download = `${(form?.name || 'menu').replace(/[^a-z0-9_-]+/gi, '-').toLowerCase()}-qr.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   if (loading) {
@@ -155,13 +173,6 @@ export function SettingsPage() {
   }
 
   const showPhoto = form.headerLayout !== 'minimal';
-  const menuUrl = form.domain
-    ? /^https?:\/\//.test(form.domain)
-      ? form.domain
-      : `https://${form.domain}`
-    : restaurantId
-      ? `${window.location.origin}/${restaurantId}`
-      : '';
 
   return (
     <div className="mx-auto w-full max-w-6xl">
@@ -202,7 +213,7 @@ export function SettingsPage() {
                 disabled={!menuUrl}
                 title="Copy menu link"
                 aria-label="Copy menu link"
-                className="flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white"
+                className="flex shrink-0 items-center justify-center gap-1.5 rounded-lg border border-gray-300 bg-ui-surface px-3.5 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-ui-surface"
               >
                 {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <CopyIcon className="h-4 w-4" />}
                 <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy'}</span>
@@ -220,9 +231,9 @@ export function SettingsPage() {
                 </button>
                 {showQr && (
                   <div className="inline-flex flex-col items-start gap-3">
-                    <div className="inline-block rounded-lg border border-gray-200 bg-white p-3">
+                    <div className="inline-block rounded-lg border border-gray-200 bg-ui-surface p-3">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(menuUrl)}`}
+                        src={qrDataUrl || undefined}
                         alt="Menu QR code"
                         width={180}
                         height={180}
@@ -232,7 +243,8 @@ export function SettingsPage() {
                     <button
                       type="button"
                       onClick={handleDownloadQr}
-                      className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+                      disabled={!qrDataUrl}
+                      className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-ui-surface px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <Download className="h-4 w-4" />
                       Download QR
@@ -259,7 +271,7 @@ export function SettingsPage() {
                   className={`flex w-full flex-col gap-2 rounded-xl border p-3 text-left transition-colors ${
                     active
                       ? 'border-indigo-500 bg-indigo-50/60 ring-1 ring-indigo-500/30'
-                      : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
+                      : 'border-gray-200 bg-ui-surface hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -386,9 +398,16 @@ export function SettingsPage() {
               </Field>
               <Field label="Heading Font">
                 <select value={form.headingFont || 'serif'} onChange={(e) => update('headingFont', e.target.value as Restaurant['headingFont'])} className={inputStyles}>
-                  <option value="serif">Serif</option>
-                  <option value="sans">Sans</option>
-                  <option value="display">Display</option>
+                  {FONT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Body Font">
+                <select value={form.bodyFont || 'sans'} onChange={(e) => update('bodyFont', e.target.value as Restaurant['bodyFont'])} className={inputStyles}>
+                  {FONT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
                 </select>
               </Field>
             </div>
@@ -529,7 +548,7 @@ export function SettingsPage() {
         </div>
 
         {/* Save bar */}
-        <div className="sticky bottom-0 z-40 -mx-4 border-t border-gray-200 bg-white/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-white/75 sm:mx-0 sm:rounded-xl sm:border sm:px-5 sm:shadow-lg">
+        <div className="sticky bottom-0 z-40 -mx-4 border-t border-gray-200 bg-ui-surface/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-ui-surface/75 sm:mx-0 sm:rounded-xl sm:border sm:px-5 sm:shadow-lg">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 text-sm">
               {saved && !dirty ? (
@@ -549,7 +568,7 @@ export function SettingsPage() {
             <button
               type="submit"
               disabled={saving || !dirty}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 active:bg-indigo-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-ui-accent-solid px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-ui-accent-solid-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? 'Saving...' : 'Save changes'}
             </button>
@@ -581,7 +600,7 @@ function Section({
 }) {
   return (
     <section
-      className={`mb-5 break-inside-avoid rounded-xl border border-gray-200 bg-white shadow-sm sm:mb-6 ${
+      className={`mb-5 break-inside-avoid rounded-xl border border-gray-200 bg-ui-surface shadow-sm sm:mb-6 ${
         compact ? 'p-4 sm:p-5' : 'p-4 sm:p-6'
       }`}
     >
@@ -612,7 +631,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <Field label={label}>
-      <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-1.5 shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20">
+      <div className="flex items-center gap-2 rounded-lg border border-gray-300 bg-ui-surface p-1.5 shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20">
         <input
           type="color"
           value={value}
@@ -656,7 +675,7 @@ function RangeInput({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(Number(e.target.value))}
-      className="h-8 w-full cursor-pointer accent-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+      className="h-8 w-full cursor-pointer accent-ui-accent-solid disabled:cursor-not-allowed disabled:opacity-50"
     />
   );
 }
@@ -670,10 +689,10 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
       aria-label={label}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2 ${
-        checked ? 'bg-indigo-600' : 'bg-gray-300'
+        checked ? 'bg-ui-accent-solid' : 'bg-gray-300'
       }`}
     >
-      <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
+      <span className={`inline-block h-4 w-4 transform rounded-full bg-ui-surface shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
     </button>
   );
 }
@@ -729,7 +748,7 @@ function SegmentedControl<T extends string>({
             aria-checked={active}
             onClick={() => onChange(opt.value)}
             className={`min-w-0 flex-1 truncate rounded-md px-2 py-2 text-sm font-medium transition-colors sm:px-3 sm:py-1.5 ${
-              active ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'
+              active ? 'bg-ui-surface text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             {opt.label}

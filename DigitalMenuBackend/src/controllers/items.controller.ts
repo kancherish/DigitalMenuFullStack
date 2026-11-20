@@ -45,7 +45,13 @@ const isManagedImageUrl = (url: string | null): boolean => {
 export const addItem = asyncHandler(async (req: Request, res: Response) => {
 
   const rawPara = req.body?.para;
-  const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  let para: any;
+  try {
+    para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  } catch {
+    res.status(400).json(new ErrorResponse(400, "Invalid JSON in para"));
+    return;
+  }
   const { name, description, price, category_id, variants, badges , available, imageURL } = para || {};
 
   const parsedImageUrl = parseImageUrl(imageURL);
@@ -92,7 +98,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 
   const priceNum = toNumber(price);
   const hasPrice = priceNum !== null;
-  const badgesToAdd = Array.isArray(badges) && badges.length > 0 && badges;
+  const badgesToAdd = Array.isArray(badges) ? badges : [];
   const hasVariants = Array.isArray(variants) && variants.length > 0;
   let ItemImageUrl = '';
 
@@ -119,7 +125,7 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  const data: any = { name, description: description || null, category_id: categoryIdStr, badges: badgesToAdd || [], imageURL: parsedImageUrl.value, available};
+  const data: any = { name, description: description || null, category_id: categoryIdStr, badges: badgesToAdd, imageURL: parsedImageUrl.value, available};
   if (hasPrice) data.price = priceNum;
   if (hasVariants) data.variants = { create: validatedVariants };
 
@@ -146,7 +152,13 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   
   const rawPara = req.body?.para;
-  const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  let para: any;
+  try {
+    para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  } catch {
+    res.status(400).json(new ErrorResponse(400, "Invalid JSON in para"));
+    return;
+  }
   const { item_id, name, description, price, category_id, variants, badges, removeImage , available, imageURL } = para|| {};
 
   const parsedImageUrl = parseImageUrl(imageURL);
@@ -178,7 +190,6 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   const priceNum = toNumber(price);
   const hasPrice = priceNum !== null;
   const hasVariants = variants !== undefined;
-  const badgesToadd = Array.isArray(badges) && badges.length > 0 && badges;
   const willHaveVariants = hasVariants && Array.isArray(variants) && variants.length > 0;
 
   if (hasPrice && hasVariants) {
@@ -192,10 +203,16 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const updateData: any = {};
-  updateData.available = available;
+  if (available !== undefined) updateData.available = available;
   if (name !== undefined) updateData.name = name;
   if (description !== undefined) updateData.description = description;
-  if (badgesToadd !== false) updateData.badges = badgesToadd;
+  if (badges !== undefined) {
+    if (!Array.isArray(badges)) {
+      res.status(400).json(new ErrorResponse(400, "badges must be an array"));
+      return;
+    }
+    updateData.badges = badges;
+  }
 
   if (name !== undefined) {
 
@@ -246,57 +263,83 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   if (hasVariants) {
     updateData.price = null;
   }
-  let resStatus = { code: 200, msg: "Item Updated successfully" }
+  let resStatus = { code: 200, msg: "Item Updated successfully" };
+  let oldManagedUrlToDelete: string | null = null;
+  let uploadedManagedUrlToCleanup: string | null = null;
 
   if (removeImage || req.file || parsedImageUrl.provided) {
-    if (existingItem.imageURL && isManagedImageUrl(existingItem.imageURL)) {
-      try {
-        await storage.delete(existingItem.imageURL)
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    const oldManagedUrl =
+      existingItem.imageURL && isManagedImageUrl(existingItem.imageURL)
+        ? existingItem.imageURL
+        : null;
 
     if (req.file) {
-      const publicUrl = await uploadImage(req.file.buffer, `itemsImages/${uuidv4()}.webp`)
+      const publicUrl = await uploadImage(req.file.buffer, `itemsImages/${uuidv4()}.webp`);
       if (publicUrl) {
-        updateData.imageURL = String(publicUrl)
+        const newUrl = String(publicUrl);
+        updateData.imageURL = newUrl;
+        uploadedManagedUrlToCleanup = newUrl;
+        if (oldManagedUrl && oldManagedUrl !== newUrl) {
+          oldManagedUrlToDelete = oldManagedUrl;
+        }
       } else {
-        updateData.imageURL = parsedImageUrl.value
-        resStatus.code = 207
-        resStatus.msg = "Item Updated But Failed To Add Image"
+        resStatus.code = 207;
+        resStatus.msg = "Item Updated But Failed To Add Image";
       }
     } else {
-      updateData.imageURL = parsedImageUrl.value
+      updateData.imageURL = parsedImageUrl.value;
+      if (oldManagedUrl && oldManagedUrl !== parsedImageUrl.value) {
+        oldManagedUrlToDelete = oldManagedUrl;
+      }
     }
   }
 
-  const updatedItem = await prisma.$transaction(async (tx) => {
-    const item = await tx.item.update({
-      where: { publicId: itemIdStr },
-      data: updateData,
-    });
+  let updatedItem;
+  try {
+    updatedItem = await prisma.$transaction(async (tx) => {
+      const item = await tx.item.update({
+        where: { publicId: itemIdStr },
+        data: updateData,
+      });
 
-    if (hasPrice) {
-      await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
-    } else if (hasVariants) {
-      await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
-      if (willHaveVariants) {
-        await tx.variant.createMany({
-          data: variants.map((v: any) => ({
-            name: v.name,
-            price: toNumber(v.price)!,
-            item_id: itemIdStr,
-          })),
-        });
+      if (hasPrice) {
+        await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
+      } else if (hasVariants) {
+        await tx.variant.deleteMany({ where: { item_id: itemIdStr } });
+        if (willHaveVariants) {
+          await tx.variant.createMany({
+            data: variants.map((v: any) => ({
+              name: v.name,
+              price: toNumber(v.price)!,
+              item_id: itemIdStr,
+            })),
+          });
+        }
+      }
+
+      return tx.item.findUnique({
+        where: { publicId: itemIdStr },
+        include: { variants: true },
+      });
+    });
+  } catch (error) {
+    if (uploadedManagedUrlToCleanup && isManagedImageUrl(uploadedManagedUrlToCleanup)) {
+      try {
+        await storage.delete(uploadedManagedUrlToCleanup);
+      } catch (cleanupError) {
+        console.log(cleanupError);
       }
     }
+    throw error;
+  }
 
-    return tx.item.findUnique({
-      where: { publicId: itemIdStr },
-      include: { variants: true },
-    });
-  });
+  if (oldManagedUrlToDelete) {
+    try {
+      await storage.delete(oldManagedUrlToDelete);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   res.status(resStatus.code).json(new ApiResponse(resStatus.code, updatedItem, true, resStatus.msg));
 });

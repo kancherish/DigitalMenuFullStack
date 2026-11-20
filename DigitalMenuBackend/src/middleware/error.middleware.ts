@@ -99,16 +99,19 @@ const errorMiddleware = (
       error = new ErrorResponse(500, message);
     }
 
-    res
-      .status(error.statusCode || 500)
-      .json(
-        new ErrorResponse(
-          error.statusCode || 500,
-          error.message || "Internal Server Error",
-          error.errors,
-          error.stack
-        )
-      );
+    const statusCode = error.statusCode || 500;
+    if (statusCode >= 500) {
+      console.error(error);
+    }
+
+    const response = new ErrorResponse(
+      statusCode,
+      error.message || "Internal Server Error",
+      error.errors || []
+    );
+    delete (response as any).stack;
+
+    res.status(statusCode).json(response);
   } catch (err) {
     console.error("CRITICAL ERROR IN ERROR HANDLER:", err);
     if (!res.headersSent) {

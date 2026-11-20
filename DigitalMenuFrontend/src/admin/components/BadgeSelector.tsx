@@ -26,8 +26,8 @@ export function BadgeSelector({ value, onChange }: BadgeSelectorProps) {
   const pill = (active: boolean) =>
     `px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
       active
-        ? 'bg-indigo-600 text-white border-indigo-600'
-        : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
+        ? 'bg-ui-accent-solid text-white border-ui-accent-solid'
+        : 'bg-ui-surface text-slate-600 border-slate-300 hover:bg-slate-50'
     }`;
 
   return (

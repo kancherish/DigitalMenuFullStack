@@ -1,3 +1,5 @@
+import { fontClass, type MenuFont } from "../util/fonts";
+
 interface HeaderProps {
   name: string;
   tagline?: string;
@@ -16,7 +18,7 @@ interface HeaderProps {
   overlayStyle: "gradient" | "solid" | "none";
   overlayIntensity: number; // 0–1
 
-  headingFont: "serif" | "sans" | "display";
+  headingFont: MenuFont;
   radius: string;
 
   statusBadge?: {
@@ -100,11 +102,7 @@ const sizeStyles = {
   },
 } as const;
 
-const fontStyles = {
-  serif: "font-serif",
-  sans: "font-sans",
-  display: "font-display",
-} as const;
+
 
 const logoShapeStyles = {
   circle: "rounded-full",
@@ -270,7 +268,7 @@ export function Header({
   const titleEl = (
     <h1
       className={`
-        ${fontStyles[headingFont]}
+        ${fontClass(headingFont)}
         ${title}
         font-semibold
         tracking-[-0.025em]

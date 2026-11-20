@@ -24,7 +24,8 @@ export interface RestaurantConfig {
   logoShape?: 'circle' | 'rounded' | 'square';
   overlayStyle?: 'gradient' | 'solid' | 'none';
   overlayIntensity?: number; // 0–1
-  headingFont?: 'serif' | 'sans' | 'display';
+  headingFont?: 'serif' | 'sans' | 'display' | 'inter' | 'poppins' | 'montserrat' | 'nunito' | 'playfair' | 'lora' | 'merriweather';
+  bodyFont?: 'serif' | 'sans' | 'display' | 'inter' | 'poppins' | 'montserrat' | 'nunito' | 'playfair' | 'lora' | 'merriweather';
   headerAlign?: 'center' | 'left';
   headerSize?: 'compact' | 'default' | 'large';
   headerAccentPanel?: boolean;

@@ -222,7 +222,11 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-  const { refreshToken } = req.body?.para || {};
+  const authHeader = req.headers.authorization;
+  const headerToken = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  const { refreshToken: bodyToken } = req.body?.para || {};
+  const refreshToken = bodyToken || headerToken;
+
   if (refreshToken) {
     const decoded = verifyRefreshToken(refreshToken);
     if (decoded) {
@@ -326,10 +330,9 @@ export const getAllAdmins = asyncHandler(async (req: Request, res: Response) => 
 
 // Delete a restaurant admin (and its associated restaurant)
 export const deleteAdmin = asyncHandler(async (req: Request, res: Response) => {
-  let { publicId } = req.params; // assumes you pass admin publicId in URL
-  publicId = String(publicId)
+  const { publicId } = req.params; // assumes you pass admin publicId in URL
 
-  if (!publicId && typeof publicId) {
+  if (!publicId || typeof publicId !== "string") {
     res.status(400).json(new ErrorResponse(400, 'Admin publicId is required'));
     return;
   }

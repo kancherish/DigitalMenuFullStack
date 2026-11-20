@@ -35,6 +35,13 @@
     serif
     sans 
     display
+    inter
+    poppins
+    montserrat
+    nunito
+    playfair
+    lora
+    merriweather
   }
 
   enum headerAlignN{
@@ -149,6 +156,7 @@
     overlayStyle overlayStyleN @default(solid)
     overlayIntensity Float  @default(1)
     headingFont headingFontN @default(sans)
+    bodyFont headingFontN @default(sans)
     headerAlign headerAlignN @default(center)
     headerSize  headerSizeN @default(compact)
     headerAccentPanel Boolean @default(true)

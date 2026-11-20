@@ -46,8 +46,14 @@ export const verifyRestaurantOwnership = (req: Request, res: Response, next: Nex
 };
 
 export const verifyCategoryOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const rawPara = req.body?.para 
-  const para =typeof req.body?.para === 'string' ? JSON.parse(rawPara) : rawPara;
+  const rawPara = req.body?.para;
+  let para: any;
+  try {
+    para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  } catch {
+    res.status(400).json(new ErrorResponse(400, 'Invalid JSON in para'));
+    return;
+  }
 
   const categoryId = para?.category_id || req.params.categoryid;
   if (!categoryId) {
@@ -70,8 +76,14 @@ export const verifyCategoryOwnership = async (req: Request, res: Response, next:
 };
 
 export const verifyItemOwnership = async (req: Request, res: Response, next: NextFunction) => {
-  const rawPara = req.body?.para || req.params;
-  const para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  const rawPara = req.body?.para ?? req.params;
+  let para: any;
+  try {
+    para = typeof rawPara === 'string' ? JSON.parse(rawPara) : rawPara;
+  } catch {
+    res.status(400).json(new ErrorResponse(400, 'Invalid JSON in para'));
+    return;
+  }
 
   const { item_id } = para ;
   if (!item_id) {

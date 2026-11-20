@@ -9,6 +9,7 @@ import { getCategoriesAndItems, getRestaurantInfo } from './db/db';
 import ItemCard from './component/Item';
 import { CategoryTabs, CategoryDropdown } from './component/CatgoriesNavs';
 import { getCategoryIcon, useThemeVars } from './util/util';
+import { fontClass } from './util/fonts';
 import { downloadMenuPdf } from './util/menuPdf';
 import { useParams } from 'react-router-dom';
 
@@ -125,8 +126,11 @@ export default function DigitalMenu() {
   // ERROR SCREEN
   if (configError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-slate-500">Failed to load restaurant data.</p>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center gap-4"
+        style={{ ...themeVars, backgroundColor: 'var(--surface, #f8fafc)' }}
+      >
+        <p style={{ color: 'var(--body-text, #334155)' }}>Failed to load restaurant data.</p>
         <button
           onClick={() => {
             setConfigError(false);
@@ -134,7 +138,11 @@ export default function DigitalMenu() {
             setCategoriesAndItems([]);
             setCategoryConfigRetryCount((c) => c + 1);
           }}
-          className="px-6 py-2 rounded-lg bg-slate-700 text-white font-semibold"
+          className="px-6 py-2 font-semibold text-white"
+          style={{
+            backgroundColor: 'var(--accent, #0ea5e9)',
+            borderRadius: 'var(--radius, 0.5rem)',
+          }}
         >
           Try again
         </button>
@@ -142,8 +150,11 @@ export default function DigitalMenu() {
     );
   }
 
+  const bodyFont = restaurantConfig!.bodyFont || "sans";
+  const headingFont = restaurantConfig!.headingFont || "sans";
+
   return (
-    <div className="min-h-screen min-h-dvh font-sans flex flex-col" style={themeVars}>
+    <div className={`min-h-screen min-h-dvh flex flex-col ${fontClass(bodyFont)}`} style={themeVars}>
       <div
         className="fixed inset-0 -z-10"
         style={{ backgroundColor: 'var(--surface, #f8fafc)' }}
@@ -158,7 +169,7 @@ export default function DigitalMenu() {
         tagline={restaurantConfig!.tagline || ''}
         textColor={restaurantConfig!.headerText ?? 'white'}
         showDivider={restaurantConfig!.showDivider}
-        headingFont={restaurantConfig!.headingFont || "sans"}
+        headingFont={headingFont}
         logoShape={restaurantConfig!.logoShape || "circle"}
         overlayStyle={restaurantConfig!.overlayStyle || "gradient"}
         overlayIntensity={restaurantConfig!.overlayIntensity ?? 1}
@@ -309,7 +320,7 @@ export default function DigitalMenu() {
               // SEARCH RESULTS VIEW
               <>
                 <h2
-                  className="font-serif text-3xl font-semibold mb-6"
+                  className={`${fontClass(headingFont)} text-3xl font-semibold mb-6`}
                   style={{ color: 'var(--body-text)' }}
                 >
                   Search results for "{searchQuery}"
@@ -381,10 +392,10 @@ export default function DigitalMenu() {
                         >
                           <span className="flex min-w-0 items-center gap-2">
                             <Icon size={20} style={{ color: 'var(--accent)' }} />
-                            <h2
-                              className="truncate font-serif text-2xl font-semibold"
-                              style={{ color: 'var(--body-text)' }}
-                            >
+                          <h2
+                            className={`${fontClass(headingFont)} text-2xl font-semibold`}
+                            style={{ color: 'var(--body-text)' }}
+                          >
                               {category.name}
                             </h2>
                             {restaurantConfig!.showItemCount && (
@@ -414,10 +425,10 @@ export default function DigitalMenu() {
                           }}
                         >
                           <Icon size={20} style={{ color: 'var(--accent)' }} />
-                          <h2
-                            className="font-serif text-2xl font-semibold"
-                            style={{ color: 'var(--body-text)' }}
-                          >
+                            <h2
+                              className={`truncate ${fontClass(headingFont)} text-2xl font-semibold`}
+                              style={{ color: 'var(--body-text)' }}
+                            >
                             {category.name}
                           </h2>
                           {restaurantConfig!.showItemCount && (
@@ -470,7 +481,7 @@ export default function DigitalMenu() {
               // NORMAL CATEGORY VIEW
               <>
                 <h2
-                  className="font-serif text-3xl font-semibold mb-6"
+                  className={`${fontClass(headingFont)} text-3xl font-semibold mb-6`}
                   style={{ color: 'var(--body-text)' }}
                 >
                   {activeCategoryData?.name}

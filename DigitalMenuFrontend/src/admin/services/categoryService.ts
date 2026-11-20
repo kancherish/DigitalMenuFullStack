@@ -6,7 +6,8 @@ export const categoryService = {
     const params = new URLSearchParams();
     if (includeItems) params.set('incItem', 'true');
 
-    const res = await apiFetch(`/category/get/${restaurantId}/${params.toString()}`);
+    const query = params.toString();
+    const res = await apiFetch(`/category/get/${restaurantId}${query ? `?${query}` : ''}`);
     const data: ApiResponse<Category[]> = await res.json();
 
     if (!res.ok || !data.success) throw new Error(data.message || 'Failed to fetch categories');

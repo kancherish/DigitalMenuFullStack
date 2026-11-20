@@ -1,5 +1,6 @@
 // App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './admin/theme/ThemeProvider';
 import { AuthProvider } from './admin/auth/AuthProvider';
 import { ProtectedRoute } from './admin/auth/ProtectedRoute';
 import { LoginPage } from './admin/pages/LoginPage';
@@ -10,26 +11,27 @@ import { ItemsPage } from './admin/pages/ItemPage';
 import { AdminLayout } from './admin/pages/AdminLayout';
 import Home from './Home';
 
-
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/admin/login" element={<LoginPage />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <Routes>
+            <Route path="/admin/login" element={<LoginPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<SettingsPage />} />
-              <Route path="categories" element={<CategoriesPage />} />
-              <Route path="items" element={<ItemsPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<SettingsPage />} />
+                <Route path="categories" element={<CategoriesPage />} />
+                <Route path="items" element={<ItemsPage />} />
+              </Route>
             </Route>
-          </Route>
 
-          <Route path='/:RestaurantId' element={<DigitalMenu />} />
-          <Route path='/' element={<Home />} />
-        </Routes>
-      </AuthProvider>
+            <Route path="/:RestaurantId" element={<DigitalMenu />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

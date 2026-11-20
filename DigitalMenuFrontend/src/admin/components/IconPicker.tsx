@@ -52,7 +52,7 @@ export function IconPicker({ value, onChange, className = '' }: IconPickerProps)
 
       {/* Dropdown list */}
       {isOpen && (
-        <ul className="absolute z-10 mt-1 w-full bg-white border border-slate-200 rounded-md shadow-lg max-h-60 overflow-auto py-1">
+        <ul className="absolute z-10 mt-1 w-full bg-ui-surface border border-slate-200 rounded-md shadow-lg max-h-60 overflow-auto py-1">
           <li
             className="px-3 py-2 hover:bg-slate-100 cursor-pointer flex items-center gap-2"
             onClick={() => {

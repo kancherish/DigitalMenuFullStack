@@ -48,7 +48,14 @@ export type overlayStyleN = (typeof overlayStyleN)[keyof typeof overlayStyleN]
 export const headingFontN = {
   serif: 'serif',
   sans: 'sans',
-  display: 'display'
+  display: 'display',
+  inter: 'inter',
+  poppins: 'poppins',
+  montserrat: 'montserrat',
+  nunito: 'nunito',
+  playfair: 'playfair',
+  lora: 'lora',
+  merriweather: 'merriweather'
 } as const
 
 export type headingFontN = (typeof headingFontN)[keyof typeof headingFontN]

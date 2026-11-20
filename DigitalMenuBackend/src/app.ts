@@ -20,6 +20,8 @@ const STATIC_ORIGINS = new Set([
   "http://localhost:5173",
 ])
 
+app.set("trust proxy", 1);
+
 // let allowedOrigins: Set<string|null> = new Set([""]);
 
 // export async function refreshOrigins() {
@@ -41,7 +43,7 @@ const corsError = (message: string) => {
 app.use(cors({
   origin(origin, callback) {
     if (!origin) {
-      return callback(corsError("Origin header is required"));
+      return callback(null, true);
     }
 
     if (!STATIC_ORIGINS.has(origin)) {
@@ -58,12 +60,14 @@ app.use(helmet({
   crossOriginResourcePolicy: false
 }));
 
+app.set("trust proxy", 1);
+
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // Time window (e.g., 15 minutes)
-  max: 100, // Limit each IP to 100 requests per `window`
+  windowMs: 15 * 60 * 1000,
+  limit: 1000,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
   message: "Too many requests, please try again later.",
-  standardHeaders: 'draft-8', // Returns standard RateLimit headers
-  legacyHeaders: false, // Disables old `X-RateLimit-*` headers
 });
 
 // Apply to all requests
@@ -87,7 +91,7 @@ app.use("/api/v1/item", itemRouter)
 //fallback for invalid api url
 app.use((req, res) => {
   console.log(req.url)
-  res.json(new ErrorResponse(
+  res.status(404).json(new ErrorResponse(
     404,
     "INVALID API",
   ))

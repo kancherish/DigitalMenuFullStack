@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Upload, ImageOff, X, Link2 } from "lucide-react";
 
 const inputStyles =
-  'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500';
+  'w-full rounded-lg border border-gray-300 bg-ui-surface px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500';
 
 export default function ItemForm({ values, onChange, onSubmit, onCancel, submitLabel, submitting }: ItemFormProps) {
 
@@ -60,7 +60,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
   return (
     <div className="space-y-5 bg-slate-50 rounded-xl border border-slate-200 p-5">
       {/* Availability */}
-      <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2.5">
+      <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-ui-surface px-3 py-2.5">
         <div>
           <span className="text-sm font-medium text-gray-700">Available</span>
           <p className="text-xs text-slate-500">Turn off if this item is temporarily out of stock</p>
@@ -95,7 +95,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
               onClick={() => handleImageModeChange('upload')}
               className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                 values.imageMode === 'upload'
-                  ? 'bg-white text-slate-900 shadow-sm'
+                  ? 'bg-ui-surface text-slate-900 shadow-sm'
                   : 'text-slate-500 hover:text-slate-700'
               }`}
             >
@@ -106,7 +106,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
               onClick={() => handleImageModeChange('url')}
               className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
                 values.imageMode === 'url'
-                  ? 'bg-white text-slate-900 shadow-sm'
+                  ? 'bg-ui-surface text-slate-900 shadow-sm'
                   : 'text-slate-500 hover:text-slate-700'
               }`}
             >
@@ -166,7 +166,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
             type="button"
             onClick={() => update('pricingMode', 'price')}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-              values.pricingMode === 'price' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              values.pricingMode === 'price' ? 'bg-ui-surface text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Single price
@@ -175,7 +175,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
             type="button"
             onClick={() => update('pricingMode', 'variants')}
             className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-              values.pricingMode === 'variants' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              values.pricingMode === 'variants' ? 'bg-ui-surface text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Variants
@@ -239,7 +239,7 @@ export default function ItemForm({ values, onChange, onSubmit, onCancel, submitL
           type="button"
           onClick={onSubmit}
           disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-lg bg-ui-accent-solid px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-ui-accent-solid-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? 'Saving...' : submitLabel}
         </button>
@@ -261,11 +261,11 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 ${
-        checked ? 'bg-indigo-600' : 'bg-gray-300'
+        checked ? 'bg-ui-accent-solid' : 'bg-gray-300'
       }`}
     >
       <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+        className={`inline-block h-4 w-4 transform rounded-full bg-ui-surface shadow transition-transform ${
           checked ? 'translate-x-6' : 'translate-x-1'
         }`}
       />

@@ -1,46 +1,27 @@
 export default function LoadingScreen() {
-
   return (
-
-    <div className="min-h-dvh flex flex-col items-center justify-center bg-white">
-
-      {/* OUTER CIRCLE */}
+    <div
+      className="min-h-dvh flex flex-col items-center justify-center"
+      style={{ backgroundColor: 'var(--loader-bg)' }}
+    >
       <div
-        className="
-          w-[72px]
-          h-[72px]
-          rounded-full
-          bg-[#A9B4C2]
-          border-2
-          border-[#A9B4C2]
-          flex
-          items-center
-          justify-center
-        "
+        className="flex h-[72px] w-[72px] items-center justify-center rounded-full border-2"
+        style={{
+          backgroundColor: 'var(--loader-surface)',
+          borderColor: 'var(--loader-surface)',
+        }}
       >
-
-        {/* SPINNER */}
         <div
-          className="
-            w-7
-            h-7
-            rounded-full
-            border-[2.5px]
-            border-black/10
-            border-t-[#EEF1EF]
-            animate-spin
-          "
+          className="h-7 w-7 animate-spin rounded-full border-[2.5px]"
+          style={{
+            borderColor: 'var(--loader-track)',
+            borderTopColor: 'var(--loader-head)',
+          }}
         />
-
       </div>
-
-      {/* TEXT */}
-      <div className="mt-4 text-slate-600 font-medium">
+      <div className="mt-4 font-medium" style={{ color: 'var(--loader-text)' }}>
         Loading...
       </div>
-
     </div>
-
   );
-
-}   
+}

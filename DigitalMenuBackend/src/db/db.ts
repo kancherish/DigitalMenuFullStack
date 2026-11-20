@@ -1,16 +1,11 @@
 import { prisma } from "../lib/prisma.js";
-import { asyncHandler } from "../utils/asyncHandeler.js";
 
-export const connectdb = async()=>{
-   try {
-     await prisma.$connect();
-     return true;
-   } catch (error) {
-    console.log(error)
-   } 
-}
+export const connectdb = async () => {
+  await prisma.$connect();
+  return true;
+};
 
-export const disconnect = asyncHandler(async()=>{
+export const disconnect = async () => {
   await prisma.$disconnect();
   return true;
-})
+};

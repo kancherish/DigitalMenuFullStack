@@ -30,14 +30,16 @@ export const getRestaurantInfo = asyncHandler(async (req: Request, res: Response
     return;
   }
 
-  res.status(200).json(new ApiResponse(200, restaurant, true, "Restaurant fetched successfully"));
+  const { id, adminId, ...safeRestaurant } = restaurant;
+
+  res.status(200).json(new ApiResponse(200, safeRestaurant, true, "Restaurant fetched successfully"));
 });
 
 export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Response) => {
 
   const { restaurant_id, name, tagline, primaryColor, accentColor, tabStyle, logoUrl, backgroundUrl, roundness, showSearch,
     showItemCount, stickyNav, continuousCollapsible, domain, showDivider, headerText, defaultImageUrl, showItemImage, headerLayout,
-    logoShape, overlayStyle, overlayIntensity, headingFont, headerAlign, headerSize, categoryVariant,
+    logoShape, overlayStyle, overlayIntensity, headingFont, bodyFont, headerAlign, headerSize, categoryVariant,
     categorySize, itemSize, itemImagePosition, itemImageShape, currencySymbol, surfaceColor ,  boardEnabled,
   boardText, BodyTextColor, headerAccentPanel, headerPanelIntensity, headerNameGradient,
   headerUppercaseTagline, headerShimmer, headerNameColor, headerTaglineColor,
@@ -69,7 +71,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
     ; tabStyle?: NavStyle; roundness?: string; showDivider?: boolean; headerText?: string;
     showSearch?: boolean, showItemCount?: boolean, stickyNav?: boolean, continuousCollapsible?: boolean, domain?: string, showItemImage?: boolean
     defaultImageUrl?: string, headerLayout?: headerLayoutN, logoShape?: logoShapeN, overlayStyle?: overlayStyleN, overlayIntensity?: number,
-    headingFont?: headingFontN, headerAlign?: headerAlignN, headerSize?: headerSizeN, categoryVariant?: categoryVariantN,
+    headingFont?: headingFontN, bodyFont?: headingFontN, headerAlign?: headerAlignN, headerSize?: headerSizeN, categoryVariant?: categoryVariantN,
     categorySize?: categorySizeN, itemSize?: itemSizeN, itemImagePosition?: itemImagePositionN, itemImageShape?: itemImageShapeN,
     currencySymbol?: string, surfaceColor?: string; boardEnabled?: boolean;
     boardText?: string;BodyTextColor?:string;
@@ -103,6 +105,7 @@ export const updateRestaurantInfo = asyncHandler(async (req: Request, res: Respo
   if (overlayStyle !== undefined) updateData.overlayStyle = overlayStyle;
   if (overlayIntensity !== undefined) updateData.overlayIntensity = overlayIntensity;
   if (headingFont !== undefined) updateData.headingFont = headingFont;
+  if (bodyFont !== undefined) updateData.bodyFont = bodyFont;
   if (headerAlign !== undefined) updateData.headerAlign = headerAlign;
   if (headerSize !== undefined) updateData.headerSize = headerSize;
   if (categorySize !== undefined) updateData.categorySize = categorySize;

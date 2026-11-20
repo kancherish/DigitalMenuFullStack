@@ -112,8 +112,10 @@ const ItemCard = ({
 
   const thumbnail = (showImage && (initialSrc || defaultImage)) && (
     <div
-      className={`relative shrink-0 overflow-hidden bg-slate-100 ring-1 ring-black/5 ${image} ${imageShapeStyles[imageShape]}`}
+      className={`relative shrink-0 overflow-hidden border ${image} ${imageShapeStyles[imageShape]}`}
       style={{
+        backgroundColor: "color-mix(in srgb, var(--surface, #fff) 88%, var(--body-text, #334155))",
+        borderColor: "color-mix(in srgb, var(--body-text, #334155) 14%, transparent)",
         borderRadius:
           imageShape === "rounded" ? "calc(var(--radius, 1rem) - 0.375rem)" : undefined,
       }}
@@ -164,7 +166,7 @@ const ItemCard = ({
             {itemStructure.name}
           </h3>
 
-          {itemStructure.price && !hasVariants && (
+          {itemStructure.price != null && !hasVariants && (
             <span className={`font-bold whitespace-nowrap tabular-nums ${price}`} style={{ color: 'var(--body-text)' }}>
               {currencySymbol}
               {itemStructure.price}

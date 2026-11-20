@@ -6,7 +6,8 @@ import { diffChanged } from '../../util/util';
 import ItemForm from './ItemForm';
 import type { Category, Item, ItemFormValues, ItemPayload } from '../types';
 import { emptyItemForm } from '../components/ItemFormValues';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, UtensilsCrossed } from 'lucide-react';
+import { Alert, Button, EmptyState, PageHeader, Spinner } from '../components/ui';
 
 function itemToFormValues(item: Item): ItemFormValues {
   const hasVariants = item.variants.length > 0;
@@ -90,6 +91,22 @@ function buildNewItemPayload(form: ItemFormValues, categoryId: string) {
   };
 }
 
+function validatePricing(form: ItemFormValues): string | null {
+  if (form.pricingMode === 'price') {
+    if (form.price.trim() === '') return 'Enter a price (use 0 for free).';
+    const price = Number(form.price);
+    if (!Number.isFinite(price) || price < 0) return 'Enter a valid price.';
+    return null;
+  }
+
+  const variants = form.variants.filter((v) => v.name.trim());
+  if (variants.length === 0) return 'Add at least one variant with a name and price.';
+  if (variants.some((v) => v.price.trim() === '' || !Number.isFinite(Number(v.price)) || Number(v.price) < 0)) {
+    return 'Enter a valid price for every variant.';
+  }
+  return null;
+}
+
 export function ItemsPage() {
   const { admin } = useAuth();
   const restaurantId = admin?.restaurant.publicId;
@@ -157,6 +174,11 @@ export function ItemsPage() {
 
   async function handleAdd() {
     if (!activeCategoryId || !addForm.name.trim()) return;
+    const pricingError = validatePricing(addForm);
+    if (pricingError) {
+      setError(pricingError);
+      return;
+    }
 
     setSavingAdd(true);
     setError(null);
@@ -185,6 +207,11 @@ export function ItemsPage() {
 
   async function handleSaveEdit(item: Item) {
     if (!editForm) return;
+    const pricingError = validatePricing(editForm);
+    if (pricingError) {
+      setError(pricingError);
+      return;
+    }
     const changes = buildItemChanges(item, editForm);
     const hasJsonChanges = Object.keys(changes).length > 0;
     const hasImageChange = editForm.imageFile !== null || editForm.removeImage;
@@ -238,40 +265,44 @@ export function ItemsPage() {
     }
   }
 
+  const currency = admin?.restaurant.currencySymbol || '₹';
+
   if (loadingCategories) {
-    return (
-      <div className="max-w-3xl animate-pulse space-y-4">
-        <div className="h-5 w-32 rounded bg-gray-200" />
-        <div className="h-10 rounded-lg bg-gray-100" />
-        <div className="h-20 rounded-lg bg-gray-100" />
-      </div>
-    );
+    return <Spinner label="Loading menu items..." />;
   }
 
   if (categories.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed border-slate-300 py-10 text-center text-sm text-slate-500">
-        No categories yet — add one on the Categories page first.
-      </div>
+      <EmptyState
+        icon={<UtensilsCrossed size={20} />}
+        title="No categories yet"
+        description="Add a category first, then come back to add items to your menu."
+      />
     );
   }
 
   return (
-    <div className="max-w-3xl">
-      <div className="mb-6">
-        <h1 className="text-lg font-semibold text-slate-900">Menu Items</h1>
-        <p className="mt-1 text-sm text-slate-500">Manage what's on your menu, by category.</p>
-      </div>
+    <div>
+      <PageHeader
+        title="Menu Items"
+        description="Manage what's on your menu, by category."
+        action={
+          <span className="rounded-full border border-slate-200 bg-ui-surface px-3 py-1 text-xs font-medium text-slate-600">
+            {items.length} {items.length === 1 ? 'item' : 'items'}
+          </span>
+        }
+      />
 
-      <div className="mb-6 flex gap-2 overflow-x-auto border-b border-slate-200">
+      <div className="scrollbar-hide mb-6 flex gap-1.5 overflow-x-auto rounded-xl border border-slate-200 bg-ui-surface p-1.5 shadow-sm">
         {categories.map((cat) => (
           <button
             key={cat.publicId}
+            type="button"
             onClick={() => handleCategoryChange(cat.publicId)}
-            className={`whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
+            className={`whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-medium transition-colors ${
               activeCategoryId === cat.publicId
-                ? 'border-indigo-600 text-indigo-700'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
+                ? 'bg-ui-accent-solid text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             {cat.name}
@@ -279,20 +310,13 @@ export function ItemsPage() {
         ))}
       </div>
 
-      {error && (
-        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
-          {error}
-        </div>
-      )}
+      {error && <Alert>{error}</Alert>}
 
       {!adding ? (
-        <button
-          onClick={() => setAdding(true)}
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-        >
+        <Button type="button" variant="secondary" onClick={() => setAdding(true)} className="mb-6">
           <Plus size={16} />
           Add item
-        </button>
+        </Button>
       ) : (
         <div className="mb-6">
           <ItemForm
@@ -310,18 +334,15 @@ export function ItemsPage() {
       )}
 
       {loadingItems ? (
-        <div className="space-y-3">
-          <div className="h-20 animate-pulse rounded-lg bg-gray-100" />
-          <div className="h-20 animate-pulse rounded-lg bg-gray-100" />
-        </div>
+        <Spinner label="Loading items..." />
+      ) : items.length === 0 ? (
+        <EmptyState
+          icon={<UtensilsCrossed size={20} />}
+          title="No items in this category"
+          description="Add your first item to this category to make it appear on your menu."
+        />
       ) : (
         <div className="space-y-3">
-          {items.length === 0 && (
-            <div className="rounded-lg border border-dashed border-slate-300 py-8 text-center text-sm text-slate-500">
-              No items in this category
-            </div>
-          )}
-
           {items.map((item) => {
             const isEditing = editingId === item.publicId;
 
@@ -346,69 +367,67 @@ export function ItemsPage() {
             return (
               <div
                 key={item.publicId}
-                className={`flex items-start justify-between gap-4 rounded-lg border bg-white p-4 shadow-sm transition-opacity ${
-                  item.available === false ? 'border-slate-200 opacity-60' : 'border-slate-200'
+                className={`rounded-xl border bg-ui-surface p-4 shadow-sm transition-colors hover:border-slate-300 ${
+                  item.available === false ? 'border-slate-200 opacity-75' : 'border-slate-200'
                 }`}
               >
-                <div className="flex min-w-0 items-start gap-3">
-                  {imageUrl && (
-                    <div className="relative shrink-0">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex min-w-0 items-start gap-3">
+                    {imageUrl && (
                       <img
                         src={imageUrl}
                         alt={item.name}
-                        className={`h-16 w-16 rounded-md border border-slate-200 object-cover ${
+                        className={`h-16 w-16 shrink-0 rounded-lg border border-slate-200 object-cover ${
                           item.available === false ? 'grayscale' : ''
                         }`}
                       />
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-slate-900">{item.name}</span>
-                      {item.available === false && (
-                        <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                          Sold out
-                        </span>
-                      )}
-                    </div>
-                    {item.description && (
-                      <div className="mt-0.5 text-xs text-slate-500">{item.description}</div>
                     )}
-                    <div className="mt-1 text-sm text-slate-700">
-                      {item.variants.length > 0
-                        ? item.variants.map((v) => `${v.name}: ₹${v.price}`).join(' · ')
-                        : `₹${item.price}`}
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-semibold text-slate-900">{item.name}</span>
+                        {item.available === false && (
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                            Sold out
+                          </span>
+                        )}
+                      </div>
+                      {item.description && (
+                        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">
+                          {item.description}
+                        </p>
+                      )}
+                      <div className="mt-2 text-sm font-medium text-slate-800">
+                        {item.variants.length > 0
+                          ? item.variants.map((v) => `${v.name}: ${currency}${v.price}`).join(' · ')
+                          : `${currency}${item.price ?? 0}`}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex shrink-0 flex-col items-end gap-2">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => startEdit(item)}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700"
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <div className="flex items-center gap-1">
+                      <Button type="button" variant="ghost" onClick={() => startEdit(item)}>
+                        <Pencil size={14} />
+                        Edit
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="danger"
+                        onClick={() => handleDelete(item.publicId)}
+                        disabled={deletingId === item.publicId}
+                      >
+                        <Trash2 size={14} />
+                        {deletingId === item.publicId ? 'Deleting...' : 'Delete'}
+                      </Button>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleQuickToggleAvailable(item)}
                     >
-                      <Pencil size={14} />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.publicId)}
-                      disabled={deletingId === item.publicId}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
-                    >
-                      <Trash2 size={14} />
-                      {deletingId === item.publicId ? 'Deleting...' : 'Delete'}
-                    </button>
+                      {item.available === false ? 'Mark available' : 'Mark sold out'}
+                    </Button>
                   </div>
-                  <button
-                    onClick={() => handleQuickToggleAvailable(item)}
-                    className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
-                      item.available === false
-                        ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                        : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
-                    }`}
-                  >
-                    {item.available === false ? 'Mark available' : 'Mark sold out'}
-                  </button>
                 </div>
               </div>
             );

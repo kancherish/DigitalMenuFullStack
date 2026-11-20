@@ -32,17 +32,23 @@ export const generateRefreshToken = (payload: TokenPayload): string => {
 };
 
 export const verifyAccessToken = (token: string): TokenPayload | null => {
-  try { 
-    const decoded = jwt.verify(token, JWT_ACCESS_SECRET as string) as TokenPayload;
-    return decoded
-   }
-  catch { return null; }
+  try {
+    const decoded = jwt.verify(token, JWT_ACCESS_SECRET as string, {
+      algorithms: [JWT_ALGO as Algorithm],
+    }) as TokenPayload;
+    return decoded;
+  } catch {
+    return null;
+  }
 };
 
 export const verifyRefreshToken = (token: string): TokenPayload | null => {
-  try { 
-    const decoded = jwt.verify(token, JWT_REFRESH_SECRET as string) as TokenPayload;
-    return decoded 
- }
-  catch { return null; }
+  try {
+    const decoded = jwt.verify(token, JWT_REFRESH_SECRET as string, {
+      algorithms: [JWT_ALGO as Algorithm],
+    }) as TokenPayload;
+    return decoded;
+  } catch {
+    return null;
+  }
 };

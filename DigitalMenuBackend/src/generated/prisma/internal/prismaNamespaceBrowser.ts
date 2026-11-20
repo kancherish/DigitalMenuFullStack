@@ -112,6 +112,7 @@ export const RestaurantScalarFieldEnum = {
   overlayStyle: 'overlayStyle',
   overlayIntensity: 'overlayIntensity',
   headingFont: 'headingFont',
+  bodyFont: 'bodyFont',
   headerAlign: 'headerAlign',
   headerSize: 'headerSize',
   headerAccentPanel: 'headerAccentPanel',

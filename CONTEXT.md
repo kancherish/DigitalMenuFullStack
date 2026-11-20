@@ -110,7 +110,7 @@ DigitalMenuFullStack/
 | Area | Stack |
 |---|---|
 | Backend | Node ESM, Express 5, TypeScript, Prisma 7 (`prisma-client` generator), PostgreSQL via `@prisma/adapter-pg`, JWT (`jsonwebtoken`), bcryptjs, helmet, express-rate-limit, multer + sharp, AWS S3 SDK optional, uuid |
-| Customer/admin frontend | React 19, TypeScript, Vite (`rolldown-vite` override), Tailwind CSS v4, react-router-dom 7, lucide-react, jsPDF |
+| Customer/admin frontend | React 19, TypeScript, Vite (`rolldown-vite` override), Tailwind CSS v4, react-router-dom 7, lucide-react, jsPDF, qrcode |
 | Super admin | React 19, TypeScript, Vite, Tailwind v4, axios listed but **fetch is used**; react-router-dom listed but **not used** |
 | Images | Local disk (`UPLOAD_ROOT`, public base `UPLOAD_PUBLIC_BASE`) or S3 (`STORAGE_TYPE=s3`) |
 
@@ -437,6 +437,7 @@ No `createdAt`/`updatedAt` timestamps on any model.
 | `overlayStyle` | `overlayStyleN` default `solid` |
 | `overlayIntensity` | Float default `1` |
 | `headingFont` | `headingFontN` default `sans` |
+| `bodyFont` | `headingFontN` default `sans` |
 | `headerAlign` | `headerAlignN` default `center` |
 | `headerSize` | `headerSizeN` default `compact` |
 | `headerAccentPanel`, `headerNameGradient`, `headerUppercaseTagline`, `headerShimmer` | Boolean default `true` |
@@ -486,7 +487,7 @@ Enums:
 - `headerLayoutN`: `banner`, `minimal`, `split`
 - `logoShapeN`: `circle`, `rounded`, `square`
 - `overlayStyleN`: `gradient`, `solid`, `none`
-- `headingFontN`: `serif`, `sans`, `display`
+- `headingFontN`: `serif`, `sans`, `display`, `inter`, `poppins`, `montserrat`, `nunito`, `playfair`, `lora`, `merriweather`
 - `headerAlignN`: `center`, `left`
 - `headerSizeN`: `compact`, `default`, `large`
 - `categoryVariantN`: `pill`, `underline`
@@ -522,8 +523,12 @@ Untracked at time of writing:
    `Item_category_id_name_key` (`category_id`, `name`).
 7. `20261117130000_continuous_nav_style` — adds the `continuous` value to the `NavStyle`
    enum.
+8. `20261120120000_font_options` — extends `headingFontN` with `inter`, `poppins`,
+   `montserrat`, `nunito`, `playfair`, `lora`, `merriweather` and adds
+   `Restaurant.bodyFont` (`headingFontN`, default `sans`).
 
-All 7 migrations are applied to the local database. Apply/generate from
+Migrations through 7 are applied to the local database; migration 8 is added by this change
+and must be applied to existing databases. Apply/generate from
 `DigitalMenuBackend/src`, e.g. `npx prisma migrate dev` / `npx prisma migrate deploy` /
 `npx prisma generate`.
 
@@ -624,7 +629,9 @@ Vercel.
   `showLogo`.
 - `overlayStyle`: `gradient` | `solid` | `none`; `overlayIntensity` 0–1.
 - `backgroundPositionX/Y` percentages; `backgroundZoom` (scale).
-- `headingFont`: `serif` (Fraunces), `sans`, `display` (`font-display` utility).
+- heading/body font classes from `util/fonts.ts` (`font-sans`, `font-serif`, `font-display`,
+  `font-inter`, `font-poppins`, `font-montserrat`, `font-nunito`, `font-playfair`,
+  `font-lora`, `font-merriweather`), loaded via Google Fonts in `index.css`.
 - `accentPanel` + `panelIntensity`; name gradient flag/from/to/angle; `nameColor`,
   `taglineColor`; `uppercaseTagline`; `shimmer`.
 - Optional unused-by-menu `statusBadge` and `cta` props.
@@ -643,8 +650,8 @@ Vercel.
 - Sold-out items: image grayscale, dark “Sold out” overlay, card opacity 60%.
 - Badges: diet marks (`veg`, `non-veg`) with fixed FSSAI-style colors; tags
   `chef-special`, `spicy`, `bestseller` with fixed colors/icons.
-- Price shown only when `item.price` is truthy and there are no variants (so a price of
-  `0` is hidden).
+- Price shown when `item.price != null` and there are no variants, so an explicit `0` renders.
+  The admin form validates blank price/variant fields before save instead of coercing them to `0`.
 - Variants render as chips with name + price.
 - Card border uses full `accentColor` (not a translucent variant); border radius
   `--radius`; background `--surface`.
@@ -660,7 +667,9 @@ Vercel.
 `color-mix` from `--body-text`. Text: “Please inform your server of any dietary
 restrictions or allergies”.
 
-`Loader.tsx`: fixed light spinner + “Loading...”.
+`Loader.tsx`: spinner + “Loading...” driven by `--loader-bg`, `--loader-surface`,
+`--loader-track`, `--loader-head`, and `--loader-text`, so it follows the OS color scheme
+before a restaurant config is loaded.
 
 `Home.tsx`: placeholder only.
 
@@ -692,15 +701,18 @@ Badge configs:
 `src/util/assets.ts` (`assetUrl`): joins `VITE_ASSET_BASE_URL` (default `/uploads`) with a
 key; not currently imported anywhere.
 
-`src/index.css`: imports Fraunces + Tailwind, sets `html/body/#root` min-heights
-(`100%`, `100vh`, `100dvh`), overrides `.font-serif` to Fraunces, `.scrollbar-hide`,
-`.input` component, and `@media print { .no-print { display: none } }`.
+`src/index.css`: imports Fraunces 500/600/700 + Tailwind, registers the class-based `dark`
+variant, defines `--ui-*` tokens via `@theme inline`, overrides them under `.dark`, remaps
+Tailwind palette variables under `.dark .admin-scope`, defines `--loader-*` tokens (including
+an OS-preference fallback), sets `html/body/#root` min-heights (`100%`, `100vh`, `100dvh`),
+overrides `.font-serif` to Fraunces and defines `.font-display` as bold Fraunces, plus
+`.scrollbar-hide`, `.input` component, and `@media print { .no-print { display: none } }`.
 
 ### 6.7 Frontend types
 
 `src/types/index.ts`: public `RestaurantConfig`, `Category`, `Item`, `Variant`,
 `ApiResponse`, `RequestOptions`, `SearchResultItem`.
-`RestaurantConfig` includes `roundness`, `BodyTextColor`, header/layout
+`RestaurantConfig` includes `roundness`, `BodyTextColor`, `headingFont`, `bodyFont`, header/layout
 options, item/card/nav options, currency, surface, board, PDF fields.
 
 `src/admin/types/index.ts`: admin `Restaurant` includes both `bodyTextColor?` and
@@ -708,6 +720,8 @@ options, item/card/nav options, currency, surface, board, PDF fields.
 legacy/unused `pageBackground` / `itemOfTheDayId`. `NavStyle` is
 `'tabs' | 'dropdown' | 'continuous'`; `Item` has `imageURL?`; `ItemPayload` has
 `imageURL?`; `ItemFormValues` has `imageMode: 'upload' | 'url'` and `imageUrl?`.
+`Restaurant` and public `RestaurantConfig` also include `bodyFont` and expanded `headingFont`
+values (`serif`, `sans`, `display`, `inter`, `poppins`, `montserrat`, `nunito`, `playfair`, `lora`, `merriweather`).
 `AdminInfo` is `{ publicId, username, restaurant }`.
 
 ---
@@ -748,18 +762,38 @@ legacy/unused `pageBackground` / `itemOfTheDayId`. `NavStyle` is
 `ProtectedRoute`: waits for `isCheckingSession`, redirects unauthenticated users to
 `/admin/login` with `state.from = location`.
 
-`LoginPage`: redirects authenticated users to `state.from` or `/admin/dashboard`.
-**`/admin/dashboard` does not exist**, so a direct login without a `from` state ends on a
-non-matching route. Redirects after ProtectedRoute work because `from` is `/admin...`.
+`LoginPage`: redirects authenticated users to `state.from` or `/admin`. The form uses a
+split brand/form layout with client-side validation states and a shared `Button`/`Alert`
+component set from `src/admin/components/ui.tsx`. The root carries `admin-scope`, uses
+`--ui-*` tokens, and includes `ThemeToggle` in the top-right of the form.
 
 ### 7.2 Layout
 
 `AdminLayout`:
-- Desktop fixed sidebar (240px) with restaurant name, username, nav links:
-  Settings (`/admin`, `end`), Categories (`/admin/categories`), Menu Items (`/admin/items`),
-  Log out.
+- Desktop fixed sidebar (256px) with a brand mark, restaurant name/username card, icon nav
+  links (Settings `/admin` with `end`, Categories `/admin/categories`, Menu Items
+  `/admin/items`), an "Appearance" row with `ThemeToggle`, a "View live menu" link to
+  `/<restaurantId>`, and Log out.
+- Root carries `admin-scope` and `bg-ui-bg`; the mobile drawer backdrop is `bg-black/50`.
 - Mobile top bar + slide-in drawer, closes on navigation.
-- Outlet in scrollable main.
+- Outlet in a scrollable, centered `max-w-5xl` main area.
+
+### 7.2.1 Admin theme switching
+
+`src/admin/theme/`:
+- `themeContext.ts` exports `ThemePreference` (`light` | `dark` | `system`), `ResolvedTheme`,
+  `ThemeContext`, and `useTheme`.
+- `ThemeProvider.tsx` reads/writes `localStorage.adminTheme` (default `system`), listens to
+  `prefers-color-scheme: dark`, toggles `html.dark`, and sets `document.documentElement.style.colorScheme`.
+- `ThemeToggle.tsx` renders a Light/Dark/System segmented control from `useTheme`.
+- `App.tsx` wraps `AuthProvider` in `ThemeProvider`, so the toggle works on the login screen too.
+- `index.html` has a small pre-paint inline script that reads `adminTheme` and applies
+  `html.dark` before React mounts to avoid a flash of the wrong theme.
+- Admin surfaces use `--ui-*` tokens via `@theme inline`; `.dark .admin-scope` remaps Tailwind
+  `slate/gray/indigo/red/emerald` palette variables so existing utility classes flip without
+  rewriting every admin component. Dark values are pure black/white/grey (no hue tint);
+  status colors remain for errors/success. The public menu is not inside `admin-scope`, so
+  it keeps its per-restaurant colors.
 
 ### 7.3 Settings page
 
@@ -768,13 +802,13 @@ copies; computes `dirty` with `diffChanged`; save sends only changed fields thro
 `restaurantService.update` and updates auth cache.
 
 Sections:
-1. **Domain**: disabled menu URL, copy button, show/hide QR (via
-   `https://api.qrserver.com/v1/create-qr-code/`), download 512×512 PNG. Menu URL uses
+1. **Domain**: disabled menu URL, copy button, show/hide QR (generated client-side with the
+   `qrcode` npm package into a 512×512 PNG data URL), download that PNG. Menu URL uses
    `form.domain` (prefixes `https://` unless it already starts with http/https), otherwise
    `window.location.origin/<restaurantId>`.
 2. **Theme Presets** (full width): grid of ready-made themes from
-   `src/admin/themePresets.ts` (`THEME_PRESETS`: Classic, Midnight, Ocean, Sunset, Forest,
-   Rose, Mono). Each card shows a 3-colour swatch and description; clicking merges the
+   `src/admin/themePresets.ts` (`THEME_PRESETS`: Midnight, Ocean, Sunset, Forest, Rose, Tech,
+   Dark, Dark Tech, Mono). Each card shows a 3-colour swatch and description; clicking merges the
    preset's `values` (a `Partial<Restaurant>`) into the form so the admin can fine-tune and
    save. A preset is marked active when every one of its values matches the current form.
    Frontend-only; no backend/schema changes.
@@ -782,7 +816,7 @@ Sections:
    item image.
 4. **Appearance**: Primary, Accent, Body Text, Header Text, Background color; Nav Style
    (tabs/dropdown/continuous); Nav Size; Tab Style (pill/underline, only tabs); Roundness; Header
-   Alignment; Header Size; Header Layout; Logo Shape; Heading Font; Photo Overlay +
+   Alignment; Header Size; Header Layout; Logo Shape; Heading Font; Body (overall) Font; Photo Overlay +
    intensity.
 5. **Header Style**: vertical spacing, max width, name/tagline color, logo size, divider
    style, photo focus X/Y, photo zoom, toggles (show logo, accent panel, name gradient,
@@ -806,7 +840,8 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
   `categoryService.add`.
 - Inline edit name/icon; sends only changed fields via `diffChanged`.
 - Delete with confirm; DB cascade removes items/variants.
-- Errors shown in a red alert.
+- Errors shown in a shared red `Alert`; page uses `PageHeader`, `EmptyState`, and `Button`
+  primitives from `src/admin/components/ui.tsx`.
 
 ### 7.5 Items page
 
@@ -820,8 +855,9 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
   (deep), price/variants, plus image file, image URL and remove flag.
 - Quick “Mark sold out / Mark available” sends `{ available: !current }`.
 - Delete with confirm; calls itemService.delete.
-- Uses hard-coded `₹` when displaying prices in the admin list, regardless of
-  `currencySymbol`.
+- Displays admin-list prices with `admin.restaurant.currencySymbol || '₹'`.
+- Uses the shared `PageHeader`, `Alert`, `EmptyState`, `Spinner`, and `Button` primitives
+  for headers, errors, empty states, loading, and actions.
 
 ### 7.6 Item form
 
@@ -845,10 +881,8 @@ reads `roundness` (the field the backend sends), so both previously-broken contr
 
 `categoryService`:
 - `getByRestaurant(restaurantId, includeItems=false)` builds
-  `/category/get/${restaurantId}/${params.toString()}`. This puts query data after a slash
-  (and leaves a trailing slash when empty) instead of using `?`. The current admin calls
-  omit `includeItems`, so it usually works only by Express trailing-slash tolerance;
-  `includeItems=true` is broken.
+  `/category/get/${restaurantId}` and appends `?incItem=true` only when `includeItems` is
+  true. Admin calls that omit `includeItems` send no trailing slash or query string.
 - `add`, `update`, `delete` send the expected `para`/URL shapes.
 
 `itemService`:
@@ -970,54 +1004,37 @@ Super admin:
    `DigitalMenuBackend/.env` unless the path is fixed or env vars are exported externally.
 2. **Prisma commands must run from `DigitalMenuBackend/src`.** From the package root,
    Prisma cannot find the schema/config.
-3. **Login default redirect is broken.** `LoginPage` falls back to
-   `/admin/dashboard`, which has no route. Direct logins can land on a blank page; use
-   `/admin` or remove the fallback.
-4. **Logout uses the wrong HTTP method.** Frontend `authService.logout` POSTs to
+3. **Logout uses the wrong HTTP method.** Frontend `authService.logout` POSTs to
    `/auth/logout`; backend defines DELETE. Local state clears, but the stored refresh token
    is not cleared server-side.
-5. **Category service query string is malformed.**
-   `categoryService.getByRestaurant` builds `/category/get/:id/<params>` instead of
-   `/category/get/:id?<params>`. `includeItems=true` would not be understood.
-6. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
+4. **Invalid API fallback returns HTTP 200.** `app.ts` sends `ErrorResponse(404)` via
    `res.json` without `res.status(404)`.
-7. **No-origin requests are rejected by CORS.** curl/Postman/server-to-server calls must
+5. **No-origin requests are rejected by CORS.** curl/Postman/server-to-server calls must
    send an `Origin` header from the allow-list; the header is spoofable, so this is not
    authentication.
-8. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
+6. **Badges cannot be cleared via update.** Sending `badges: []` is treated as “no
    change” by `items.controller.ts`.
-9. **A price of `0` is not displayed** because `Item.tsx` checks
-   `itemStructure.price && !hasVariants` instead of `price != null`.
-10. **Custom domain is effectively immutable.** Register ignores its `domain` input and
-    overwrites it with `${MAIN_DOMAIN}/${publicId}/`; both restaurant update endpoints
-    have domain updates commented out.
-11. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
-    `/v1`; set `VITE_SERVER_ADDRESS`.
-12. **QR download depends on `api.qrserver.com`.** Network/CORS failures surface as
-    “Failed to download QR code”; the QR preview is an external image.
-13. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
-    a public URL even if the object was not stored.
-14. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
+7. **Custom domain is effectively immutable.** Register ignores its `domain` input and
+   overwrites it with `${MAIN_DOMAIN}/${publicId}/`; both restaurant update endpoints
+   have domain updates commented out.
+8. **Super-admin API fallback base path is wrong.** `http://localhost:3000/api` lacks
+   `/v1`; set `VITE_SERVER_ADDRESS`.
+9. **S3 upload errors are swallowed** in `S3StorageAdapter.upload`, so the API may return
+   a public URL even if the object was not stored.
+10. **Force-logout leaves `refreshToken` in localStorage.** `triggerForceLogout` only
     clears the access token and cached admin info.
-15. **`assetUrl` is unused and backend stores full image URLs.** Image fields
+11. **`assetUrl` is unused and backend stores full image URLs.** Image fields
     (`imageURL`, `logoUrl`, etc.) are rendered directly; `VITE_ASSET_BASE_URL` only affects
     `assetUrl`.
-16. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
+12. **Two init migrations exist.** `20260816041942_init` creates the full initial schema;
     `20261022152811_init` only adds `BodyTextColor`. Keep this in mind when resetting a DB
     or squashing history.
-17. **The Postman collection is stale.** Do not use it as the API source of truth.
-18. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
+13. **The Postman collection is stale.** Do not use it as the API source of truth.
+14. **Frontend env keys are partly legacy.** `VITE_API_BASE_URL` and
     `VITE_RESTAURANT_ID` are present but unused; code uses `VITE_SERVER_ADDRESS` (and
     `VITE_ASSET_BASE_URL` only in unused `assets.ts`).
-19. **Admin item prices are hard-coded to `₹`.** The `currencySymbol` setting only affects
-    the public menu/PDF, not `ItemPage.tsx`.
-20. **Header `display` font uses `font-display`**, but the app only explicitly loads
-    Fraunces and overrides `.font-serif`; verify that the `display` option renders as
-    intended in the target Tailwind build.
-21. **`admin/login` after successful direct login** can navigate to a non-existent route
-    (see #3); also `AuthProvider` requires cached `adminInfo` after refresh, so clearing
-    that key while keeping a valid refresh token leaves the admin unauthenticated until
-    login.
+15. **`AuthProvider` requires cached `adminInfo` after refresh**, so clearing that key
+    while keeping a valid refresh token leaves the admin unauthenticated until login.
 
 ---
 
@@ -1034,13 +1051,206 @@ Super admin:
 - Update this file whenever behavior, routes, schema, env vars, or known issues change.
 - Preferred canonical spelling: the persisted field is `BodyTextColor` (PascalCase in
   DB/API) and the radius field is `roundness`; the admin form and public menu now both use
-  these. `bodyTextColor`/`cardRadius` are legacy aliases kept only on the admin type.
+  these. `bodyTextColor` remains only as a legacy alias on the admin type.
 
 ---
 
 ## Change Log
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
+
+### 2026-11-20 — More font options and separate header/body fonts
+- **Backend**
+  - `src/prisma/schema.prisma`: extended `headingFontN` with `inter`, `poppins`, `montserrat`,
+    `nunito`, `playfair`, `lora`, `merriweather`; added `Restaurant.bodyFont` (`headingFontN`,
+    default `sans`).
+  - Migration `src/prisma/migrations/20261120120000_font_options` adds the enum values and
+    `bodyFont` column.
+  - `src/controllers/restaurant.controller.ts`: accepts/persists `bodyFont` with `headingFont`.
+  - Prisma client regenerated.
+- **Frontend public**
+  - `src/util/fonts.ts` (new): `MenuFont`, `FONT_OPTIONS`, and `fontClass`.
+  - `src/index.css`: loads Inter, Poppins, Montserrat, Nunito, Playfair Display, Lora,
+    Merriweather and defines matching font utility classes.
+  - `src/types/index.ts`, `src/component/Header.tsx`, `src/DigitalMenu.tsx`: `headingFont` uses
+    the expanded set; root menu uses `bodyFont`, header title and section/category headings use
+    `headingFont`.
+- **Frontend admin**
+  - `src/admin/types/index.ts`, `src/admin/pages/SettingsPage.tsx`: added Body (overall) Font
+    selector and expanded Heading Font options in Appearance.
+  - `src/admin/themePresets.ts`: presets now set `bodyFont`.
+- **Verified:** backend `tsc` build passes; frontend `tsc -b && vite build` passes; frontend
+  lint still reports only the pre-existing `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** give restaurants more typography choices and independent control over header and
+  overall menu fonts.
+
+### 2026-11-20 — Fix display font option
+- **Frontend public/admin**
+  - `src/index.css`: loads Fraunces 700 and defines `.font-display` as bold Fraunces, matching
+    the class emitted by `Header.tsx` for `headingFont: 'display'`.
+  - The `Sunset` preset and manual `display` heading option now render the intended bold display
+    heading.
+- **Docs**
+  - `functional_test`: row 8 marked PASS (fixed).
+  - `PRODUCTION_QUALIFICATION_REPORT.md`: checklist, accepted limitations, and deployment gates
+    updated; `font-display` is no longer an accepted limitation.
+- **Verified:** `npm run build` passes; generated CSS contains `.font-display` with
+  `font-weight: 700`; `npm run lint` reports only the pre-existing `no-control-regex` error in
+  `src/util/menuPdf.ts`.
+- **Why:** `display` was an inert class name because no `.font-display` rule or `--font-display`
+  theme variable existed, so the setting silently fell back.
+
+### 2026-11-20 — Production qualification report
+- **Docs**
+  - `PRODUCTION_QUALIFICATION_REPORT.md` (new): submission report for Production Qualifiers based on
+    current code, build/lint/Prisma checks, the original 10-point checklist, and additional
+    backend/frontend/super-admin functional audits.
+  - Recommendation: conditional acceptance with deployment gates (frontend API URLs, CORS origins,
+    Prisma generate/deploy, backend env/secrets, SPA/upload hosting) and documented accepted
+    limitations (generated-only custom domain, partial currency cleanup, debug log, name-only
+    search).
+  - Scope note: static/code-level verification only; no live database/API/browser E2E was run.
+- **Verified:** backend build and Prisma validate pass; customer/admin and super-admin builds pass;
+  super-admin lint passes; customer/admin lint reports only the pre-existing `no-control-regex`
+  error in `src/util/menuPdf.ts`.
+- **Why:** provide one artifact that records functional readiness, residual risks, and the exact
+  conditions required before final production sign-off.
+
+### 2026-11-20 — Fix category service query string
+- **Frontend admin**
+  - `src/admin/services/categoryService.ts`: `getByRestaurant` now builds the query with
+    `URLSearchParams` and appends `?incItem=true` only when `includeItems` is true; the
+    default call no longer sends a trailing slash or an empty param section.
+- **Docs**
+  - `CONTEXT.md`: updated the admin service notes and removed the fixed query-string issue
+    from the known-issues list.
+  - `functional_test`: row 3 marked PASS (fixed).
+- **Verified:** `npm run build` passes; `npm run lint` reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** the backend reads `req.query.incItem`, but the old URL put the value in the path,
+  so `includeItems=true` could never include items.
+
+### 2026-11-19 — Display explicit zero prices
+- **Frontend public**
+  - `src/component/Item.tsx`: price condition changed from truthy check to
+    `itemStructure.price != null && !hasVariants`, so `₹0` renders on item cards.
+- **Frontend admin**
+  - `src/admin/pages/ItemPage.tsx`: added pricing validation before add/save so blank price
+    or variant-price fields are rejected with a visible error instead of being coerced to
+    `0` by `Number('')`; an explicit `0` is still accepted.
+- **Docs**
+  - `functional_test`: row 4 updated to PASS (fixed).
+- **Verified:** `npm run build` passes; `npm run lint` reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** an explicit zero price should be visible to customers, while an accidentally blank
+  admin field should not silently become a zero-price item.
+
+### 2026-11-19 — Grayscale dark theme and preset cleanup
+- **Frontend admin**
+  - `src/index.css`: dark `--ui-*` tokens and `.dark .admin-scope` palette remapping now use
+    only black/white/grey (`#000000` / `#0a0a0a` / `#1a1a1a` … / `#ffffff`). The indigo
+    remap and solid accent controls are grayscale; red/green status colors remain for alerts.
+    Dark loader fallbacks are grayscale too.
+  - `src/admin/pages/LoginPage.tsx`: brand panel glows are white/grey instead of amber.
+- **Frontend public**
+  - `src/admin/themePresets.ts`: removed the redundant `Classic` preset (9 presets still
+    remain). `Dark` is now pure black/white/grey (`#000000` / `#111111` / `#d4d4d4`).
+    Added `Dark Tech`, which is the intentional dark-blue variant (`#0b1120` / `#0f172a`
+    with `#38bdf8` cyan accents). `Tech` remains the single light slate/cyan preset.
+- **Verified:** `npm run build` passes; `npm run lint` reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** make the plain dark theme strictly monochrome while keeping a dedicated, clearly
+  named dark-blue option instead of having two nearly identical light tech themes.
+
+### 2026-11-19 — Neutral dark palette (no blue tint)
+- **Frontend admin**
+  - `src/index.css`: dark `--ui-*` tokens and `.dark .admin-scope` slate/gray remapping now use
+    neutral zinc values (`#09090b` / `#18181b` / `#27272a` …) instead of navy/slate blue.
+    Indigo remapping became warm amber, and solid controls use a darker amber that keeps white
+    text readable. Dark loader fallbacks are neutral too.
+  - `src/admin/pages/LoginPage.tsx`: brand panel is `#0c0c0c` with amber radial glows instead
+    of navy/cyan; shadows use `black/10`.
+  - `src/admin/pages/AdminLayout.tsx`: brand marks use `bg-ui-accent-solid` (amber in dark mode).
+  - Toggles, range accent, spinner, and mobile logo in `SettingsPage.tsx`, `ItemForm.tsx`, and
+    `src/admin/components/ui.tsx` also use the theme token instead of hard-coded indigo.
+- **Frontend public**
+  - `src/admin/themePresets.ts`: the `Dark` preset is now neutral charcoal (`#111111` /
+    `#18181b`) with warm amber accent/glow (`#f59e0b`) and `#fcd34d` tagline/gradient end.
+- **Verified:** `npm run build` passes; `npm run lint` reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** remove the blue/navy cast from dark mode while keeping strong contrast and a clear
+  accent color.
+
+### 2026-11-19 — Dark theme for admin and public menu
+- **Frontend admin**
+  - `index.html`: pre-paint inline script reads `localStorage.adminTheme` and applies
+    `html.dark` / `colorScheme` before React mounts to avoid a flash of the wrong theme.
+  - `src/admin/theme/themeContext.ts` (new): `ThemePreference`, `ResolvedTheme`,
+    `ThemeContext`, `useTheme`; kept separate from the provider so the React Refresh lint
+    rule passes.
+  - `src/admin/theme/ThemeProvider.tsx` (new): persists `adminTheme` (default `system`),
+    tracks `prefers-color-scheme: dark`, toggles `html.dark`, and provides the resolved theme.
+  - `src/admin/theme/ThemeToggle.tsx` (new): Light/Dark/System segmented control shown on
+    the login screen and in `AdminLayout`.
+  - `src/App.tsx`: `ThemeProvider` wraps `AuthProvider`.
+  - `src/admin/pages/AdminLayout.tsx`: root is `admin-scope bg-ui-bg`; sidebar includes the
+    Appearance/theme control; mobile drawer backdrop is `bg-black/50`.
+  - `src/index.css`: `@custom-variant dark`, `--ui-*` tokens mapped through `@theme inline`,
+    dark overrides, `.dark .admin-scope` palette remapping, and tokenized body/selection/`.input`.
+  - Interactive primary controls now use `bg-ui-accent-solid` / `hover:bg-ui-accent-solid-hover`
+    instead of `indigo-600/700` (which would invert under the dark palette remap).
+- **Frontend public**
+  - `src/admin/themePresets.ts`: added a `Dark` preset (charcoal/cyan, split left header,
+    underline tabs, gradient name) — nine presets total, still frontend-only.
+  - `src/component/Loader.tsx`: now driven by `--loader-*` variables so it follows the OS
+    color scheme before a restaurant config is loaded.
+  - `src/DigitalMenu.tsx`: error screen uses the restaurant theme variables instead of
+    hard-coded light grays.
+  - `src/component/Item.tsx`: image placeholder uses `--surface` / `--body-text`.
+  - `src/component/CatgoriesNavs.tsx`: dropdown focus state no longer uses `bg-black/5`.
+- **Verified:** `npm run build` passes; `npm run lint` reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** give the management console a real dark mode that follows the device by default
+  while keeping each restaurant’s public menu independently themed; also remove the remaining
+  light-only public surfaces that looked broken under the Dark preset.
+
+### 2026-11-19 — Tech theme preset and admin UI polish
+- **Frontend admin**
+  - `src/admin/themePresets.ts`: added a `Tech` preset (slate/navy with electric cyan,
+    split left-aligned header, underline tabs, 0.5rem corners, gradient name) — eight presets
+    total, still frontend-only.
+  - `src/admin/components/ui.tsx` (new): shared `Button` (four variants, three sizes),
+    `PageHeader`, `Alert`, `EmptyState`, and `Spinner` primitives with consistent focus,
+    hover, and disabled states.
+  - `src/admin/pages/LoginPage.tsx`: split-screen login with a branded gradient panel,
+    icon fields, error alert, and a spinner. Default redirect is now `/admin` (was the
+    non-existent `/admin/dashboard`).
+  - `src/admin/pages/AdminLayout.tsx`: 256px sidebar with brand mark, restaurant/avatar
+    card, icon nav with active states, a "View live menu" link, icon logout, and a polished
+    mobile bar/drawer. Main content is centered in `max-w-5xl`.
+  - `src/admin/pages/CategoriesPage.tsx` / `ItemPage.tsx`: consistent page headers, cards,
+    empty states, icon actions, and pill category tabs. Admin item prices now honor
+    `currencySymbol` instead of a hard-coded `₹`.
+  - `src/index.css`: antialiased body text and indigo selection color.
+- **Verified:** `npm run build` passes; `npm run lint` still reports only the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts`.
+- **Why:** give the management console a consistent, modern visual language and add another
+  ready-made menu look without touching the API or database. Known-issues list updated to
+  drop the two fixed entries and renumber the rest.
+
+### 2026-11-19 — Generate menu QR codes client-side
+- **Frontend admin**
+  - `package.json` / `package-lock.json`: added `qrcode` and dev `@types/qrcode`.
+  - `src/admin/pages/SettingsPage.tsx`: replaced the `api.qrserver.com` preview image and
+    the `fetch`-based download with a single client-side `QRCode.toDataURL(menuUrl, { width: 512 })`
+    result held in `qrDataUrl`. `menuUrl` is computed before the early returns and the QR is
+    generated in an effect; the preview `<img>` and the download `<a>` both reuse the same
+    512×512 data URL. The Download button is disabled until the data URL is ready.
+- **Verified:** `npm run build` passes. `npm run lint` still reports the pre-existing
+  `no-control-regex` error in `src/util/menuPdf.ts` (unrelated).
+- **Why:** remove the third-party network/CORS dependency, stop sending menu URLs to an
+  external service, and make the QR work offline while guaranteeing the preview and the
+  downloaded PNG are the same code.
 
 ### 2026-11-17 — CORS rejects no-origin and unknown origins explicitly
 - **Backend**

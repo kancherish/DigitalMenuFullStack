@@ -191,7 +191,7 @@ export function CategoryDropdown({
                   onSelect(idx);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center justify-between gap-3 px-6 py-4 transition-all hover:brightness-95 focus-visible:outline-none focus-visible:bg-black/5 ${
+                className={`w-full flex items-center justify-between gap-3 px-6 py-4 transition-all hover:brightness-95 focus-visible:outline-none focus-visible:brightness-110 ${
                   isActive ? "font-semibold" : ""
                 }`}
                 style={{
