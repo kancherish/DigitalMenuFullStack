@@ -53,8 +53,7 @@ export const itemService = {
         body: formData,
       }); 
       const data: ApiResponse<Item> = await res.json();
-     console.log(data)
-      if (!res.ok || !data.success) throw new Error(data.message || 'Failed to update item');
+     if (!res.ok || !data.success) throw new Error(data.message || 'Failed to update item');
       return data.data;
     }
    

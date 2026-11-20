@@ -82,8 +82,12 @@ DigitalMenuFullStack/
 │       │   └── Loader.tsx
 │       ├── util/
 │       │   ├── util.ts             # icons/theme vars/diff/badges
-│       │   ├── menuPdf.ts          # jsPDF export
+│       │   ├── menuPdf.ts          # branded jsPDF export
+│       │   ├── pdfFonts.ts         # local TTF loader/registrar for jsPDF
+│       │   ├── fonts.ts            # MenuFont values + fontClass helper
 │       │   └── assets.ts           # assetUrl helper (currently unused)
+│       ├── public/
+│       │   └── pdf-fonts/          # 16 subsetted TTFs (8 families × regular/bold)
 │       └── admin/
 │           ├── api/                # apiFetch, authService, tokenstore
 │           ├── auth/               # AuthContext, AuthProvider, ProtectedRoute
@@ -190,7 +194,7 @@ Currently unused/legacy: `VITE_API_BASE_URL`, `VITE_RESTAURANT_ID`.
 
 `index.ts`:
 1. Imports `app`, `connectdb`, `PORT`.
-2. Calls `app.listen(PORT, async () => { await connectdb(); console.log(...) })`.
+2. Connects to the database, then calls `app.listen(PORT)`.
 3. Dynamic CORS refresh is disabled/commented.
 
 `app.ts` order:
@@ -352,7 +356,7 @@ can be set to `null` if provided.
 
 | Method | Path | Auth | Body / notes |
 |---|---|---|---|
-| POST | `/item/add` | access token + category ownership + optional multipart | `para` may be object or JSON string. Fields: `name`, `description?`, `price?`, `category_id`, `variants?`, `badges?`, `available?`, `imageURL?`; optional file field `image`. `imageURL` accepts an http(s) or `/`-relative URL (invalid values → 400); an uploaded file takes precedence over it. Requires name + category_id. Name is checked case-insensitively **within the category**. Must have either numeric `price` **or** non-empty `variants`, never both. Variants require string name + numeric price. If image processing fails, still creates item and returns status **207** “Item Added But Failed To Add Image”. |
+| POST | `/item/add` | access token + category ownership + optional multipart | `para` may be object or JSON string. Fields: `name`, `description?`, `price?`, `category_id`, `variants?`, `badges?`, `available?`, `imageURL?`; optional file field `image`. `imageURL` accepts an http(s) or `/`-relative URL (invalid values → 400); an uploaded file takes precedence over it. Requires name + category_id. Name is checked case-insensitively **within the category**. Must have either numeric `price` **or** non-empty `variants`, never both. Variants require string name + numeric price. If image processing fails, still creates item and returns status **207** “Item Added But Failed To Add Image”. If the DB insert fails after a successful upload, the new image is deleted. |
 | GET | `/item/get/:cid` | none | Public. Returns items for category `publicId`, ordered by `name` ascending, including variants. |
 | PATCH | `/item/update` | access token + item ownership + optional multipart | `{ para: { item_id, name?, description?, price?, category_id?, variants?, badges?, imageURL?, removeImage?, available? } }`. `item_id` from `para`. Cannot send both price and variants. If `variants` is provided it must be non-empty. Price mode deletes all variants and sets price. Variant mode sets price `null`, deletes existing variants, recreates them. Image URL sets/clears `imageURL`; an uploaded file takes precedence. Old image files are deleted from storage only when their URL is managed by `UPLOAD_PUBLIC_BASE`/`S3_PUBLIC_URL_BASE`. Returns updated item with variants. |
 | DELETE | `/item/delete/:item_id` | access token + item ownership | Deletes item (variants cascade), then best-effort deletes stored image only when its URL is managed by `UPLOAD_PUBLIC_BASE`/`S3_PUBLIC_URL_BASE`. |
@@ -370,10 +374,11 @@ updates badges when that value is not `false`; an empty array becomes `false` an
 `src/middleware/upload.middleware.ts`:
 - `multer.memoryStorage()`
 - max file size `5 * 1024 * 1024` bytes
-- `fileFilter` accepts only MIME types starting with `image/`; otherwise error
-  `"Only images allowed"`.
+- `fileFilter` accepts only `image/jpeg`, `image/png`, `image/webp`, `image/gif`,
+  `image/avif`, `image/heic`, `image/heif`; otherwise error `"Only images allowed"`.
 
 `src/utils/upload.ts`:
+- `sharp.concurrency(2)` and `limitInputPixels: 16_000_000` to bound decoded-image memory.
 - sharp pipeline: `.rotate()` → `.resize(800, 800, { fit: "inside", withoutEnlargement: true })`
   → `.webp({ quality: 75, effort: 4 })`.
 - Key is `itemsImages/<uuid>.webp`.
@@ -391,9 +396,9 @@ Local adapter:
 S3 adapter:
 - AWS S3 client with `S3_REGION` + access keys (no custom endpoint, no path-style).
 - `PutObjectCommand` with `ContentType: image/webp`,
-  `CacheControl: public, max-age=15552000` (6 months).
-- Upload errors are caught and only logged, so `uploadImage` can still return a public URL
-  even when the S3 put failed. `delete` does not swallow errors.
+  `CacheControl: public, max-age=31536000, immutable` (1 year).
+- Upload errors propagate to `uploadImage`, which returns `false`; `delete` does not swallow
+  errors.
 
 Nginx can serve `/uploads` directly instead of Express.
 
@@ -564,12 +569,16 @@ Vercel.
   errors.
 - `getCategoriesAndItems(id, signal)` → `GET /category/get/:id?incItem=true`; returns `null`
   on non-abort errors.
+- Both helpers cache successful results in memory for **60 seconds** per restaurant; failures
+  are not cached. `clearMenuCache(id?)` clears both entries (or the whole cache), used by the
+  menu's “Try again” button so a retry always refetches.
 
 ### 6.3 `DigitalMenu.tsx`
 
 - Reads `:RestaurantId` from the route.
 - Fetches restaurant config and categories/items in parallel with one `AbortController`;
-  aborts after **8 seconds**. Retry button resets state and bumps a retry counter.
+  aborts after **8 seconds**. Retry button clears the menu cache, resets state, and bumps a
+  retry counter.
 - Loading screen while config absent; error screen with “Try again” when config/category
   fetch sets `configError`.
 - Global search (`showSearch` controls input visibility):
@@ -607,13 +616,25 @@ Vercel.
 
 ### 6.4 PDF export (`src/util/menuPdf.ts`)
 
-- jsPDF A4, points, 40pt margins.
-- Replaces `₹` with `Rs. ` and strips non-ASCII except tab/LF/CR/space–`~`; collapses
-  whitespace.
-- Renders restaurant name/tagline, divider, categories, item names/descriptions, price or
-  variants, `(Unavailable)` for `available === false`, “No items…” placeholders.
-- Wraps text and adds pages as needed; adds `i / total` page numbers.
-- Filename = sanitized restaurant name + `.pdf`.
+- `downloadMenuPdf(config, categories)` is `async`; the caller in `DigitalMenu.tsx` invokes
+  it with `void`. It dynamically imports `jspdf` on first use, then awaits `registerPdfFonts`
+  before drawing, keeping jsPDF out of the initial bundle.
+- jsPDF A4, points, 40pt margins, `contentBottom = pageHeight - 48`.
+- Branding: primary-colored rounded title band with contrasting title/tagline and an accent
+  marker, accent rules, accent-colored category markers/prices, soft-accent variant pills,
+  and badge chips (VEG / NON-VEG / CHEF SPECIAL / SPICY / BESTSELLER / SOLD OUT).
+- `BodyTextColor` is used only when dark enough to read on white; otherwise body text falls
+  back to a neutral ink. White-on-dark values do not produce invisible PDF text.
+- Fonts: `src/util/pdfFonts.ts` fetches subsetted TTFs from `${BASE_URL}pdf-fonts/` once,
+  caches base64 data, registers normal/bold families with jsPDF, and falls back to
+  Helvetica/Times if a fetch fails. Embedded fonts preserve `₹` and other common symbols;
+  unsupported characters are stripped and whitespace collapsed.
+- Continuation pages get a compact running header; every page gets a footer with the
+  restaurant name and `i / total`.
+- Renders restaurant name/tagline, categories with item counts, item names/descriptions,
+  prices or variants, `SOLD OUT` for `available === false`, and “No items…” placeholders.
+- Wraps text, estimates block height before page breaks, and writes a filename from the
+  sanitized restaurant name + `.pdf`.
 
 ### 6.5 Components
 
@@ -645,6 +666,7 @@ Vercel.
 
 `Item.tsx`:
 - `showImage` + `imageURL`/`defaultImage`; falls back to default on image error.
+- Images use `loading="lazy"` and `decoding="async"` so offscreen items do not load eagerly.
 - `size`: `sm` | `md` | `lg`; `imagePosition` left/right; `imageShape`
   rounded/square/circle.
 - Sold-out items: image grayscale, dark “Sold out” overlay, card opacity 60%.
@@ -975,11 +997,10 @@ PDF fields: `showPdfDownload`, `pdfDownloadPlacement`.
 `nginx.config` (sample):
 - Listens on `8080`, `server_name localhost`.
 - `location /uploads` aliases placeholder `your_root_upload_path`; denies `.php`, `.js`,
-  `.sh`; caches 1 day; `try_files $uri =404`.
-- `location /` proxies to `http://localhost:3000` with standard forwarded headers.
-- The sample proxy target (`3000`) matches the Vite frontend port, while the backend
-  `.env` currently uses `PORT=3001`. Treat this as an incomplete sample and align it for
-  the real deployment (static frontend + API server).
+  `.sh`; caches 1 year as `public, immutable`; `try_files $uri =404`.
+- `location /` proxies to `http://localhost:3001` with standard forwarded headers.
+- The sample only covers the API proxy and uploads; align it with the real static frontend
+  hosting for deployment.
 - Backend helmet disables `crossOriginResourcePolicy` so images can be embedded
   cross-origin.
 
@@ -1058,6 +1079,65 @@ Super admin:
 ## Change Log
 
 > Newest entries at the top. Include date, area, files, and a short what/why.
+
+### 2026-11-20 — Frontend loading optimizations
+- **Frontend public**
+  - `src/component/Item.tsx`: item images are `loading="lazy"` / `decoding="async"`.
+  - `src/util/menuPdf.ts`: `jspdf` is dynamically imported when the PDF button is used, so
+    the initial bundle dropped from ~784 KB to ~381 KB (jsPDF remains a separate on-demand
+    chunk).
+  - `src/db/db.tsx`: successful public API results are cached in memory for 60 seconds per
+    restaurant; `clearMenuCache(id?)` is exported, and `DigitalMenu.tsx` calls it on retry.
+- **Verified:** frontend `npm run build` and `npm run lint` pass.
+- **Why:** cut initial JS, avoid downloading offscreen item images, and reduce repeat API/DB
+  hits without making retries return stale data.
+
+### 2026-11-20 — Image upload hardening and caching
+- **Backend**
+  - `src/utils/upload.ts`: `sharp.concurrency(2)` and `limitInputPixels: 16_000_000` bound
+    decoded-image memory and parallel processing.
+  - `src/controllers/items.controller.ts`: on a failed `item.create` after a successful
+    upload, the new image is deleted from storage before the error is rethrown.
+  - `src/utils/storage/cloud.adapter.ts`: S3 objects use
+    `CacheControl: public, max-age=31536000, immutable`.
+- **Infrastructure**
+  - `nginx.config`: `/uploads` now uses `expires 1y` and `Cache-Control: public, immutable`.
+- **Docs**
+  - Corrected stale notes about the Multer MIME allow-list, S3 error handling, nginx cache,
+    and proxy target.
+- **Verified:** backend `tsc` build passes.
+- **Why:** reduce memory/CPU spikes from crafted images, avoid orphaned files, and let
+  browsers/CDNs cache UUID-named images permanently.
+
+### 2026-11-20 — Remove debug console.log calls
+- **Backend**
+  - `src/index.ts`: startup no longer logs the listening port.
+  - `src/app.ts`: removed the invalid-URL request log and a commented-out CORS log.
+  - `src/controllers/items.controller.ts`, `src/utils/upload.ts`: removed logs from swallowed
+    cleanup/upload failures.
+- **Frontend**
+  - `src/db/db.tsx`, `src/admin/services/itemService.ts`: removed API error/response logs.
+- **Verified:** no `console.log`/`console.debug`/`console.info`/`console.trace` remain in any
+  source file; `console.error` is retained for real error reporting.
+- **Why:** stop leaking request URLs, API payloads, and internal errors to the console.
+
+### 2026-11-20 — Branded PDF export with embedded fonts
+- **Frontend public**
+  - `src/util/menuPdf.ts`: rewritten as an async, branded layout — primary title band,
+    accent category markers/prices/rules, soft-accent variant pills, badge chips, running
+    headers on continuation pages, page footers, and safer body-text contrast. Added height
+    estimation before page breaks; `downloadMenuPdf` now returns a `Promise<void>`.
+  - `src/DigitalMenu.tsx`: PDF button calls `void downloadMenuPdf(...)`.
+  - `src/util/pdfFonts.ts` (new): lazily fetches, caches, and registers local subsetted TTFs
+    for both heading and body fonts, falling back to Helvetica/Times on fetch failure.
+  - `public/pdf-fonts/` (new): 16 subsetted TTFs (~339 KB total) for Fraunces, Inter,
+    Poppins, Montserrat, Nunito, Playfair Display, Lora, and Merriweather at regular/bold,
+    plus `licenses/` with each family's OFL text.
+- **Verified:** backend unchanged; frontend `npm run build` passes and `npm run lint` now
+  passes with no errors (the old `no-control-regex` report is gone). Rendered a sample PDF
+  from the real code with Poppins/Inter and confirmed embedded CID fonts and `₹` output.
+- **Why:** make exported menus match each restaurant's branding and chosen typography while
+  keeping assets local and avoiding fragile runtime CDN font fetches.
 
 ### 2026-11-20 — More font options and separate header/body fonts
 - **Backend**

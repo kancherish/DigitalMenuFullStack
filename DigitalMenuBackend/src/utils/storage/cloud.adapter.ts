@@ -26,7 +26,7 @@ export class S3StorageAdapter implements StorageAdapter {
         Key: normalized,
         Body: buffer,
         ContentType: 'image/webp',
-        CacheControl: 'public, max-age=15552000', // 6 months
+        CacheControl: 'public, max-age=31536000, immutable',
       })
     );
   }

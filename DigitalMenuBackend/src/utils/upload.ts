@@ -1,10 +1,12 @@
 import { storage } from "./storage/index.js";
 import sharp from "sharp";
 
+sharp.concurrency(2);
+
 export const uploadImage = async (file: Buffer, filelocation: string): Promise<boolean | string> => {
     try {
 
-        const processed = await sharp(file)
+        const processed = await sharp(file, { limitInputPixels: 16_000_000 })
             .rotate()
             .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
             .webp({ quality: 75, effort: 4 })
@@ -13,8 +15,7 @@ export const uploadImage = async (file: Buffer, filelocation: string): Promise<b
         await storage.upload(processed,filelocation);
         return storage.getPublicUrl(filelocation);
 
-    } catch (error) {
-        console.log(error)
+    } catch {
         return false
     }
 }

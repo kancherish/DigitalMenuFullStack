@@ -123,6 +123,8 @@ const ItemCard = ({
       <img
         src={finalSrc}
         alt={itemStructure.name}
+        loading="lazy"
+        decoding="async"
         className={`w-full h-full object-cover transition-transform duration-300 ${
           itemStructure.available ? "group-hover:scale-110" : "grayscale"
         }`}

@@ -5,7 +5,7 @@ import { Header } from './component/Header';
 import LoadingScreen from './component/Loader';
 import Footer from './component/Footer';
 import type { Category, RestaurantConfig, SearchResultItem } from './types';
-import { getCategoriesAndItems, getRestaurantInfo } from './db/db';
+import { clearMenuCache, getCategoriesAndItems, getRestaurantInfo } from './db/db';
 import ItemCard from './component/Item';
 import { CategoryTabs, CategoryDropdown } from './component/CatgoriesNavs';
 import { getCategoryIcon, useThemeVars } from './util/util';
@@ -133,6 +133,7 @@ export default function DigitalMenu() {
         <p style={{ color: 'var(--body-text, #334155)' }}>Failed to load restaurant data.</p>
         <button
           onClick={() => {
+            clearMenuCache(RestaurantId);
             setConfigError(false);
             setRestaurantConfig(null);
             setCategoriesAndItems([]);
@@ -524,7 +525,7 @@ export default function DigitalMenu() {
           {(restaurantConfig!.showPdfDownload ?? true) && (
             <button
               type="button"
-              onClick={() => downloadMenuPdf(restaurantConfig!, categoriesAndItems)}
+              onClick={() => void downloadMenuPdf(restaurantConfig!, categoriesAndItems)}
               className={`no-print fixed z-30 inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium shadow-lg transition-transform hover:scale-105 active:scale-95 ${
                 {
                   bottom_right: 'bottom-5 right-5',

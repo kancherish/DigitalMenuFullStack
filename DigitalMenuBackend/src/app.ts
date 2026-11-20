@@ -31,7 +31,6 @@ app.set("trust proxy", 1);
 //   });
 
 //   allowedOrigins = new Set((restaurants ?? []).map(r => r.domain));
-//   console.log(`[CORS] Refreshed ${allowedOrigins.size} dynamic origins`);
 // }
 
 const corsError = (message: string) => {
@@ -90,7 +89,6 @@ app.use("/api/v1/item", itemRouter)
 
 //fallback for invalid api url
 app.use((req, res) => {
-  console.log(req.url)
   res.status(404).json(new ErrorResponse(
     404,
     "INVALID API",

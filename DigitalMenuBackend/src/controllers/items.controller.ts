@@ -143,9 +143,13 @@ export const addItem = asyncHandler(async (req: Request, res: Response) => {
 
   }
 
-  const item = await prisma.item.create({ data, include: { variants: true } });
-
-  res.status(resStatus.code).json(new ApiResponse(resStatus.code, item, true, resStatus.msg));
+  try {
+    const item = await prisma.item.create({ data, include: { variants: true } });
+    res.status(resStatus.code).json(new ApiResponse(resStatus.code, item, true, resStatus.msg));
+  } catch (error) {
+    if (ItemImageUrl) await storage.delete(ItemImageUrl).catch(() => {});
+    throw error;
+  }
   return
 });
 
@@ -326,8 +330,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
     if (uploadedManagedUrlToCleanup && isManagedImageUrl(uploadedManagedUrlToCleanup)) {
       try {
         await storage.delete(uploadedManagedUrlToCleanup);
-      } catch (cleanupError) {
-        console.log(cleanupError);
+      } catch {
       }
     }
     throw error;
@@ -336,8 +339,7 @@ export const updateItem = asyncHandler(async (req: Request, res: Response) => {
   if (oldManagedUrlToDelete) {
     try {
       await storage.delete(oldManagedUrlToDelete);
-    } catch (error) {
-      console.log(error);
+    } catch {
     }
   }
 
@@ -393,8 +395,7 @@ export const deleteItem = asyncHandler(async (req: Request, res: Response) => {
   if (existingItem.imageURL && isManagedImageUrl(existingItem.imageURL)) {
     try {
       await storage.delete(existingItem.imageURL)
-    } catch (error) {
-      console.log(error)
+    } catch {
     }
   }
 
